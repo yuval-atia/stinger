@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-color: #3b82f6;
+  --error-color: #ef4444;
+  --success-color: #22c55e;
+  --diff-add: #dcfce7;
+  --diff-remove: #fee2e2;
+  --diff-change: #fef3c7;
+}
+
+.dark {
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --accent-color: #60a5fa;
+  --error-color: #f87171;
+  --success-color: #4ade80;
+  --diff-add: #166534;
+  --diff-remove: #991b1b;
+  --diff-change: #854d0e;
+}
+
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-secondary);
+}
+
+/* Toast animation */
+@keyframes toast-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.2s ease-out forwards;
+}
+
+.json-string { color: #22c55e; }
+.json-number { color: #3b82f6; }
+.json-boolean { color: #f97316; }
+.json-null { color: #a855f7; }
+.json-key { color: #ec4899; }
+
+.dark .json-string { color: #4ade80; }
+.dark .json-number { color: #60a5fa; }
+.dark .json-boolean { color: #fb923c; }
+.dark .json-null { color: #c084fc; }
+.dark .json-key { color: #f472b6; }
+
+.highlight-match {
+  background-color: #fef08a;
+  border-radius: 2px;
+}
+
+.dark .highlight-match {
+  background-color: #854d0e;
+}
+
+.tree-node-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.tree-node-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 150ms, transform 150ms;
+}
