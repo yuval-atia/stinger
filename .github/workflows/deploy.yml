@@ -28,12 +28,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Debug - check vite exists
-        run: ls -la node_modules/.bin/ | grep vite || echo "vite not found in .bin"
+        env:
+          NODE_ENV: development
 
       - name: Build
-        run: ./node_modules/.bin/vite build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
