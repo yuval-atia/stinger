@@ -211,10 +211,7 @@ function App() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold flex items-center gap-2">
             <span className="text-2xl">🐝</span>
-            Stinger
-            <span className="text-sm font-normal text-[var(--text-secondary)]">
-              JSON Viewer/Parser
-            </span>
+            JSON Bee
           </h1>
           <div className="flex items-center gap-4">
             <button
