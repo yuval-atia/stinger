@@ -62,6 +62,26 @@ body {
   scrollbar-color: var(--border-color) var(--bg-secondary);
 }
 
+/* Number input spinners — hidden by default, visible on focus */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0;
+}
+
+input[type="number"]:focus::-webkit-inner-spin-button,
+input[type="number"]:focus::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Firefox — hide spinners by default */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+}
+
 /* Toast animation */
 @keyframes toast-in {
   0% {

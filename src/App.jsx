@@ -11,8 +11,8 @@ function App() {
       <header className="flex-shrink-0 bg-[var(--bg-primary)] border-b border-[var(--border-color)] px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center">
           <div className="w-28 flex items-center flex-shrink-0">
-            <h1 className="flex items-center gap-2 text-xl font-bold whitespace-nowrap">
-              <span className="text-2xl">🐝</span>Stingr
+            <h1 className="flex items-baseline gap-2 text-xl font-bold whitespace-nowrap">
+              <span className="text-2xl">🐝</span>Stingr<span className="text-sm font-semibold text-[var(--accent-color)] -ml-2">.dev</span>
             </h1>
           </div>
           <div className="flex-1 flex justify-center">

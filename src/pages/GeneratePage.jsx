@@ -375,7 +375,7 @@ function LoremIpsumGenerator() {
 
 // ── QR Code Generator ─────────────────────────────────────────────────────────
 function QRCodeGenerator() {
-  const [text, setText] = useState('https://example.com');
+  const [text, setText] = useState('https://stingr.dev');
   const [errorLevel, setErrorLevel] = useState('M');
 
   const handleGenerate = useCallback(() => {
