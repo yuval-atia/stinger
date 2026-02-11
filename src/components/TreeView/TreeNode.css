@@ -42,7 +42,7 @@
 }
 
 /* Animation for expanding nodes */
-.tree-node > div:last-child {
+.tree-node > .pl-4 {
   animation: slideDown 0.15s ease-out;
 }
 

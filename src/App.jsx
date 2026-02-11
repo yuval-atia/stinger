@@ -209,9 +209,8 @@ function App() {
       {/* Header */}
       <header className="flex-shrink-0 bg-[var(--bg-primary)] border-b border-[var(--border-color)] px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold flex items-center gap-2">
-            <span className="text-2xl">🐝</span>
-            JSON Bee
+          <h1 className="flex items-center">
+            <img src={import.meta.env.BASE_URL + 'logo.png'} alt="JSON Bee" className="h-8" />
           </h1>
           <div className="flex items-center gap-4">
             <button
@@ -346,6 +345,10 @@ function App() {
           </div>
         )}
       </main>
+
+      <footer className="flex-shrink-0 px-4 py-1.5">
+        <p className="text-xs text-[var(--text-secondary)] opacity-50">Created by Yuval Atia</p>
+      </footer>
     </div>
   );
 }

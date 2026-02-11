@@ -305,7 +305,8 @@ function TreeNode({
             : isMatch
             ? 'bg-yellow-500 bg-opacity-20'
             : ''
-        } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''}`}
+        } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''}`}
+        onClick={isExpandable ? handleToggle : undefined}
       >
         {/* Expand/Collapse Toggle */}
         {isExpandable ? (
@@ -337,10 +338,10 @@ function TreeNode({
         )}
 
         {/* Value */}
-        <span className="flex-1">{renderValue()}</span>
+        <span className="flex-1" onClick={isExpandable ? undefined : (e) => e.stopPropagation()}>{renderValue()}</span>
 
         {/* Copy buttons */}
-        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity" onClick={(e) => e.stopPropagation()}>
           {!isRoot && (
             <CopyButton onClick={handleCopyPath} tooltip="Copy path" size="sm">
               📋
