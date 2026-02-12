@@ -32,11 +32,11 @@ const NestedJsonPreview = ({ nestedJson, children }) => {
     : `Nested JSON Object (${Object.keys(nestedJson.parsed).length} keys)`;
 
   return (
-    <span>
-      {children}
+    <span className="inline-flex items-center gap-1">
+      <span className="truncate max-w-[300px]">{children}</span>
       <span
         onClick={handleOpen}
-        className="text-[var(--text-secondary)] text-xs opacity-60 cursor-pointer ml-1"
+        className="text-[var(--text-secondary)] text-xs opacity-60 cursor-pointer flex-shrink-0"
         title="Click to open parsed JSON in modal"
       >
         📦
