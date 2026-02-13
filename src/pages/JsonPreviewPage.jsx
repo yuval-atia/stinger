@@ -3,6 +3,7 @@ import JsonInput from '../components/Editor/JsonInput';
 import TreeView from '../components/TreeView/TreeView';
 import SearchBar from '../components/Search/SearchBar';
 import FormatButton from '../components/common/FormatButton';
+import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
 import { parseJson, formatJson } from '../utils/jsonParser';
@@ -134,8 +135,13 @@ function JsonPreviewPage() {
         {/* Input Panel */}
         <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden relative">
           <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
-            <span className="text-sm font-medium">Input</span>
+            <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm1 2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 4.25Zm0 2.5A.75.75 0 0 1 5.75 6h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 6.75ZM5.75 8.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" clipRule="evenodd" /></svg></span>Input</span>
             <div className="flex items-center gap-2">
+              <InfoButton info={{
+                what: 'Parses and visualises JSON (or JSON5) as an interactive, collapsible tree with syntax highlighting, search, and in-place editing.',
+                how: 'The input is parsed with a lenient JSON/JSON5 parser, then rendered as a virtual tree. Nodes are expandable, searchable, and editable — changes are reflected in the raw input in real time.',
+                usedFor: 'Exploring API responses, debugging deeply nested data, editing config files, and quickly navigating large JSON documents.',
+              }} />
               <FormatButton onClick={handleFormat} label="Format" />
               <FormatButton onClick={handleMinify} label="Minify" />
               <FormatButton onClick={handleClear} label="Clear" variant="danger" />
@@ -171,7 +177,7 @@ function JsonPreviewPage() {
         <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden relative">
           <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Tree View</span>
+              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Tree View</span>
               {hasExpandedNodes && (
                 <button
                   onClick={handleCollapseAll}

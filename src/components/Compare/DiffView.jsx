@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import JsonInput from '../Editor/JsonInput';
 import TreeView from '../TreeView/TreeView';
+import { InfoButton } from '../common/InfoTooltip';
 import { diffJson, createDiffMap } from '../../utils/differ';
 
 function DiffView({
@@ -35,7 +36,12 @@ function DiffView({
       {/* Stats bar */}
       {leftData !== null && rightData !== null && (
         <div className="flex-shrink-0 flex items-center gap-4 px-4 py-2 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
-          <span className="text-sm font-medium">Diff Summary:</span>
+          <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" /><path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" /></svg></span>Diff Summary:</span>
+          <InfoButton info={{
+            what: 'Side-by-side JSON comparison that highlights added, removed, and changed keys between two JSON documents.',
+            how: 'Recursively walks both object trees, comparing keys and values at each level. Differences are classified as added, removed, or changed and colour-coded in the tree view.',
+            usedFor: 'Reviewing API response changes, comparing config versions, debugging state mutations, and validating data migrations.',
+          }} />
           {stats.total === 0 ? (
             <span className="text-[var(--success-color)] text-sm">No differences found</span>
           ) : (
@@ -64,7 +70,7 @@ function DiffView({
           {/* Input */}
           <div className="flex-1 min-h-0 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden">
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
-              <span className="text-sm font-medium">Left (Original)</span>
+              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm1 2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 4.25Zm0 2.5A.75.75 0 0 1 5.75 6h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 6.75ZM5.75 8.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" clipRule="evenodd" /></svg></span>Left (Original)</span>
             </div>
             <div className="flex-1 overflow-auto">
               <JsonInput
@@ -79,7 +85,7 @@ function DiffView({
           {/* Tree */}
           <div className="flex-1 min-h-0 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden">
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
-              <span className="text-sm font-medium">Left Tree</span>
+              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Left Tree</span>
             </div>
             <div className="flex-1 overflow-auto p-4">
               {leftData !== null ? (
@@ -107,7 +113,7 @@ function DiffView({
           {/* Input */}
           <div className="flex-1 min-h-0 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden">
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
-              <span className="text-sm font-medium">Right (Modified)</span>
+              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm1 2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 4.25Zm0 2.5A.75.75 0 0 1 5.75 6h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 6.75ZM5.75 8.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" clipRule="evenodd" /></svg></span>Right (Modified)</span>
             </div>
             <div className="flex-1 overflow-auto">
               <JsonInput
@@ -122,7 +128,7 @@ function DiffView({
           {/* Tree */}
           <div className="flex-1 min-h-0 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden">
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
-              <span className="text-sm font-medium">Right Tree</span>
+              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Right Tree</span>
             </div>
             <div className="flex-1 overflow-auto p-4">
               {rightData !== null ? (

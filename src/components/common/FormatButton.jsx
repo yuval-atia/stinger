@@ -5,7 +5,7 @@ function FormatButton({ onClick, label, variant = 'default' }) {
     primary:
       'bg-[var(--accent-color)] hover:bg-blue-600 text-white',
     danger:
-      'bg-transparent hover:bg-[var(--error-color)] hover:bg-opacity-20 text-[var(--error-color)]',
+      'bg-transparent hover:bg-[var(--error-color)] hover:bg-opacity-20 text-[var(--error-color)] hover:text-white',
   };
 
   return (

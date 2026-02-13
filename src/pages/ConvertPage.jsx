@@ -1,21 +1,24 @@
-function ConvertPage() {
-  const tools = ['Timestamp', 'JSON / YAML', 'CSV / JSON', 'Case Converter'];
+import TimestampCard from '../components/Convert/TimestampCard';
+import JsonYamlCard from '../components/Convert/JsonYamlCard';
+import CaseConverterCard from '../components/Convert/CaseConverterCard';
+import NumberBaseCard from '../components/Convert/NumberBaseCard';
+import ColorConverterCard from '../components/Convert/ColorConverterCard';
+import ByteSizeCard from '../components/Convert/ByteSizeCard';
+import CronParserCard from '../components/Convert/CronParserCard';
+import RegexTesterCard from '../components/Convert/RegexTesterCard';
 
+function ConvertPage() {
   return (
-    <div className="flex items-center justify-center h-full">
-      <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] p-8 max-w-md w-full text-center">
-        <h2 className="text-lg font-semibold mb-4">Convert</h2>
-        <p className="text-[var(--text-secondary)] text-sm mb-6">Coming soon</p>
-        <ul className="space-y-2">
-          {tools.map((tool) => (
-            <li
-              key={tool}
-              className="px-4 py-2 text-sm bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] text-[var(--text-secondary)]"
-            >
-              {tool}
-            </li>
-          ))}
-        </ul>
+    <div className="h-full overflow-y-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
+        <TimestampCard />
+        <JsonYamlCard />
+        <CaseConverterCard />
+        <NumberBaseCard />
+        <ColorConverterCard />
+        <ByteSizeCard />
+        <CronParserCard />
+        <RegexTesterCard />
       </div>
     </div>
   );

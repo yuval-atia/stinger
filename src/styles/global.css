@@ -135,6 +135,65 @@ input[type="number"]:focus {
   background-color: #854d0e;
 }
 
+/* Regex match highlight */
+.regex-match {
+  background-color: var(--diff-change);
+  border-radius: 2px;
+  padding: 1px 2px;
+}
+
+/* Markdown preview styles */
+.markdown-body h1 { font-size: 1.5em; font-weight: 700; margin: 0.67em 0; color: var(--text-primary); }
+.markdown-body h2 { font-size: 1.3em; font-weight: 700; margin: 0.6em 0; color: var(--text-primary); }
+.markdown-body h3 { font-size: 1.1em; font-weight: 600; margin: 0.5em 0; color: var(--text-primary); }
+.markdown-body h4 { font-size: 1em; font-weight: 600; margin: 0.4em 0; color: var(--text-primary); }
+.markdown-body h5 { font-size: 0.9em; font-weight: 600; margin: 0.4em 0; color: var(--text-primary); }
+.markdown-body h6 { font-size: 0.85em; font-weight: 600; margin: 0.4em 0; color: var(--text-secondary); }
+.markdown-body p { margin: 0.5em 0; line-height: 1.6; }
+.markdown-body ul, .markdown-body ol { margin: 0.5em 0; padding-left: 1.5em; }
+.markdown-body ul { list-style-type: disc; }
+.markdown-body ol { list-style-type: decimal; }
+.markdown-body li { margin: 0.2em 0; }
+.markdown-body code {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+  font-size: 0.9em;
+}
+.markdown-body pre {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.75em;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+.markdown-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.markdown-body blockquote {
+  border-left: 3px solid var(--accent-color);
+  padding-left: 0.75em;
+  margin: 0.5em 0;
+  color: var(--text-secondary);
+}
+.markdown-body a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1em 0;
+}
+.markdown-body strong { font-weight: 700; }
+.markdown-body em { font-style: italic; }
+.markdown-body del { text-decoration: line-through; }
+.markdown-body img { max-width: 100%; border-radius: 4px; }
+
 .tree-node-enter {
   opacity: 0;
   transform: translateY(-10px);

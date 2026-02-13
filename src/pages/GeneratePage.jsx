@@ -448,6 +448,11 @@ function QRCodeGenerator() {
   );
 }
 
+// ── Imported generators ──────────────────────────────────────────────────────
+import PasswordGenerator from '../components/Generate/PasswordGenerator';
+import FakeDataGenerator from '../components/Generate/FakeDataGenerator';
+import ColorPaletteGenerator from '../components/Generate/ColorPaletteGenerator';
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 function GeneratePage() {
   return (
@@ -455,10 +460,13 @@ function GeneratePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         <UUIDGenerator />
         <APIKeyGenerator />
+        <PasswordGenerator />
         <NanoIDGenerator />
         <ULIDGenerator />
         <LoremIpsumGenerator />
         <QRCodeGenerator />
+        <FakeDataGenerator />
+        <ColorPaletteGenerator />
       </div>
     </div>
   );

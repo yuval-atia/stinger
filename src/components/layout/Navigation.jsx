@@ -8,6 +8,8 @@ const navItems = [
   { to: '/encode', label: 'Encode/Decode' },
   { to: '/hash', label: 'Hash' },
   { to: '/convert', label: 'Convert' },
+  { to: '/diff', label: 'Text Diff' },
+  { to: '/format', label: 'Formatter' },
 ];
 
 function Navigation({ isOpen, onClose }) {
