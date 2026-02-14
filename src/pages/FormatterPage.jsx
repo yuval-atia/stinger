@@ -2,6 +2,7 @@ import { useState } from 'react';
 import FormatButton from '../components/common/FormatButton';
 import CopyButton from '../components/common/CopyButton';
 import { InfoButton } from '../components/common/InfoTooltip';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
   formatSQL, minifySQL,
   formatXML, minifyXML,
@@ -24,6 +25,7 @@ const FORMATTERS = {
 };
 
 function FormatterPage() {
+  useDocumentTitle('JSON, XML & Code Formatter');
   const [lang, setLang] = useState('sql');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');

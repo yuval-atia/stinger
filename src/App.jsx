@@ -88,18 +88,20 @@ function App() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-hidden w-full mx-auto p-4">
+      <main className="flex-1 overflow-hidden w-full mx-auto px-4 pt-4 pb-2">
         <Outlet />
       </main>
 
-      <footer className="flex-shrink-0 px-4 py-1.5 flex items-center">
-        <p className="flex-1 text-xs text-[var(--text-secondary)] opacity-50">Created by Yuval Atia</p>
-        <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)] opacity-50">
-          <Link to="/privacy" className="underline hover:text-[var(--text-primary)] transition-colors">Privacy Policy</Link>
-          <Link to="/terms" className="underline hover:text-[var(--text-primary)] transition-colors">Terms of Use</Link>
-          <Link to="/contact" className="underline hover:text-[var(--text-primary)] transition-colors">Contact</Link>
-        </div>
-        <p className="flex-1 text-xs text-[var(--text-secondary)] opacity-50 text-right">v{__APP_VERSION__}</p>
+      <footer className="flex-shrink-0 py-0 leading-none flex justify-center items-center h-5 gap-1 text-xs text-[var(--text-secondary)] opacity-50">
+        <span>&copy; Yuval Atia</span>
+        <span className="opacity-30">|</span>
+        <Link to="/privacy" className="hover:text-[var(--text-primary)] transition-colors">Privacy</Link>
+        <span className="opacity-30">|</span>
+        <Link to="/terms" className="hover:text-[var(--text-primary)] transition-colors">Terms</Link>
+        <span className="opacity-30">|</span>
+        <Link to="/contact" className="hover:text-[var(--text-primary)] transition-colors">Contact</Link>
+        <span className="opacity-30">|</span>
+        <span>v{__APP_VERSION__}</span>
       </footer>
     </div>
   );

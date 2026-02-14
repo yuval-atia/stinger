@@ -6,11 +6,13 @@ import FormatButton from '../components/common/FormatButton';
 import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { parseJson, formatJson } from '../utils/jsonParser';
 import { setValueAtPath } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
 
 function JsonPreviewPage() {
+  useDocumentTitle('JSON Viewer & Tree Explorer');
   const {
     inputValue,
     setInputValue,
@@ -220,11 +222,6 @@ function JsonPreviewPage() {
           </div>
           <ScrollToTop containerRef={treeScrollRef} />
         </div>
-      </div>
-
-      {/* Ad Placeholder */}
-      <div className="flex-shrink-0 h-24 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex items-center justify-center">
-        <span className="text-[var(--text-secondary)] text-sm">Ad Space</span>
       </div>
     </div>
   );

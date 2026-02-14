@@ -1,0 +1,21 @@
+{
+  "name": "Stingr - Free Private Developer Tools",
+  "short_name": "Stingr",
+  "description": "100% client-side developer toolkit — your data never leaves the browser. 40+ free tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#6366f1",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

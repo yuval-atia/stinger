@@ -8,7 +8,7 @@ import GeneratePage from './pages/GeneratePage'
 import EncodePage from './pages/EncodePage'
 import HashPage from './pages/HashPage'
 import ConvertPage from './pages/ConvertPage'
-import TextDiffPage from './pages/TextDiffPage'
+import TextToolsPage from './pages/TextToolsPage'
 import FormatterPage from './pages/FormatterPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="encode" element={<EncodePage />} />
             <Route path="hash" element={<HashPage />} />
             <Route path="convert" element={<ConvertPage />} />
-            <Route path="diff" element={<TextDiffPage />} />
+            <Route path="text" element={<TextToolsPage />} />
             <Route path="format" element={<FormatterPage />} />
             <Route path="privacy" element={<PrivacyPolicyPage />} />
             <Route path="terms" element={<TermsOfUsePage />} />

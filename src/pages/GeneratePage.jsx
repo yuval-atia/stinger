@@ -454,7 +454,10 @@ import FakeDataGenerator from '../components/Generate/FakeDataGenerator';
 import ColorPaletteGenerator from '../components/Generate/ColorPaletteGenerator';
 
 // ── Page ─────────────────────────────────────────────────────────────────────
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
 function GeneratePage() {
+  useDocumentTitle('UUID, API Key & QR Generators');
   return (
     <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
