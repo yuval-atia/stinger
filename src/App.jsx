@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Navigation from './components/layout/Navigation';
 import { useDarkMode } from './hooks/useDarkMode';
 import stingrLogo from './assets/stingr_logo_dev.svg';
@@ -37,7 +37,7 @@ function App() {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://www.paypal.com/donate/?hosted_button_id=PXEF8FL63X9CJ"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -92,9 +92,14 @@ function App() {
         <Outlet />
       </main>
 
-      <footer className="flex-shrink-0 px-4 py-1.5 flex items-center justify-between">
-        <p className="text-xs text-[var(--text-secondary)] opacity-50">Created by Yuval Atia</p>
-        <p className="text-xs text-[var(--text-secondary)] opacity-50">v{__APP_VERSION__}</p>
+      <footer className="flex-shrink-0 px-4 py-1.5 flex items-center">
+        <p className="flex-1 text-xs text-[var(--text-secondary)] opacity-50">Created by Yuval Atia</p>
+        <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)] opacity-50">
+          <Link to="/privacy" className="underline hover:text-[var(--text-primary)] transition-colors">Privacy Policy</Link>
+          <Link to="/terms" className="underline hover:text-[var(--text-primary)] transition-colors">Terms of Use</Link>
+          <Link to="/contact" className="underline hover:text-[var(--text-primary)] transition-colors">Contact</Link>
+        </div>
+        <p className="flex-1 text-xs text-[var(--text-secondary)] opacity-50 text-right">v{__APP_VERSION__}</p>
       </footer>
     </div>
   );

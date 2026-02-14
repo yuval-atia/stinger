@@ -11,6 +11,9 @@ import ConvertPage from './pages/ConvertPage'
 import TextDiffPage from './pages/TextDiffPage'
 import FormatterPage from './pages/FormatterPage'
 import NotFoundPage from './pages/NotFoundPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsOfUsePage from './pages/TermsOfUsePage'
+import ContactPage from './pages/ContactPage'
 import { ToastProvider } from './components/common/Toast'
 import './styles/global.css'
 
@@ -28,6 +31,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="convert" element={<ConvertPage />} />
             <Route path="diff" element={<TextDiffPage />} />
             <Route path="format" element={<FormatterPage />} />
+            <Route path="privacy" element={<PrivacyPolicyPage />} />
+            <Route path="terms" element={<TermsOfUsePage />} />
+            <Route path="contact" element={<ContactPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
