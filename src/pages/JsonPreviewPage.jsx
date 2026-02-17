@@ -7,9 +7,71 @@ import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-import { parseJson, formatJson } from '../utils/jsonParser';
+import { parseJson, formatJson, getValueType } from '../utils/jsonParser';
 import { setValueAtPath } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Collect all expandable paths up to a given depth */
+function collectPathsToDepth(value, path, maxDepth, result) {
+  if (path.length >= maxDepth) return;
+  const type = getValueType(value);
+  if (type === 'object') {
+    const pathStr = path.join('.');
+    result.add(pathStr);
+    Object.entries(value).forEach(([k, v]) => collectPathsToDepth(v, [...path, k], maxDepth, result));
+  } else if (type === 'array') {
+    const pathStr = path.join('.');
+    result.add(pathStr);
+    value.forEach((item, i) => collectPathsToDepth(item, [...path, i], maxDepth, result));
+  }
+}
+
+function collectAllPaths(value, path, result) {
+  const type = getValueType(value);
+  if (type === 'object') {
+    const pathStr = path.join('.');
+    result.add(pathStr);
+    Object.entries(value).forEach(([k, v]) => collectAllPaths(v, [...path, k], result));
+  } else if (type === 'array') {
+    const pathStr = path.join('.');
+    result.add(pathStr);
+    value.forEach((item, i) => collectAllPaths(item, [...path, i], result));
+  }
+}
+
+// ── Breadcrumb ───────────────────────────────────────────────────────────────
+
+function Breadcrumb({ path, onNavigate }) {
+  if (!path || path.length === 0) return null;
+
+  return (
+    <div className="flex items-center gap-0.5 text-xs text-[var(--text-secondary)] overflow-x-auto px-4 py-1.5 border-b border-[var(--border-color)] flex-shrink-0">
+      <button
+        onClick={() => onNavigate([])}
+        className="hover:text-[var(--accent-color)] transition-colors flex-shrink-0"
+      >
+        root
+      </button>
+      {path.map((segment, i) => (
+        <span key={i} className="flex items-center gap-0.5 flex-shrink-0">
+          <span className="text-[var(--border-color)]">/</span>
+          <button
+            onClick={() => onNavigate(path.slice(0, i + 1))}
+            className={`hover:text-[var(--accent-color)] transition-colors ${
+              i === path.length - 1 ? 'text-[var(--text-primary)] font-medium' : ''
+            }`}
+          >
+            {typeof segment === 'number' ? `[${segment}]` : segment}
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 function JsonPreviewPage() {
   useDocumentTitle('JSON Viewer & Tree Explorer');
@@ -21,7 +83,7 @@ function JsonPreviewPage() {
     parseError,
     inputType,
     handleInputChange,
-  } = useJsonParser();
+  } = useJsonParser('json-preview-input');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
@@ -29,6 +91,8 @@ function JsonPreviewPage() {
   const [matchCount, setMatchCount] = useState(0);
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const [expandedPaths, setExpandedPaths] = useState(new Set());
+  const [filterMode, setFilterMode] = useState(false);
+  const [breadcrumbPath, setBreadcrumbPath] = useState([]);
 
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
@@ -37,9 +101,25 @@ function JsonPreviewPage() {
 
   const hasExpandedNodes = expandedPaths.size > 0;
 
+  // ── Expand / Collapse ────────────────────────────────────────────────────
+
   const handleCollapseAll = useCallback(() => {
     setExpandedPaths(new Set());
   }, []);
+
+  const handleExpandToDepth = useCallback((depth) => {
+    if (!parsedData) return;
+    const paths = new Set();
+    collectPathsToDepth(parsedData, [], depth, paths);
+    setExpandedPaths(paths);
+  }, [parsedData]);
+
+  const handleExpandAll = useCallback(() => {
+    if (!parsedData) return;
+    const paths = new Set();
+    collectAllPaths(parsedData, [], paths);
+    setExpandedPaths(paths);
+  }, [parsedData]);
 
   const handleTogglePath = useCallback((pathStr, isExpanded) => {
     setExpandedPaths((prev) => {
@@ -52,6 +132,8 @@ function JsonPreviewPage() {
       return next;
     });
   }, []);
+
+  // ── Format / Minify / Clear / Download ────────────────────────────────────
 
   const handleFormat = useCallback(() => {
     const result = formatJson(inputValue);
@@ -66,6 +148,18 @@ function JsonPreviewPage() {
       setInputValue(JSON.stringify(result.data));
     }
   }, [inputValue, setInputValue]);
+
+  const handleDownload = useCallback(() => {
+    if (!parsedData) return;
+    const json = JSON.stringify(parsedData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [parsedData]);
 
   const handleValueEdit = useCallback((path, newValue) => {
     if (!parsedData) return;
@@ -82,7 +176,11 @@ function JsonPreviewPage() {
     setMatchCount(0);
     setCurrentMatchIndex(0);
     setExpandedPaths(new Set());
+    setBreadcrumbPath([]);
+    setFilterMode(false);
   }, [setInputValue, handleInputChange]);
+
+  // ── Search ────────────────────────────────────────────────────────────────
 
   const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
@@ -90,6 +188,7 @@ function JsonPreviewPage() {
       setActiveSearch('');
       setMatchCount(0);
       setCurrentMatchIndex(0);
+      setFilterMode(false);
     }
   }, []);
 
@@ -109,6 +208,27 @@ function JsonPreviewPage() {
     }, 50);
   }, [searchQuery, activeSearch, matchCount]);
 
+  const handleSearchPrev = useCallback(() => {
+    if (matchCount <= 0) return;
+    if (activeSearch !== searchQuery) {
+      handleSearchSubmit();
+      return;
+    }
+    setCurrentMatchIndex((prev) => (prev - 1 + matchCount) % matchCount);
+  }, [activeSearch, searchQuery, matchCount, handleSearchSubmit]);
+
+  const handleSearchNext = useCallback(() => {
+    if (matchCount <= 0) {
+      handleSearchSubmit();
+      return;
+    }
+    if (activeSearch !== searchQuery) {
+      handleSearchSubmit();
+      return;
+    }
+    setCurrentMatchIndex((prev) => (prev + 1) % matchCount);
+  }, [activeSearch, searchQuery, matchCount, handleSearchSubmit]);
+
   const handleMatchCountChange = useCallback((count, searchExpandedPaths) => {
     setMatchCount(count);
     if (count === 0) {
@@ -125,10 +245,38 @@ function JsonPreviewPage() {
     }
   }, []);
 
-  // Wrap handleInputChange to also reset expanded paths
+  const handleFilterToggle = useCallback(() => {
+    setFilterMode((prev) => !prev);
+  }, []);
+
+  // ── Breadcrumb ────────────────────────────────────────────────────────────
+
+  const handleBreadcrumbPath = useCallback((path) => {
+    setBreadcrumbPath(path);
+  }, []);
+
+  const handleBreadcrumbNavigate = useCallback((path) => {
+    if (path.length === 0) {
+      setBreadcrumbPath([]);
+      handleCollapseAll();
+      return;
+    }
+    setBreadcrumbPath(path);
+    // Ensure all ancestors are expanded
+    setExpandedPaths((prev) => {
+      const next = new Set(prev);
+      for (let i = 0; i <= path.length; i++) {
+        next.add(path.slice(0, i).join('.'));
+      }
+      return next;
+    });
+  }, [handleCollapseAll]);
+
+  // Wrap handleInputChange to also reset state
   const onInputChange = useCallback((value) => {
     handleInputChange(value);
     setExpandedPaths(new Set());
+    setBreadcrumbPath([]);
   }, [handleInputChange]);
 
   return (
@@ -146,6 +294,9 @@ function JsonPreviewPage() {
               }} />
               <FormatButton onClick={handleFormat} label="Format" />
               <FormatButton onClick={handleMinify} label="Minify" />
+              {parsedData && (
+                <FormatButton onClick={handleDownload} label="Download" />
+              )}
               <FormatButton onClick={handleClear} label="Clear" variant="danger" />
             </div>
           </div>
@@ -155,7 +306,7 @@ function JsonPreviewPage() {
               value={inputValue}
               onChange={onInputChange}
               error={parseError}
-              placeholder="Paste JSON or JavaScript object here..."
+              placeholder="Paste JSON here, or drag & drop a file..."
             />
           </div>
           {(inputType || jsonStats) && (
@@ -166,9 +317,17 @@ function JsonPreviewPage() {
                 </div>
               )}
               {jsonStats && (
-                <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
-                  {jsonStats.sizeFormatted}
-                </div>
+                <>
+                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                    {jsonStats.sizeFormatted}
+                  </div>
+                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                    {jsonStats.keys} keys
+                  </div>
+                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                    depth {jsonStats.maxDepth}
+                  </div>
+                </>
               )}
             </div>
           )}
@@ -180,25 +339,56 @@ function JsonPreviewPage() {
           <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Tree View</span>
-              {hasExpandedNodes && (
-                <button
-                  onClick={handleCollapseAll}
-                  className="px-2 py-1 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors"
-                  title="Collapse all"
-                >
-                  Collapse
-                </button>
+              {/* Depth controls */}
+              {parsedData && (
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3].map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => handleExpandToDepth(d)}
+                      className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      title={`Expand to depth ${d}`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                  <button
+                    onClick={handleExpandAll}
+                    className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    title="Expand all"
+                  >
+                    All
+                  </button>
+                  {hasExpandedNodes && (
+                    <button
+                      onClick={handleCollapseAll}
+                      className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center"
+                      title="Collapse all"
+                      style={{ minHeight: '1.25rem' }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                        <path d="M3.75 3.5a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5ZM3.75 7.5a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5ZM3 12.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             <SearchBar
               value={searchQuery}
               onChange={handleSearchChange}
               onSubmit={handleSearchSubmit}
+              onPrev={handleSearchPrev}
+              onNext={handleSearchNext}
               isSearching={isSearching}
               matchCount={matchCount}
               currentMatch={currentMatchIndex}
+              filterMode={filterMode}
+              onFilterToggle={parsedData ? handleFilterToggle : undefined}
             />
           </div>
+          {/* Breadcrumb */}
+          <Breadcrumb path={breadcrumbPath} onNavigate={handleBreadcrumbNavigate} />
           <div className="flex-1 overflow-auto p-4" ref={treeScrollRef}>
             {parsedData !== null ? (
               <TreeView
@@ -209,6 +399,8 @@ function JsonPreviewPage() {
                 onMatchCountChange={handleMatchCountChange}
                 controlledExpandedPaths={expandedPaths}
                 onTogglePath={handleTogglePath}
+                filterMode={filterMode}
+                onBreadcrumbPath={handleBreadcrumbPath}
               />
             ) : parseError ? (
               <div className="text-[var(--error-color)] text-sm">

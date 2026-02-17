@@ -28,6 +28,13 @@ function JsonComparePage() {
     }, 50);
   }, [searchQuery]);
 
+  const handleSwap = useCallback(() => {
+    const leftVal = left.inputValue;
+    const rightVal = right.inputValue;
+    left.handleInputChange(rightVal);
+    right.handleInputChange(leftVal);
+  }, [left, right]);
+
   return (
     <DiffView
       leftInput={left.inputValue}
@@ -42,6 +49,7 @@ function JsonComparePage() {
       onSearchChange={handleSearchChange}
       onSearchSubmit={handleSearchSubmit}
       isSearching={isSearching}
+      onSwap={handleSwap}
     />
   );
 }

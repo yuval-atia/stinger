@@ -28,6 +28,8 @@ function TreeNode({
   diffMap,
   side,
   isRoot = false,
+  filterMode = false,
+  onBreadcrumbPath,
 }) {
   const nodeRef = useRef(null);
   const pathStr = path.join('.');
@@ -63,7 +65,10 @@ function TreeNode({
     if (!isRoot && onTogglePath) {
       onTogglePath(pathStr, !isExpanded);
     }
-  }, [isRoot, onTogglePath, pathStr, isExpanded]);
+    if (onBreadcrumbPath && path.length > 0) {
+      onBreadcrumbPath(path);
+    }
+  }, [isRoot, onTogglePath, pathStr, isExpanded, onBreadcrumbPath, path]);
 
   const handleCopyPath = useCallback(async () => {
     const pathString = buildPath(path);
@@ -257,6 +262,24 @@ function TreeNode({
     }
   };
 
+  const handleNodeClick = useCallback(() => {
+    if (onBreadcrumbPath && path.length > 0) {
+      onBreadcrumbPath(path);
+    }
+  }, [onBreadcrumbPath, path]);
+
+  // Check if a child path (or any of its descendants) has a match
+  const childHasMatch = useCallback((childPath) => {
+    if (!matches) return false;
+    const childPathStr = childPath.join('.');
+    for (const matchPath of matches) {
+      if (matchPath === childPathStr || matchPath.startsWith(childPathStr + '.')) {
+        return true;
+      }
+    }
+    return false;
+  }, [matches]);
+
   const renderChildren = () => {
     if (!isExpandable || !isExpanded) return null;
 
@@ -273,9 +296,21 @@ function TreeNode({
       );
     }
 
+    // In filter mode, only show children that match or have matching descendants
+    const filteredEntries = filterMode && searchQuery && matches?.size > 0
+      ? entries.filter(([key]) => {
+          const childPath = [...path, key];
+          return childHasMatch(childPath);
+        })
+      : entries;
+
+    if (filterMode && filteredEntries.length === 0) {
+      return null;
+    }
+
     return (
       <div className="pl-4 border-l border-[var(--border-color)]">
-        {entries.map(([key, val]) => (
+        {filteredEntries.map(([key, val]) => (
           <TreeNode
             key={key}
             keyName={key}
@@ -290,6 +325,8 @@ function TreeNode({
             onTogglePath={onTogglePath}
             diffMap={diffMap}
             side={side}
+            filterMode={filterMode}
+            onBreadcrumbPath={onBreadcrumbPath}
           />
         ))}
       </div>
@@ -306,7 +343,7 @@ function TreeNode({
             ? 'search-other-match'
             : ''
         } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''}`}
-        onClick={isExpandable ? handleToggle : undefined}
+        onClick={isExpandable ? handleToggle : handleNodeClick}
       >
         {/* Expand/Collapse Toggle */}
         {isExpandable ? (

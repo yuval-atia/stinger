@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import JsonInput from '../Editor/JsonInput';
 import TreeView from '../TreeView/TreeView';
 import { InfoButton } from '../common/InfoTooltip';
-import { diffJson, createDiffMap } from '../../utils/differ';
+import { diffJson, createDiffMap, pathHasDiff } from '../../utils/differ';
 
 function DiffView({
   leftInput,
@@ -14,7 +14,14 @@ function DiffView({
   onLeftChange,
   onRightChange,
   searchQuery,
+  onSwap,
 }) {
+  const [diffOnly, setDiffOnly] = useState(false);
+  const [syncScroll, setSyncScroll] = useState(true);
+  const leftTreeRef = useRef(null);
+  const rightTreeRef = useRef(null);
+  const scrollingRef = useRef(false);
+
   const { diffs, diffMap } = useMemo(() => {
     if (leftData === null || rightData === null) {
       return { diffs: [], diffMap: new Map() };
@@ -31,12 +38,99 @@ function DiffView({
     return { added, removed, changed, total: diffs.length };
   }, [diffs]);
 
+  // Expanded paths for both trees (shared so diff-only filter works)
+  const [leftExpanded, setLeftExpanded] = useState(new Set());
+  const [rightExpanded, setRightExpanded] = useState(new Set());
+
+  const handleLeftToggle = useCallback((pathStr, isExpanded) => {
+    setLeftExpanded((prev) => {
+      const next = new Set(prev);
+      isExpanded ? next.add(pathStr) : next.delete(pathStr);
+      return next;
+    });
+    // Mirror in right tree for sync
+    setRightExpanded((prev) => {
+      const next = new Set(prev);
+      isExpanded ? next.add(pathStr) : next.delete(pathStr);
+      return next;
+    });
+  }, []);
+
+  const handleRightToggle = useCallback((pathStr, isExpanded) => {
+    setRightExpanded((prev) => {
+      const next = new Set(prev);
+      isExpanded ? next.add(pathStr) : next.delete(pathStr);
+      return next;
+    });
+    setLeftExpanded((prev) => {
+      const next = new Set(prev);
+      isExpanded ? next.add(pathStr) : next.delete(pathStr);
+      return next;
+    });
+  }, []);
+
+  // Sync scroll
+  const handleScroll = useCallback((source) => {
+    if (!syncScroll || scrollingRef.current) return;
+    scrollingRef.current = true;
+
+    const sourceEl = source === 'left' ? leftTreeRef.current : rightTreeRef.current;
+    const targetEl = source === 'left' ? rightTreeRef.current : leftTreeRef.current;
+
+    if (sourceEl && targetEl) {
+      targetEl.scrollTop = sourceEl.scrollTop;
+    }
+
+    requestAnimationFrame(() => {
+      scrollingRef.current = false;
+    });
+  }, [syncScroll]);
+
+  useEffect(() => {
+    const leftEl = leftTreeRef.current;
+    const rightEl = rightTreeRef.current;
+
+    const onLeftScroll = () => handleScroll('left');
+    const onRightScroll = () => handleScroll('right');
+
+    leftEl?.addEventListener('scroll', onLeftScroll, { passive: true });
+    rightEl?.addEventListener('scroll', onRightScroll, { passive: true });
+
+    return () => {
+      leftEl?.removeEventListener('scroll', onLeftScroll);
+      rightEl?.removeEventListener('scroll', onRightScroll);
+    };
+  }, [handleScroll]);
+
+  // Diff-only expanded paths: auto-expand paths that contain diffs
+  const diffExpandedPaths = useMemo(() => {
+    if (!diffOnly || diffs.length === 0) return new Set();
+    const paths = new Set();
+    for (const diff of diffs) {
+      // Add all ancestors
+      for (let i = 0; i <= diff.path.length; i++) {
+        paths.add(diff.path.slice(0, i).join('.'));
+      }
+    }
+    return paths;
+  }, [diffOnly, diffs]);
+
+  const leftMergedExpanded = useMemo(() => {
+    if (diffOnly) return new Set([...leftExpanded, ...diffExpandedPaths]);
+    return leftExpanded;
+  }, [leftExpanded, diffExpandedPaths, diffOnly]);
+
+  const rightMergedExpanded = useMemo(() => {
+    if (diffOnly) return new Set([...rightExpanded, ...diffExpandedPaths]);
+    return rightExpanded;
+  }, [rightExpanded, diffExpandedPaths, diffOnly]);
+
   return (
     <div className="flex flex-col h-full gap-4">
       {/* Stats bar */}
       {leftData !== null && rightData !== null && (
         <div className="flex-shrink-0 flex items-center gap-4 px-4 py-2 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
-          <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" /><path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" /></svg></span>Diff Summary:</span>
+          <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" /><path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" /></svg></span>Diff</span>
           <InfoButton info={{
             what: 'Side-by-side JSON comparison that highlights added, removed, and changed keys between two JSON documents.',
             how: 'Recursively walks both object trees, comparing keys and values at each level. Differences are classified as added, removed, or changed and colour-coded in the tree view.',
@@ -60,6 +154,53 @@ function DiffView({
               </span>
             </>
           )}
+
+          <div className="flex-1" />
+
+          {/* Controls */}
+          <div className="flex items-center gap-2">
+            {/* Diff only toggle */}
+            {stats.total > 0 && (
+              <button
+                onClick={() => setDiffOnly((p) => !p)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  diffOnly
+                    ? 'bg-[var(--accent-color)] text-white'
+                    : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)]'
+                }`}
+                title="Show only differences"
+              >
+                Diff only
+              </button>
+            )}
+
+            {/* Sync scroll toggle */}
+            <button
+              onClick={() => setSyncScroll((p) => !p)}
+              className={`px-2 py-1 text-xs rounded transition-colors ${
+                syncScroll
+                  ? 'bg-[var(--accent-color)] text-white'
+                  : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)]'
+              }`}
+              title="Sync scroll between panels"
+            >
+              Sync
+            </button>
+
+            {/* Swap button */}
+            {onSwap && (
+              <button
+                onClick={onSwap}
+                className="px-2 py-1 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center gap-1"
+                title="Swap left and right"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                  <path fillRule="evenodd" d="M13.78 10.47a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 1 1 1.06-1.06l.97.97V8.75a.75.75 0 0 1 1.5 0v2.69l.97-.97a.75.75 0 0 1 1.06 0ZM2.22 5.53a.75.75 0 0 1 0-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1-1.06 1.06l-.97-.97v2.69a.75.75 0 0 1-1.5 0V4.56l-.97.97a.75.75 0 0 1-1.06 0Z" clipRule="evenodd" />
+                </svg>
+                Swap
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -87,13 +228,15 @@ function DiffView({
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
               <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Left Tree</span>
             </div>
-            <div className="flex-1 overflow-auto p-4">
+            <div className="flex-1 overflow-auto p-4" ref={leftTreeRef}>
               {leftData !== null ? (
                 <TreeView
                   data={leftData}
                   searchQuery={searchQuery}
                   diffMap={diffMap}
                   side="left"
+                  controlledExpandedPaths={leftMergedExpanded}
+                  onTogglePath={handleLeftToggle}
                 />
               ) : leftError ? (
                 <div className="text-[var(--error-color)] text-sm">
@@ -130,13 +273,15 @@ function DiffView({
             <div className="flex-shrink-0 px-4 py-2 border-b border-[var(--border-color)]">
               <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Right Tree</span>
             </div>
-            <div className="flex-1 overflow-auto p-4">
+            <div className="flex-1 overflow-auto p-4" ref={rightTreeRef}>
               {rightData !== null ? (
                 <TreeView
                   data={rightData}
                   searchQuery={searchQuery}
                   diffMap={diffMap}
                   side="right"
+                  controlledExpandedPaths={rightMergedExpanded}
+                  onTogglePath={handleRightToggle}
                 />
               ) : rightError ? (
                 <div className="text-[var(--error-color)] text-sm">
