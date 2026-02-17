@@ -30,11 +30,14 @@ function TreeNode({
   isRoot = false,
   filterMode = false,
   onBreadcrumbPath,
+  pinnedPaths,
+  onTogglePin,
 }) {
   const nodeRef = useRef(null);
   const pathStr = path.join('.');
   const isCurrentMatch = currentMatchPath === pathStr;
   const { showToast } = useToast();
+  const isPinned = pinnedPaths?.has(pathStr);
 
   // Expanded state is derived from controlledExpandedPaths
   // Root is always expanded, others check if in expandedPaths
@@ -327,6 +330,8 @@ function TreeNode({
             side={side}
             filterMode={filterMode}
             onBreadcrumbPath={onBreadcrumbPath}
+            pinnedPaths={pinnedPaths}
+            onTogglePin={onTogglePin}
           />
         ))}
       </div>
@@ -342,7 +347,7 @@ function TreeNode({
             : isMatch
             ? 'search-other-match'
             : ''
-        } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''}`}
+        } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''} ${isPinned ? 'pinned-node' : ''}`}
         onClick={isExpandable ? handleToggle : handleNodeClick}
       >
         {/* Expand/Collapse Toggle */}
@@ -377,16 +382,29 @@ function TreeNode({
         {/* Value */}
         <span className="flex-1" onClick={isExpandable ? undefined : (e) => e.stopPropagation()}>{renderValue()}</span>
 
-        {/* Copy buttons */}
-        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity" onClick={(e) => e.stopPropagation()}>
-          {!isRoot && (
-            <CopyButton onClick={handleCopyPath} tooltip="Copy path" size="sm">
-              📋
-            </CopyButton>
+        {/* Action buttons */}
+        <div className="flex-shrink-0 flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+          {!isRoot && onTogglePin && (
+            <span className={`transition-opacity ${isPinned ? '' : 'opacity-0 group-hover:opacity-100'}`}>
+              <CopyButton onClick={() => onTogglePin(pathStr)} tooltip={isPinned ? 'Unpin node' : 'Pin node'} size="sm">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 translate-y-0.5">
+                  <path d="M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" />
+                </svg>
+              </CopyButton>
+            </span>
           )}
-          <CopyButton onClick={handleCopyValue} tooltip="Copy value" size="sm">
-            📄
-          </CopyButton>
+          {!isRoot && (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <CopyButton onClick={handleCopyPath} tooltip="Copy path" size="sm">
+                📋
+              </CopyButton>
+            </span>
+          )}
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <CopyButton onClick={handleCopyValue} tooltip="Copy value" size="sm">
+              📄
+            </CopyButton>
+          </span>
         </div>
       </div>
 

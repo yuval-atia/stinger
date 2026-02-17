@@ -93,11 +93,34 @@ function JsonPreviewPage() {
   const [expandedPaths, setExpandedPaths] = useState(new Set());
   const [filterMode, setFilterMode] = useState(false);
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
+  const [pinnedPaths, setPinnedPaths] = useState(new Set());
 
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
 
   const jsonStats = useMemo(() => calculateJsonStats(parsedData), [parsedData]);
+
+  // Compute ancestor paths for all pinned nodes so they stay expanded
+  const pinnedAncestorPaths = useMemo(() => {
+    const ancestors = new Set();
+    for (const pinned of pinnedPaths) {
+      const parts = pinned.split('.');
+      for (let i = 0; i <= parts.length; i++) {
+        ancestors.add(parts.slice(0, i).join('.'));
+      }
+    }
+    return ancestors;
+  }, [pinnedPaths]);
+
+  // Merge pinned ancestor paths into expandedPaths so pinned nodes stay open
+  const effectiveExpandedPaths = useMemo(() => {
+    if (pinnedAncestorPaths.size === 0) return expandedPaths;
+    const merged = new Set(expandedPaths);
+    for (const p of pinnedAncestorPaths) {
+      merged.add(p);
+    }
+    return merged;
+  }, [expandedPaths, pinnedAncestorPaths]);
 
   const hasExpandedNodes = expandedPaths.size > 0;
 
@@ -128,6 +151,18 @@ function JsonPreviewPage() {
         next.add(pathStr);
       } else {
         next.delete(pathStr);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleTogglePin = useCallback((pathStr) => {
+    setPinnedPaths((prev) => {
+      const next = new Set(prev);
+      if (next.has(pathStr)) {
+        next.delete(pathStr);
+      } else {
+        next.add(pathStr);
       }
       return next;
     });
@@ -178,6 +213,7 @@ function JsonPreviewPage() {
     setExpandedPaths(new Set());
     setBreadcrumbPath([]);
     setFilterMode(false);
+    setPinnedPaths(new Set());
   }, [setInputValue, handleInputChange]);
 
   // ── Search ────────────────────────────────────────────────────────────────
@@ -277,6 +313,7 @@ function JsonPreviewPage() {
     handleInputChange(value);
     setExpandedPaths(new Set());
     setBreadcrumbPath([]);
+    setPinnedPaths(new Set());
   }, [handleInputChange]);
 
   return (
@@ -397,10 +434,12 @@ function JsonPreviewPage() {
                 onValueEdit={handleValueEdit}
                 currentMatchIndex={currentMatchIndex}
                 onMatchCountChange={handleMatchCountChange}
-                controlledExpandedPaths={expandedPaths}
+                controlledExpandedPaths={effectiveExpandedPaths}
                 onTogglePath={handleTogglePath}
                 filterMode={filterMode}
                 onBreadcrumbPath={handleBreadcrumbPath}
+                pinnedPaths={pinnedPaths}
+                onTogglePin={handleTogglePin}
               />
             ) : parseError ? (
               <div className="text-[var(--error-color)] text-sm">
