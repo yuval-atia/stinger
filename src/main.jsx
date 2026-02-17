@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App'
 import { ToastProvider } from './components/common/Toast'
 import './styles/global.css'
@@ -29,7 +29,7 @@ function PageLoader() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HashRouter>
+    <BrowserRouter>
       <ToastProvider>
         <Routes>
           <Route path="/" element={<App />}>
@@ -48,6 +48,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           </Route>
         </Routes>
       </ToastProvider>
-    </HashRouter>
+    </BrowserRouter>
   </React.StrictMode>,
 )
