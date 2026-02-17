@@ -112,3 +112,53 @@ export function trimText(text, { trimLines = true, collapseSpaces = true, trimEd
 
   return result;
 }
+
+// ── Line Numbers ─────────────────────────────────────────────────────────────
+
+export function addLineNumbers(text, startFrom = 1, separator = '  ') {
+  if (!text) return '';
+  const lines = text.split('\n');
+  const maxDigits = String(lines.length + startFrom - 1).length;
+  return lines.map((line, i) => `${String(i + startFrom).padStart(maxDigits, ' ')}${separator}${line}`).join('\n');
+}
+
+export function removeLineNumbers(text) {
+  if (!text) return '';
+  return text.split('\n').map(line => line.replace(/^\s*\d+[\s.:)\-|]+/, '')).join('\n');
+}
+
+// ── Case Transform ───────────────────────────────────────────────────────────
+
+function toWords(text) {
+  return text
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[_\-./\\]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+export function transformCase(text, mode) {
+  if (!text) return '';
+
+  switch (mode) {
+    case 'upper':
+      return text.toUpperCase();
+    case 'lower':
+      return text.toLowerCase();
+    case 'title':
+      return text.replace(/\b\w/g, c => c.toUpperCase());
+    case 'sentence':
+      return text.toLowerCase().replace(/(^|[.!?]\s+)\w/g, c => c.toUpperCase());
+    case 'camel':
+      return toWords(text).map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+    case 'pascal':
+      return toWords(text).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+    case 'snake':
+      return toWords(text).map(w => w.toLowerCase()).join('_');
+    case 'kebab':
+      return toWords(text).map(w => w.toLowerCase()).join('-');
+    default:
+      return text;
+  }
+}

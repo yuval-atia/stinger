@@ -5,6 +5,10 @@ import JwtDecodeCard from '../components/Encode/JwtDecodeCard';
 import HexEncodeCard from '../components/Encode/HexEncodeCard';
 import UnicodeEscapeCard from '../components/Encode/UnicodeEscapeCard';
 import MarkdownPreviewCard from '../components/Encode/MarkdownPreviewCard';
+import JsonEscapeCard from '../components/Encode/JsonEscapeCard';
+import ImageBase64Card from '../components/Encode/ImageBase64Card';
+import AesCard from '../components/Encode/AesCard';
+import BinaryCard from '../components/Encode/BinaryCard';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 function EncodePage() {
@@ -15,9 +19,13 @@ function EncodePage() {
         <Base64Card />
         <UrlEncodeCard />
         <HtmlEntityCard />
+        <JsonEscapeCard />
         <JwtDecodeCard />
         <HexEncodeCard />
         <UnicodeEscapeCard />
+        <ImageBase64Card />
+        <AesCard />
+        <BinaryCard />
         <MarkdownPreviewCard />
       </div>
     </div>

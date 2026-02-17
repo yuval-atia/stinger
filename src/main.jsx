@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import App from './App'
-import JsonPreviewPage from './pages/JsonPreviewPage'
-import JsonComparePage from './pages/JsonComparePage'
-import GeneratePage from './pages/GeneratePage'
-import EncodePage from './pages/EncodePage'
-import HashPage from './pages/HashPage'
-import ConvertPage from './pages/ConvertPage'
-import TextToolsPage from './pages/TextToolsPage'
-import FormatterPage from './pages/FormatterPage'
-import NotFoundPage from './pages/NotFoundPage'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
-import TermsOfUsePage from './pages/TermsOfUsePage'
-import ContactPage from './pages/ContactPage'
 import { ToastProvider } from './components/common/Toast'
 import './styles/global.css'
+
+// Lazy-load pages for code splitting
+const JsonPreviewPage = lazy(() => import('./pages/JsonPreviewPage'))
+const JsonComparePage = lazy(() => import('./pages/JsonComparePage'))
+const GeneratePage = lazy(() => import('./pages/GeneratePage'))
+const EncodePage = lazy(() => import('./pages/EncodePage'))
+const HashPage = lazy(() => import('./pages/HashPage'))
+const ConvertPage = lazy(() => import('./pages/ConvertPage'))
+const TextToolsPage = lazy(() => import('./pages/TextToolsPage'))
+const FormatterPage = lazy(() => import('./pages/FormatterPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
+const TermsOfUsePage = lazy(() => import('./pages/TermsOfUsePage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="w-5 h-5 border-2 border-[var(--accent-color)] border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -23,18 +33,18 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ToastProvider>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route index element={<JsonPreviewPage />} />
-            <Route path="compare" element={<JsonComparePage />} />
-            <Route path="generate" element={<GeneratePage />} />
-            <Route path="encode" element={<EncodePage />} />
-            <Route path="hash" element={<HashPage />} />
-            <Route path="convert" element={<ConvertPage />} />
-            <Route path="text" element={<TextToolsPage />} />
-            <Route path="format" element={<FormatterPage />} />
-            <Route path="privacy" element={<PrivacyPolicyPage />} />
-            <Route path="terms" element={<TermsOfUsePage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route index element={<Suspense fallback={<PageLoader />}><JsonPreviewPage /></Suspense>} />
+            <Route path="compare" element={<Suspense fallback={<PageLoader />}><JsonComparePage /></Suspense>} />
+            <Route path="generate" element={<Suspense fallback={<PageLoader />}><GeneratePage /></Suspense>} />
+            <Route path="encode" element={<Suspense fallback={<PageLoader />}><EncodePage /></Suspense>} />
+            <Route path="hash" element={<Suspense fallback={<PageLoader />}><HashPage /></Suspense>} />
+            <Route path="convert" element={<Suspense fallback={<PageLoader />}><ConvertPage /></Suspense>} />
+            <Route path="text" element={<Suspense fallback={<PageLoader />}><TextToolsPage /></Suspense>} />
+            <Route path="format" element={<Suspense fallback={<PageLoader />}><FormatterPage /></Suspense>} />
+            <Route path="privacy" element={<Suspense fallback={<PageLoader />}><PrivacyPolicyPage /></Suspense>} />
+            <Route path="terms" element={<Suspense fallback={<PageLoader />}><TermsOfUsePage /></Suspense>} />
+            <Route path="contact" element={<Suspense fallback={<PageLoader />}><ContactPage /></Suspense>} />
+            <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense>} />
           </Route>
         </Routes>
       </ToastProvider>

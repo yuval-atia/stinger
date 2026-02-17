@@ -452,6 +452,8 @@ function QRCodeGenerator() {
 import PasswordGenerator from '../components/Generate/PasswordGenerator';
 import FakeDataGenerator from '../components/Generate/FakeDataGenerator';
 import ColorPaletteGenerator from '../components/Generate/ColorPaletteGenerator';
+import PlaceholderImageGenerator from '../components/Generate/PlaceholderImageGenerator';
+import MarkdownTableGenerator from '../components/Generate/MarkdownTableGenerator';
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -468,8 +470,10 @@ function GeneratePage() {
         <ULIDGenerator />
         <LoremIpsumGenerator />
         <QRCodeGenerator />
+        <PlaceholderImageGenerator />
         <FakeDataGenerator />
         <ColorPaletteGenerator />
+        <MarkdownTableGenerator />
       </div>
     </div>
   );

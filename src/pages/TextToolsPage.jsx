@@ -10,6 +10,9 @@ import {
   deduplicateLines,
   reverseText,
   trimText,
+  addLineNumbers,
+  removeLineNumbers,
+  transformCase,
 } from '../utils/textTools';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -517,6 +520,161 @@ function TextTrimmerCard() {
   );
 }
 
+// ── Line Number Card ──────────────────────────────────────────────────────────
+
+const LineNumberIcon = (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
+    <path fillRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75Zm0 4A.75.75 0 0 1 2.75 7h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 7.75Zm0 4a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
+  </svg>
+);
+
+function LineNumberCard() {
+  const [text, setText] = useState('');
+  const [mode, setMode] = useState('add');
+  const [copied, setCopied] = useState(false);
+
+  const result = useMemo(() => {
+    if (!text) return '';
+    return mode === 'add' ? addLineNumbers(text) : removeLineNumbers(text);
+  }, [text, mode]);
+
+  const handleCopy = () => {
+    if (result) {
+      navigator.clipboard.writeText(result);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
+
+  return (
+    <ToolCard title="Line Numbers" icon={LineNumberIcon} info={{
+      what: 'Adds or removes line numbers from text. Add mode prepends padded numbers; Remove mode strips leading number prefixes.',
+      how: 'Add splits by newline and prepends zero-padded indices. Remove uses a regex to strip leading digits followed by common separators.',
+      usedFor: 'Preparing code snippets for documentation, cleaning up numbered lists, and formatting log output.',
+    }}>
+      <div className="flex items-center gap-3">
+        {['add', 'remove'].map(m => (
+          <label key={m} className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] cursor-pointer">
+            <input type="radio" name="lineNumMode" checked={mode === m} onChange={() => setMode(m)} className="accent-[var(--accent-color)]" />
+            {m === 'add' ? 'Add' : 'Remove'}
+          </label>
+        ))}
+      </div>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder={mode === 'add' ? 'Paste text to number...' : 'Paste numbered text...'}
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+      />
+      {text && (
+        <div className="flex items-start gap-2">
+          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto animate-fade-in">
+            {result}
+          </div>
+          <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>
+            {copied ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-[var(--success-color)]">
+                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
+                <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
+              </svg>
+            )}
+          </CopyButton>
+        </div>
+      )}
+    </ToolCard>
+  );
+}
+
+// ── Case Transform Card ──────────────────────────────────────────────────────
+
+const CaseIcon = (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
+    <path d="M3.38 3.012a.75.75 0 0 1 .408.98L1.216 10.5h1.534a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1-.698-1.024l3-7.5a.75.75 0 0 1 .98-.408l-.053-.056ZM7.4 3.012a.75.75 0 0 1 .408.98L5.236 10.5H6.77a.75.75 0 0 1 0 1.5H4.77a.75.75 0 0 1-.698-1.024l3-7.5a.75.75 0 0 1 .98-.408l-.053-.056Z" />
+    <path fillRule="evenodd" d="M12 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2.5 4a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Z" clipRule="evenodd" />
+  </svg>
+);
+
+const CASE_MODES = [
+  { value: 'upper', label: 'UPPER' },
+  { value: 'lower', label: 'lower' },
+  { value: 'title', label: 'Title Case' },
+  { value: 'sentence', label: 'Sentence case' },
+  { value: 'camel', label: 'camelCase' },
+  { value: 'pascal', label: 'PascalCase' },
+  { value: 'snake', label: 'snake_case' },
+  { value: 'kebab', label: 'kebab-case' },
+];
+
+function CaseTransformCard() {
+  const [text, setText] = useState('');
+  const [mode, setMode] = useState('upper');
+  const [copied, setCopied] = useState(false);
+
+  const result = useMemo(() => transformCase(text, mode), [text, mode]);
+
+  const handleCopy = () => {
+    if (result) {
+      navigator.clipboard.writeText(result);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
+
+  return (
+    <ToolCard title="Case Transform" icon={CaseIcon} info={{
+      what: 'Transforms text between 8 case styles: UPPER, lower, Title, Sentence, camelCase, PascalCase, snake_case, and kebab-case.',
+      how: 'Splits input into words by detecting camelCase boundaries, underscores, hyphens, and spaces, then reassembles in the target format.',
+      usedFor: 'Converting variable names between coding conventions, formatting headings, and normalizing text for processing.',
+    }}>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Paste text to transform..."
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+      />
+      <div className="flex flex-wrap gap-1.5">
+        {CASE_MODES.map(m => (
+          <button
+            key={m.value}
+            type="button"
+            onClick={() => setMode(m.value)}
+            className={`px-2 py-1 text-xs rounded border transition-colors ${
+              mode === m.value
+                ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white'
+                : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
+            }`}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+      {text && (
+        <div className="flex items-start gap-2">
+          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto animate-fade-in">
+            {result}
+          </div>
+          <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>
+            {copied ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-[var(--success-color)]">
+                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
+                <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
+              </svg>
+            )}
+          </CopyButton>
+        </div>
+      )}
+    </ToolCard>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function TextToolsPage() {
@@ -528,8 +686,10 @@ function TextToolsPage() {
           <TextDiffCard />
         </div>
         <TextStatsCard />
+        <CaseTransformCard />
         <FindReplaceCard />
         <SortLinesCard />
+        <LineNumberCard />
         <DeduplicateLinesCard />
         <ReverseTextCard />
         <TextTrimmerCard />

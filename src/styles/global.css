@@ -36,6 +36,12 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* Smooth dark/light mode transition */
+html, body, header, footer, main,
+[class*="bg-[var(--bg"] {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -129,10 +135,12 @@ input[type="number"]:focus {
 .highlight-match {
   background-color: #fef08a;
   border-radius: 2px;
+  color: #1f2937;
 }
 
 .dark .highlight-match {
   background-color: #854d0e;
+  color: #f9fafb;
 }
 
 /* Regex match highlight */
@@ -193,6 +201,53 @@ input[type="number"]:focus {
 .markdown-body em { font-style: italic; }
 .markdown-body del { text-decoration: line-through; }
 .markdown-body img { max-width: 100%; border-radius: 4px; }
+
+/* Focus ring for keyboard accessibility */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-hover:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.dark .card-hover:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Fade-in animation for output areas */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out forwards;
+}
+
+/* Search match highlights in tree view */
+.search-current-match {
+  background-color: rgba(59, 130, 246, 0.2);
+  box-shadow: inset 0 0 0 2px var(--accent-color);
+  border-radius: 4px;
+}
+.dark .search-current-match {
+  background-color: rgba(96, 165, 250, 0.15);
+}
+.search-other-match {
+  background-color: rgba(234, 179, 8, 0.2);
+  border-radius: 4px;
+}
+
+/* Nav active indicator */
+.nav-active {
+  box-shadow: inset 0 -2px 0 var(--accent-color);
+}
 
 .tree-node-enter {
   opacity: 0;

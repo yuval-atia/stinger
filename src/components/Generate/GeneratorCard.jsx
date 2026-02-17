@@ -30,7 +30,7 @@ function GeneratorCard({ title, icon, info, onGenerate, footer, children, render
   };
 
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col h-[320px]">
+    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col h-[320px] card-hover">
       {/* Toolbar */}
       <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
         <span className="text-sm font-medium flex items-center gap-1.5">

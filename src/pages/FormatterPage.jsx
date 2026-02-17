@@ -4,6 +4,7 @@ import CopyButton from '../components/common/CopyButton';
 import { InfoButton } from '../components/common/InfoTooltip';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
+  formatJSON, minifyJSON,
   formatSQL, minifySQL,
   formatXML, minifyXML,
   formatCSS, minifyCSS,
@@ -11,6 +12,7 @@ import {
 } from '../utils/formatters';
 
 const LANGUAGES = [
+  { value: 'json', label: 'JSON' },
   { value: 'sql', label: 'SQL' },
   { value: 'xml', label: 'XML' },
   { value: 'css', label: 'CSS' },
@@ -18,6 +20,7 @@ const LANGUAGES = [
 ];
 
 const FORMATTERS = {
+  json: { format: formatJSON, minify: minifyJSON },
   sql: { format: formatSQL, minify: minifySQL },
   xml: { format: formatXML, minify: minifyXML },
   css: { format: formatCSS, minify: minifyCSS },
@@ -26,7 +29,7 @@ const FORMATTERS = {
 
 function FormatterPage() {
   useDocumentTitle('JSON, XML & Code Formatter');
-  const [lang, setLang] = useState('sql');
+  const [lang, setLang] = useState('json');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
@@ -51,13 +54,13 @@ function FormatterPage() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
+      <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] card-hover">
         {/* Title bar */}
         <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
           <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75Zm0 4A.75.75 0 0 1 2.75 7h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 7.75Zm0 4a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg></span>Formatter</span>
           <div className="flex items-center gap-2">
             <InfoButton info={{
-              what: 'Formats or minifies SQL, XML, CSS, and HTML code. Format adds proper indentation; Minify strips whitespace for smallest output.',
+              what: 'Formats or minifies JSON, SQL, XML, CSS, and HTML code. Format adds proper indentation; Minify strips whitespace for smallest output.',
               how: 'Pure-JS parsers tokenize the input by language-specific delimiters (keywords, braces, tags), then reconstruct with proper indentation or collapsed whitespace.',
               usedFor: 'Cleaning up messy code, preparing minified assets, debugging API responses, and making config files readable.',
             }} />

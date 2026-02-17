@@ -301,9 +301,9 @@ function TreeNode({
       <div
         className={`flex items-center gap-1 py-0.5 group hover:bg-[var(--bg-secondary)] rounded px-1 -mx-1 ${
           isCurrentMatch
-            ? 'bg-[var(--accent-color)] bg-opacity-30 ring-2 ring-[var(--accent-color)]'
+            ? 'search-current-match'
             : isMatch
-            ? 'bg-yellow-500 bg-opacity-20'
+            ? 'search-other-match'
             : ''
         } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''}`}
         onClick={isExpandable ? handleToggle : undefined}

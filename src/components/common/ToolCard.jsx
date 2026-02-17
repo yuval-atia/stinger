@@ -4,7 +4,7 @@ import { InfoButton } from './InfoTooltip';
 
 function ToolCard({ title, icon, info, children }) {
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col">
+    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col card-hover">
       {/* Title bar */}
       <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
         <span className="text-sm font-medium flex items-center gap-1.5">
