@@ -349,6 +349,7 @@ function TreeNode({
             : ''
         } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''} ${isPinned ? 'pinned-node' : ''}`}
         onClick={isExpandable ? handleToggle : handleNodeClick}
+        data-pinned-path={isPinned ? pathStr : undefined}
       >
         {/* Expand/Collapse Toggle */}
         {isExpandable ? (

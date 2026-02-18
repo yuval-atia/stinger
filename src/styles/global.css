@@ -250,11 +250,11 @@ select:focus-visible {
 }
 
 .pinned-node {
-  border-left: 2px solid var(--accent-color);
-  background-color: rgba(59, 130, 246, 0.08);
+  border-left: 3px solid var(--accent-color);
+  background-color: rgba(59, 130, 246, 0.12);
 }
 .dark .pinned-node {
-  background-color: rgba(96, 165, 250, 0.08);
+  background-color: rgba(96, 165, 250, 0.12);
 }
 
 .tree-node-enter {

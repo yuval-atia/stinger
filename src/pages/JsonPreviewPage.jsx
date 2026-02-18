@@ -100,6 +100,7 @@ function JsonPreviewPage() {
 
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
+  const currentPinIndexRef = useRef(0);
 
   const jsonStats = useMemo(() => calculateJsonStats(parsedData), [parsedData]);
 
@@ -194,6 +195,27 @@ function JsonPreviewPage() {
       return next;
     });
   }, []);
+
+  const handleClearPins = useCallback(() => {
+    setPinnedPaths(new Set());
+    currentPinIndexRef.current = 0;
+  }, []);
+
+  const handleJumpToPin = useCallback(() => {
+    if (pinnedPaths.size === 0) return;
+    const paths = [...pinnedPaths];
+    const index = currentPinIndexRef.current % paths.length;
+    currentPinIndexRef.current = index + 1;
+    const targetPath = paths[index];
+
+    // Find the pinned node in the DOM
+    const container = treeScrollRef.current;
+    if (!container) return;
+    const el = container.querySelector(`[data-pinned-path="${CSS.escape(targetPath)}"]`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [pinnedPaths]);
 
   // ── Format / Minify / Clear / Download ────────────────────────────────────
 
@@ -473,6 +495,28 @@ function JsonPreviewPage() {
                       </svg>
                     </button>
                   )}
+                </div>
+              )}
+              {/* Pin count pill */}
+              {pinnedPaths.size > 0 && (
+                <div className="flex items-center">
+                  <button
+                    onClick={handleJumpToPin}
+                    className="flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-l border border-r-0 border-[var(--accent-color)] bg-[var(--accent-color)]/10 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/20 transition-colors"
+                    title="Jump to next pinned node"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
+                      <path d="M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" />
+                    </svg>
+                    {pinnedPaths.size}
+                  </button>
+                  <button
+                    onClick={handleClearPins}
+                    className="px-1 py-0.5 text-xs rounded-r border border-[var(--accent-color)] bg-[var(--accent-color)]/10 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/20 transition-colors"
+                    title="Clear all pins"
+                  >
+                    ×
+                  </button>
                 </div>
               )}
             </div>
