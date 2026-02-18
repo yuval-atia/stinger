@@ -94,7 +94,7 @@ export async function compressAndCheck({ json, pinnedPaths, depth, searchQuery, 
 export async function uploadToWorker(compressed, turnstileToken) {
   const res = await fetch(`${WORKER_URL}/save`, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ blob: compressed, token: turnstileToken }),
   });
 
