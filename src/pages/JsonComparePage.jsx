@@ -1,10 +1,8 @@
 import { useState, useCallback } from 'react';
 import DiffView from '../components/Compare/DiffView';
 import { useJsonParser } from '../hooks/useJsonParser';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 function JsonComparePage() {
-  useDocumentTitle('JSON Compare & Diff');
   const left = useJsonParser();
   const right = useJsonParser();
 

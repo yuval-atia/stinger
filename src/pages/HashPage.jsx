@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import CopyButton from '../components/common/CopyButton';
 import { InfoButton } from '../components/common/InfoTooltip';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
   computeMD5,
   computeSHA1,
@@ -45,7 +44,6 @@ function HashRow({ label, value }) {
 }
 
 function HashPage() {
-  useDocumentTitle('SHA-256, MD5 & Hash Generator');
   const [input, setInput] = useState('');
   const [secret, setSecret] = useState('');
   const [hashes, setHashes] = useState({ md5: '', sha1: '', sha256: '', sha512: '' });

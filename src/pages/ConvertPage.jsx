@@ -11,10 +11,8 @@ import ChmodCalculatorCard from '../components/Convert/ChmodCalculatorCard';
 import JsonToTsCard from '../components/Convert/JsonToTsCard';
 import HtmlToJsxCard from '../components/Convert/HtmlToJsxCard';
 import ContrastCheckerCard from '../components/Convert/ContrastCheckerCard';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 function ConvertPage() {
-  useDocumentTitle('Timestamp, Color & Unit Converters');
   return (
     <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">

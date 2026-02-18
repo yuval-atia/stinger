@@ -7,7 +7,6 @@ import ShareButton from '../components/common/ShareButton';
 import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { parseJson, formatJson, getValueType } from '../utils/jsonParser';
 import { setValueAtPath } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
@@ -77,7 +76,6 @@ function Breadcrumb({ path, onNavigate }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function JsonPreviewPage() {
-  useDocumentTitle('JSON Viewer & Tree Explorer');
   const {
     inputValue,
     setInputValue,

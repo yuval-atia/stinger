@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Navigation from './components/layout/Navigation';
 import { useDarkMode } from './hooks/useDarkMode';
+import { usePageMeta } from './hooks/usePageMeta';
 import stingrLogo from './assets/stingr_logo_dev.svg';
 import stingrLogoDark from './assets/stingr_logo_dev_dark.svg';
 
 function App() {
   const { darkMode, toggleDarkMode } = useDarkMode();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  usePageMeta();
 
   return (
     <div className="h-screen flex flex-col bg-[var(--bg-secondary)] text-[var(--text-primary)]">

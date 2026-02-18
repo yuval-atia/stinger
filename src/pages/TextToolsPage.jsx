@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import ToolCard, { CopyField } from '../components/common/ToolCard';
 import CopyButton from '../components/common/CopyButton';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { computeDiff } from '../utils/textDiff';
 import {
   computeTextStats,
@@ -678,7 +677,6 @@ function CaseTransformCard() {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function TextToolsPage() {
-  useDocumentTitle('Text Diff, Sort & Transform Tools');
   return (
     <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4">
