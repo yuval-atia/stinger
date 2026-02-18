@@ -1,8 +1,9 @@
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import JsonInput from '../components/Editor/JsonInput';
 import TreeView from '../components/TreeView/TreeView';
 import SearchBar from '../components/Search/SearchBar';
 import FormatButton from '../components/common/FormatButton';
+import ShareButton from '../components/common/ShareButton';
 import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
@@ -10,6 +11,8 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { parseJson, formatJson, getValueType } from '../utils/jsonParser';
 import { setValueAtPath } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
+import { resolveHashState, stripHash } from '../utils/shareCompression';
+import { inferDepthFromPaths } from '../utils/depthDetector';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -99,6 +102,30 @@ function JsonPreviewPage() {
   const treeScrollRef = useRef(null);
 
   const jsonStats = useMemo(() => calculateJsonStats(parsedData), [parsedData]);
+
+  // Infer current depth level from expandedPaths for share state
+  const currentDepth = useMemo(
+    () => inferDepthFromPaths(parsedData, expandedPaths),
+    [parsedData, expandedPaths]
+  );
+
+  // ── Hash state restoration on mount ──────────────────────────────────────
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#state=') && !hash.startsWith('#s=')) return;
+
+    (async () => {
+      try {
+        const state = await resolveHashState();
+        if (state) restoreSharedState(state);
+      } catch {
+        // Invalid hash — silently ignore
+      } finally {
+        stripHash();
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Compute ancestor paths for all pinned nodes so they stay expanded
   const pinnedAncestorPaths = useMemo(() => {
@@ -215,6 +242,44 @@ function JsonPreviewPage() {
     setFilterMode(false);
     setPinnedPaths(new Set());
   }, [setInputValue, handleInputChange]);
+
+  // ── Share state restoration ────────────────────────────────────────────────
+
+  const restoreSharedState = useCallback((state) => {
+    if (!state || !state.j) return;
+
+    // Restore JSON input
+    handleInputChange(state.j);
+    setInputValue(state.j);
+
+    // Restore pinned paths
+    if (state.p && state.p.length > 0) {
+      setPinnedPaths(new Set(state.p));
+    }
+
+    // Restore expand depth — need parsed data to compute paths
+    const result = parseJson(state.j);
+    if (result.success && state.d) {
+      const paths = new Set();
+      if (state.d === 'all') {
+        collectAllPaths(result.data, [], paths);
+      } else {
+        collectPathsToDepth(result.data, [], state.d, paths);
+      }
+      setExpandedPaths(paths);
+    }
+
+    // Restore search
+    if (state.s) {
+      setSearchQuery(state.s);
+      setActiveSearch(state.s);
+    }
+
+    // Restore filter mode
+    if (state.f) {
+      setFilterMode(true);
+    }
+  }, [handleInputChange, setInputValue]);
 
   // ── Search ────────────────────────────────────────────────────────────────
 
@@ -411,18 +476,30 @@ function JsonPreviewPage() {
                 </div>
               )}
             </div>
-            <SearchBar
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onSubmit={handleSearchSubmit}
-              onPrev={handleSearchPrev}
-              onNext={handleSearchNext}
-              isSearching={isSearching}
-              matchCount={matchCount}
-              currentMatch={currentMatchIndex}
-              filterMode={filterMode}
-              onFilterToggle={parsedData ? handleFilterToggle : undefined}
-            />
+            <div className="flex items-center gap-2">
+              <SearchBar
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onSubmit={handleSearchSubmit}
+                onPrev={handleSearchPrev}
+                onNext={handleSearchNext}
+                isSearching={isSearching}
+                matchCount={matchCount}
+                currentMatch={currentMatchIndex}
+                filterMode={filterMode}
+                onFilterToggle={parsedData ? handleFilterToggle : undefined}
+              />
+              {parsedData && (
+                <ShareButton shareData={{
+                  json: inputValue,
+                  pinnedPaths: [...pinnedPaths],
+                  depth: currentDepth,
+                  searchQuery: activeSearch,
+                  filterMode,
+                  jsonStats,
+                }} />
+              )}
+            </div>
           </div>
           {/* Breadcrumb */}
           <Breadcrumb path={breadcrumbPath} onNavigate={handleBreadcrumbNavigate} />
@@ -454,6 +531,7 @@ function JsonPreviewPage() {
           <ScrollToTop containerRef={treeScrollRef} />
         </div>
       </div>
+
     </div>
   );
 }
