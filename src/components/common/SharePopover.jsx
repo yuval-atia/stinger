@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { compressAndCheck, uploadToWorker, TURNSTILE_SITE_KEY } from '../../utils/shareCompression';
+import { compressAndCheck, compressAndCheckDiff, uploadToWorker, TURNSTILE_SITE_KEY } from '../../utils/shareCompression';
 import { useToast } from './Toast';
 
 function SharePopover({ buttonRef, onClose, shareData }) {
@@ -17,6 +17,7 @@ function SharePopover({ buttonRef, onClose, shareData }) {
   const [copied, setCopied] = useState(false);
   const { showToast } = useToast();
 
+  const isDiffShare = shareData.leftJson !== undefined;
   const { json, pinnedPaths, depth, searchQuery, filterMode, jsonStats } = shareData;
 
   // ── Positioning ────────────────────────────────────────────────────────────
@@ -75,7 +76,13 @@ function SharePopover({ buttonRef, onClose, shareData }) {
     let cancelled = false;
     (async () => {
       try {
-        const result = await compressAndCheck({ json, pinnedPaths, depth, searchQuery, filterMode });
+        const result = isDiffShare
+          ? await compressAndCheckDiff({
+              leftJson: shareData.leftJson,
+              rightJson: shareData.rightJson,
+              diffOnly: shareData.diffOnly,
+            })
+          : await compressAndCheck({ json, pinnedPaths, depth, searchQuery, filterMode });
         if (cancelled) return;
         if (!result.needsWorker) {
           setUrl(result.inlineUrl);
@@ -153,10 +160,15 @@ function SharePopover({ buttonRef, onClose, shareData }) {
   // ── Summary pills ──────────────────────────────────────────────────────────
 
   const summaryItems = [];
-  if (jsonStats) summaryItems.push(jsonStats.sizeFormatted);
-  if (pinnedPaths.length > 0) summaryItems.push(`${pinnedPaths.length} pin${pinnedPaths.length > 1 ? 's' : ''}`);
-  if (depth) summaryItems.push(`depth ${depth}`);
-  if (searchQuery) summaryItems.push(`"${searchQuery}"`);
+  if (isDiffShare) {
+    summaryItems.push('Compare');
+    if (shareData.diffOnly) summaryItems.push('diff-only');
+  } else {
+    if (jsonStats) summaryItems.push(jsonStats.sizeFormatted);
+    if (pinnedPaths && pinnedPaths.length > 0) summaryItems.push(`${pinnedPaths.length} pin${pinnedPaths.length > 1 ? 's' : ''}`);
+    if (depth) summaryItems.push(`depth ${depth}`);
+    if (searchQuery) summaryItems.push(`"${searchQuery}"`);
+  }
 
   const displayUrl = url
     ? url.replace(/^https?:\/\//, '').slice(0, 42) + (url.replace(/^https?:\/\//, '').length > 42 ? '...' : '')

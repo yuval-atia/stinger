@@ -1,7 +1,8 @@
 import { useCallback, useRef } from 'react';
 
-function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, matchCount, currentMatch, filterMode, onFilterToggle }) {
+function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, matchCount, currentMatch, filterMode, onFilterToggle, queryMode, onToggleQueryMode, jsonPathError }) {
   const inputRef = useRef(null);
+  const isJsonPath = queryMode === 'jsonpath';
 
   const handleChange = useCallback(
     (e) => {
@@ -20,7 +21,7 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
       if (e.key === 'Escape') {
         onChange('');
         inputRef.current?.blur();
-      } else if (e.key === 'Enter') {
+      } else if (e.key === 'Enter' && !isJsonPath) {
         e.preventDefault();
         if (e.shiftKey) {
           onPrev?.();
@@ -29,18 +30,26 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
         }
       }
     },
-    [onChange, onSubmit, onPrev]
+    [onChange, onSubmit, onPrev, isJsonPath]
   );
 
   return (
     <div className="flex items-center gap-1.5">
       {/* Match counter */}
       <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap w-12 text-right">
-        {matchCount > 0 ? `${currentMatch + 1}/${matchCount}` : ''}
+        {isJsonPath ? (
+          jsonPathError ? (
+            <span className="text-[var(--error-color)]" title={jsonPathError}>err</span>
+          ) : matchCount > 0 ? (
+            `${matchCount}`
+          ) : value ? '0' : ''
+        ) : (
+          matchCount > 0 ? `${currentMatch + 1}/${matchCount}` : ''
+        )}
       </span>
 
-      {/* Prev/Next arrows */}
-      {matchCount > 0 && (
+      {/* Prev/Next arrows (search mode only) */}
+      {!isJsonPath && matchCount > 0 && (
         <div className="flex items-center">
           <button
             onClick={onPrev}
@@ -63,8 +72,8 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
         </div>
       )}
 
-      {/* Filter toggle */}
-      {onFilterToggle && matchCount > 0 && (
+      {/* Filter toggle (search mode only) */}
+      {!isJsonPath && onFilterToggle && matchCount > 0 && (
         <button
           onClick={onFilterToggle}
           className={`p-1 rounded transition-colors ${
@@ -82,6 +91,7 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
 
       {/* Search input */}
       <div className="relative flex items-center">
+        {/* Icon / mode toggle */}
         {isSearching ? (
           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xs flex items-center justify-center">
             <span className="inline-block animate-spin">
@@ -90,6 +100,27 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
               </svg>
             </span>
           </span>
+        ) : onToggleQueryMode ? (
+          <button
+            onClick={onToggleQueryMode}
+            className={`group/icon absolute left-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5 rounded transition-colors z-10 ${
+              isJsonPath
+                ? 'text-[var(--jsonpath-color)] hover:bg-[var(--jsonpath-color)]/15'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            {isJsonPath ? (
+              <span className="text-[10px] font-bold leading-none">$.</span>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
+              </svg>
+            )}
+            {/* Hover tooltip */}
+            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap rounded border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)] text-[10px] px-2 py-1 opacity-0 group-hover/icon:opacity-100 transition-opacity shadow-lg">
+              {isJsonPath ? 'Switch to text search' : 'Switch to JSONPath ($.path)'}
+            </span>
+          </button>
         ) : (
           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
@@ -103,8 +134,12 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Search..."
-          className="w-44 pl-8 pr-7 py-1 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+          placeholder={isJsonPath ? '.users[*].name' : 'Search...'}
+          className={`w-44 pl-8 pr-7 py-1 text-sm bg-[var(--bg-secondary)] border rounded focus:outline-none transition-colors ${
+            isJsonPath
+              ? 'border-[var(--jsonpath-color)]/40 focus:border-[var(--jsonpath-color)]'
+              : 'border-[var(--border-color)] focus:border-[var(--accent-color)]'
+          }`}
         />
         {value && !isSearching && (
           <button

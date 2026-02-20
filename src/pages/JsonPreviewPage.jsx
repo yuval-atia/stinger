@@ -12,6 +12,7 @@ import { setValueAtPath } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
 import { resolveHashState, stripHash } from '../utils/shareCompression';
 import { inferDepthFromPaths } from '../utils/depthDetector';
+import { evaluateJsonPath } from '../utils/jsonpath';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -95,6 +96,9 @@ function JsonPreviewPage() {
   const [filterMode, setFilterMode] = useState(false);
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
   const [pinnedPaths, setPinnedPaths] = useState(new Set());
+  const [queryMode, setQueryMode] = useState('search'); // 'search' | 'jsonpath'
+  const [jsonPathQuery, setJsonPathQuery] = useState('');
+  const [jsonPathResultsOpen, setJsonPathResultsOpen] = useState(true);
 
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
@@ -116,7 +120,8 @@ function JsonPreviewPage() {
     (async () => {
       try {
         const state = await resolveHashState();
-        if (state) restoreSharedState(state);
+        // Only restore v1 (preview) state — v2 is for Compare page
+        if (state && state.v === 1) restoreSharedState(state);
       } catch {
         // Invalid hash — silently ignore
       } finally {
@@ -147,6 +152,32 @@ function JsonPreviewPage() {
     }
     return merged;
   }, [expandedPaths, pinnedAncestorPaths]);
+
+  // ── JSONPath evaluation ──────────────────────────────────────────────────
+  const jsonPathResults = useMemo(() => {
+    if (queryMode !== 'jsonpath' || !jsonPathQuery.trim() || !parsedData) {
+      return { matches: [], matchPaths: new Set(), error: null };
+    }
+    const expr = '$' + jsonPathQuery;
+    const result = evaluateJsonPath(parsedData, expr);
+    const matchPaths = new Set(result.matches.map((m) => m.path));
+    return { matches: result.matches, matchPaths, error: result.error };
+  }, [queryMode, jsonPathQuery, parsedData]);
+
+  // Auto-expand ancestors of jsonpath matches
+  useEffect(() => {
+    if (jsonPathResults.matchPaths.size === 0) return;
+    setExpandedPaths((prev) => {
+      const next = new Set(prev);
+      for (const matchPath of jsonPathResults.matchPaths) {
+        const parts = matchPath.split('.');
+        for (let i = 0; i <= parts.length; i++) {
+          next.add(parts.slice(0, i).join('.'));
+        }
+      }
+      return next;
+    });
+  }, [jsonPathResults.matchPaths]);
 
   const hasExpandedNodes = expandedPaths.size > 0;
 
@@ -261,6 +292,8 @@ function JsonPreviewPage() {
     setBreadcrumbPath([]);
     setFilterMode(false);
     setPinnedPaths(new Set());
+    setQueryMode('search');
+    setJsonPathQuery('');
   }, [setInputValue, handleInputChange]);
 
   // ── Share state restoration ────────────────────────────────────────────────
@@ -520,16 +553,19 @@ function JsonPreviewPage() {
             </div>
             <div className="flex items-center gap-2">
               <SearchBar
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onSubmit={handleSearchSubmit}
-                onPrev={handleSearchPrev}
-                onNext={handleSearchNext}
-                isSearching={isSearching}
-                matchCount={matchCount}
-                currentMatch={currentMatchIndex}
-                filterMode={filterMode}
-                onFilterToggle={parsedData ? handleFilterToggle : undefined}
+                value={queryMode === 'search' ? searchQuery : jsonPathQuery}
+                onChange={queryMode === 'search' ? handleSearchChange : setJsonPathQuery}
+                onSubmit={queryMode === 'search' ? handleSearchSubmit : undefined}
+                onPrev={queryMode === 'search' ? handleSearchPrev : undefined}
+                onNext={queryMode === 'search' ? handleSearchNext : undefined}
+                isSearching={queryMode === 'search' ? isSearching : false}
+                matchCount={queryMode === 'search' ? matchCount : jsonPathResults.matches.length}
+                currentMatch={queryMode === 'search' ? currentMatchIndex : undefined}
+                filterMode={queryMode === 'search' ? filterMode : false}
+                onFilterToggle={queryMode === 'search' && parsedData ? handleFilterToggle : undefined}
+                queryMode={queryMode}
+                onToggleQueryMode={parsedData ? () => setQueryMode((m) => m === 'search' ? 'jsonpath' : 'search') : undefined}
+                jsonPathError={queryMode === 'jsonpath' ? jsonPathResults.error : null}
               />
               {parsedData && (
                 <ShareButton shareData={{
@@ -545,11 +581,46 @@ function JsonPreviewPage() {
           </div>
           {/* Breadcrumb */}
           <Breadcrumb path={breadcrumbPath} onNavigate={handleBreadcrumbNavigate} />
+
+          {/* JSONPath results panel */}
+          {queryMode === 'jsonpath' && jsonPathResults.matches.length > 0 && (
+            <div className="flex-shrink-0 border-b border-[var(--border-color)]">
+              <button
+                onClick={() => setJsonPathResultsOpen((p) => !p)}
+                className="w-full flex items-center gap-1.5 px-4 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors"
+              >
+                <span className="text-[10px]">{jsonPathResultsOpen ? '▼' : '▶'}</span>
+                <span className="font-medium text-[var(--jsonpath-color)]">{jsonPathResults.matches.length}</span>
+                <span>match{jsonPathResults.matches.length !== 1 ? 'es' : ''}</span>
+              </button>
+              {jsonPathResultsOpen && (
+                <div className="max-h-32 overflow-auto px-4 pb-2 space-y-0.5">
+                  {jsonPathResults.matches.slice(0, 100).map((m, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
+                      <span className="text-[var(--text-secondary)] font-mono truncate min-w-0 flex-shrink" title={m.path}>
+                        $.{m.path}
+                      </span>
+                      <span className="text-[var(--text-secondary)]">=</span>
+                      <span className="font-mono truncate min-w-0 flex-1 text-[var(--jsonpath-color)]">
+                        {typeof m.value === 'string' ? `"${m.value}"` : JSON.stringify(m.value)}
+                      </span>
+                    </div>
+                  ))}
+                  {jsonPathResults.matches.length > 100 && (
+                    <div className="text-xs text-[var(--text-secondary)] italic">
+                      ...and {jsonPathResults.matches.length - 100} more
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex-1 overflow-auto p-4" ref={treeScrollRef}>
             {parsedData !== null ? (
               <TreeView
                 data={parsedData}
-                searchQuery={activeSearch}
+                searchQuery={queryMode === 'search' ? activeSearch : ''}
                 onValueEdit={handleValueEdit}
                 currentMatchIndex={currentMatchIndex}
                 onMatchCountChange={handleMatchCountChange}
@@ -559,6 +630,7 @@ function JsonPreviewPage() {
                 onBreadcrumbPath={handleBreadcrumbPath}
                 pinnedPaths={pinnedPaths}
                 onTogglePin={handleTogglePin}
+                jsonpathMatches={queryMode === 'jsonpath' ? jsonPathResults.matchPaths : undefined}
               />
             ) : parseError ? (
               <div className="text-[var(--error-color)] text-sm">

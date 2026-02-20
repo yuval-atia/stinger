@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'react';
 import TreeNode from './TreeNode';
 
-function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin }) {
+function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, currentDiffPath, jsonpathMatches }) {
   const { matches, expandedPaths, matchList } = useMemo(() => {
     if (!searchQuery.trim()) {
       return { matches: new Set(), expandedPaths: new Set(), matchList: [] };
@@ -55,6 +55,8 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
         onBreadcrumbPath={onBreadcrumbPath}
         pinnedPaths={pinnedPaths}
         onTogglePin={onTogglePin}
+        currentDiffPath={currentDiffPath}
+        jsonpathMatches={jsonpathMatches}
       />
     </div>
   );

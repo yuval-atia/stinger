@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import JsonInput from '../Editor/JsonInput';
 import TreeView from '../TreeView/TreeView';
+import ShareButton from '../common/ShareButton';
 import { InfoButton } from '../common/InfoTooltip';
 import { diffJson, createDiffMap, pathHasDiff } from '../../utils/differ';
 
@@ -15,8 +16,14 @@ function DiffView({
   onRightChange,
   searchQuery,
   onSwap,
+  diffOnly: controlledDiffOnly,
+  onDiffOnlyChange,
+  shareData,
 }) {
-  const [diffOnly, setDiffOnly] = useState(false);
+  // Support both controlled (from page) and uncontrolled diffOnly
+  const [internalDiffOnly, setInternalDiffOnly] = useState(false);
+  const diffOnly = controlledDiffOnly !== undefined ? controlledDiffOnly : internalDiffOnly;
+  const setDiffOnly = onDiffOnlyChange || setInternalDiffOnly;
   const [syncScroll, setSyncScroll] = useState(true);
   const leftTreeRef = useRef(null);
   const rightTreeRef = useRef(null);
@@ -35,8 +42,82 @@ function DiffView({
     const added = diffs.filter((d) => d.type === 'added').length;
     const removed = diffs.filter((d) => d.type === 'removed').length;
     const changed = diffs.filter((d) => d.type === 'changed').length;
-    return { added, removed, changed, total: diffs.length };
+    // Count unique moved pairs (each move has two entries: left + right side)
+    const moved = diffs.filter((d) => d.type === 'moved' && d.side === 'left').length;
+    return { added, removed, changed, moved, total: diffs.length };
   }, [diffs]);
+
+  // ── Diff navigation ──────────────────────────────────────────────────────
+  const [currentDiffIndex, setCurrentDiffIndex] = useState(0);
+
+  // Ordered list of unique navigable diff paths (skip duplicate moved entries)
+  const diffPaths = useMemo(() => {
+    const seen = new Set();
+    const paths = [];
+    for (const d of diffs) {
+      // For moved pairs, only include the left side entry to avoid duplicates
+      if (d.type === 'moved' && d.side === 'right') continue;
+      const pathStr = d.path.join('.');
+      if (!seen.has(pathStr)) {
+        seen.add(pathStr);
+        paths.push(pathStr);
+      }
+    }
+    return paths;
+  }, [diffs]);
+
+  // Reset index when diffs change
+  useEffect(() => {
+    setCurrentDiffIndex(0);
+  }, [diffs]);
+
+  const currentDiffPath = diffPaths[currentDiffIndex] || null;
+
+  const handleDiffPrev = useCallback(() => {
+    if (diffPaths.length === 0) return;
+    setCurrentDiffIndex((prev) => (prev - 1 + diffPaths.length) % diffPaths.length);
+  }, [diffPaths]);
+
+  const handleDiffNext = useCallback(() => {
+    if (diffPaths.length === 0) return;
+    setCurrentDiffIndex((prev) => (prev + 1) % diffPaths.length);
+  }, [diffPaths]);
+
+  // Auto-expand ancestors of current diff in both trees
+  useEffect(() => {
+    if (!currentDiffPath) return;
+    const parts = currentDiffPath.split('.');
+    const ancestors = new Set();
+    for (let i = 0; i <= parts.length; i++) {
+      ancestors.add(parts.slice(0, i).join('.'));
+    }
+    setLeftExpanded((prev) => {
+      const next = new Set(prev);
+      for (const a of ancestors) next.add(a);
+      return next;
+    });
+    setRightExpanded((prev) => {
+      const next = new Set(prev);
+      for (const a of ancestors) next.add(a);
+      return next;
+    });
+  }, [currentDiffPath]);
+
+  // Keyboard shortcuts: Alt+ArrowUp / Alt+ArrowDown
+  useEffect(() => {
+    const handler = (e) => {
+      if (!e.altKey) return;
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        handleDiffPrev();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        handleDiffNext();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [handleDiffPrev, handleDiffNext]);
 
   // Expanded paths for both trees (shared so diff-only filter works)
   const [leftExpanded, setLeftExpanded] = useState(new Set());
@@ -152,6 +233,12 @@ function DiffView({
                 <span className="inline-block w-3 h-3 rounded mr-1 bg-[var(--diff-change)]" />
                 {stats.changed} changed
               </span>
+              {stats.moved > 0 && (
+                <span className="text-sm">
+                  <span className="inline-block w-3 h-3 rounded mr-1 bg-[var(--diff-move)]" />
+                  {stats.moved} moved
+                </span>
+              )}
             </>
           )}
 
@@ -159,10 +246,37 @@ function DiffView({
 
           {/* Controls */}
           <div className="flex items-center gap-2">
+            {/* Diff navigation */}
+            {diffPaths.length > 0 && (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleDiffPrev}
+                  className="p-1 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                  title="Previous diff (Alt+Up)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                    <path fillRule="evenodd" d="M11.78 9.78a.75.75 0 0 1-1.06 0L8 7.06 5.28 9.78a.75.75 0 0 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap min-w-[2.5rem] text-center">
+                  {currentDiffIndex + 1}/{diffPaths.length}
+                </span>
+                <button
+                  onClick={handleDiffNext}
+                  className="p-1 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                  title="Next diff (Alt+Down)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                    <path fillRule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            )}
+
             {/* Diff only toggle */}
             {stats.total > 0 && (
               <button
-                onClick={() => setDiffOnly((p) => !p)}
+                onClick={() => setDiffOnly(!diffOnly)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
                   diffOnly
                     ? 'bg-[var(--accent-color)] text-white'
@@ -199,6 +313,11 @@ function DiffView({
                 </svg>
                 Swap
               </button>
+            )}
+
+            {/* Share button */}
+            {shareData && leftData !== null && rightData !== null && (
+              <ShareButton shareData={shareData} />
             )}
           </div>
         </div>
@@ -237,6 +356,7 @@ function DiffView({
                   side="left"
                   controlledExpandedPaths={leftMergedExpanded}
                   onTogglePath={handleLeftToggle}
+                  currentDiffPath={currentDiffPath}
                 />
               ) : leftError ? (
                 <div className="text-[var(--error-color)] text-sm">
@@ -282,6 +402,7 @@ function DiffView({
                   side="right"
                   controlledExpandedPaths={rightMergedExpanded}
                   onTogglePath={handleRightToggle}
+                  currentDiffPath={currentDiffPath}
                 />
               ) : rightError ? (
                 <div className="text-[var(--error-color)] text-sm">

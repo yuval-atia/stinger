@@ -32,10 +32,14 @@ function TreeNode({
   onBreadcrumbPath,
   pinnedPaths,
   onTogglePin,
+  currentDiffPath,
+  jsonpathMatches,
 }) {
   const nodeRef = useRef(null);
   const pathStr = path.join('.');
   const isCurrentMatch = currentMatchPath === pathStr;
+  const isCurrentDiffMatch = currentDiffPath === pathStr;
+  const isJsonPathMatch = jsonpathMatches?.has(pathStr);
   const { showToast } = useToast();
   const isPinned = pinnedPaths?.has(pathStr);
 
@@ -55,6 +59,16 @@ function TreeNode({
       });
     }
   }, [isCurrentMatch]);
+
+  // Scroll into view when this is the current diff navigation target
+  useEffect(() => {
+    if (isCurrentDiffMatch && nodeRef.current) {
+      nodeRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [isCurrentDiffMatch]);
 
   const valueType = getValueType(value);
   const isExpandable = valueType === 'object' || valueType === 'array';
@@ -131,6 +145,9 @@ function TreeNode({
     [handleSaveEdit, handleCancelEdit]
   );
 
+  // Get diff info for 'moved' type: the full diff object has fromIndex/toIndex
+  const diffEntry = diffMap ? diffMap.get(pathStr) : null;
+
   const getDiffClass = () => {
     if (!diffType) return '';
     switch (diffType) {
@@ -140,6 +157,8 @@ function TreeNode({
         return 'diff-removed';
       case 'changed':
         return 'diff-changed';
+      case 'moved':
+        return 'diff-moved';
       default:
         return '';
     }
@@ -332,6 +351,8 @@ function TreeNode({
             onBreadcrumbPath={onBreadcrumbPath}
             pinnedPaths={pinnedPaths}
             onTogglePin={onTogglePin}
+            currentDiffPath={currentDiffPath}
+            jsonpathMatches={jsonpathMatches}
           />
         ))}
       </div>
@@ -347,7 +368,7 @@ function TreeNode({
             : isMatch
             ? 'search-other-match'
             : ''
-        } ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''} ${isPinned ? 'pinned-node' : ''}`}
+        } ${isCurrentDiffMatch ? 'diff-current-match' : ''} ${isJsonPathMatch ? 'jsonpath-match' : ''} ${hasDiffInChildren && !diffType ? 'has-diff-children' : ''} ${isExpandable ? 'cursor-pointer' : ''} ${isPinned ? 'pinned-node' : ''}`}
         onClick={isExpandable ? handleToggle : handleNodeClick}
         data-pinned-path={isPinned ? pathStr : undefined}
       >
@@ -378,6 +399,15 @@ function TreeNode({
               onClick={isExpandable ? handleToggle : undefined}
             >:</span>
           </>
+        )}
+
+        {/* Move indicator */}
+        {diffType === 'moved' && diffEntry && (
+          <span className="text-[10px] px-1 py-0.5 rounded bg-[var(--diff-move)] text-[var(--diff-move-text)] whitespace-nowrap">
+            {diffEntry.side === 'left'
+              ? `moved to [${diffEntry.toIndex}]`
+              : `moved from [${diffEntry.fromIndex}]`}
+          </span>
         )}
 
         {/* Value */}

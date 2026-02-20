@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import DiffView from '../components/Compare/DiffView';
 import { useJsonParser } from '../hooks/useJsonParser';
+import { resolveHashState, stripHash } from '../utils/shareCompression';
 
 function JsonComparePage() {
   const left = useJsonParser();
@@ -9,6 +10,29 @@ function JsonComparePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [diffOnly, setDiffOnly] = useState(false);
+
+  // ── Hash state restoration on mount ──────────────────────────────────────
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#state=') && !hash.startsWith('#s=')) return;
+
+    (async () => {
+      try {
+        const state = await resolveHashState();
+        if (state && state.v === 2) {
+          if (state.l) left.handleInputChange(state.l);
+          if (state.r) right.handleInputChange(state.r);
+          if (state.do) setDiffOnly(true);
+        }
+      } catch {
+        // Invalid hash — silently ignore
+      } finally {
+        stripHash();
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
@@ -33,6 +57,16 @@ function JsonComparePage() {
     right.handleInputChange(leftVal);
   }, [left, right]);
 
+  const handleDiffOnlyChange = useCallback((val) => {
+    setDiffOnly(val);
+  }, []);
+
+  const shareData = useMemo(() => ({
+    leftJson: left.inputValue,
+    rightJson: right.inputValue,
+    diffOnly,
+  }), [left.inputValue, right.inputValue, diffOnly]);
+
   return (
     <DiffView
       leftInput={left.inputValue}
@@ -48,6 +82,9 @@ function JsonComparePage() {
       onSearchSubmit={handleSearchSubmit}
       isSearching={isSearching}
       onSwap={handleSwap}
+      diffOnly={diffOnly}
+      onDiffOnlyChange={handleDiffOnlyChange}
+      shareData={shareData}
     />
   );
 }
