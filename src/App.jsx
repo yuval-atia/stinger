@@ -27,7 +27,7 @@ function App() {
           <div className="flex-1 flex justify-center">
             <Navigation isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
           </div>
-          <div className="flex items-center justify-end flex-shrink-0 gap-1">
+          <div className="w-28 flex items-center justify-end flex-shrink-0 gap-1">
             <a
               href="https://www.paypal.com/donate/?hosted_button_id=PXEF8FL63X9CJ"
               target="_blank"

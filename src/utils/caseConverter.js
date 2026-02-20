@@ -42,3 +42,15 @@ export function toTitleCase(tokens) {
     .map((t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase())
     .join(' ');
 }
+
+/** Recursively convert all object keys using converterFn(tokenize(key)) */
+export function convertJsonKeys(data, converterFn) {
+  if (data === null || typeof data !== 'object') return data;
+  if (Array.isArray(data)) return data.map((item) => convertJsonKeys(item, converterFn));
+  const result = {};
+  for (const [key, value] of Object.entries(data)) {
+    const newKey = converterFn(tokenize(key));
+    result[newKey] = convertJsonKeys(value, converterFn);
+  }
+  return result;
+}

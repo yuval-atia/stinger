@@ -13,6 +13,7 @@ import { calculateJsonStats } from '../utils/jsonStats';
 import { resolveHashState, stripHash } from '../utils/shareCompression';
 import { inferDepthFromPaths } from '../utils/depthDetector';
 import { evaluateJsonPath } from '../utils/jsonpath';
+import { convertJsonKeys, toCamelCase, toSnakeCase, toPascalCase, toKebabCase, toConstantCase } from '../utils/caseConverter';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -100,9 +101,20 @@ function JsonPreviewPage() {
   const [jsonPathQuery, setJsonPathQuery] = useState('');
   const [jsonPathResultsOpen, setJsonPathResultsOpen] = useState(true);
 
+  const [keyCaseOpen, setKeyCaseOpen] = useState(false);
+
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
   const currentPinIndexRef = useRef(0);
+  const keyCaseRef = useRef(null);
+  const undoStack = useRef([]);
+  const redoStack = useRef([]);
+
+  /** Save current value before a transform action */
+  const pushUndo = useCallback(() => {
+    undoStack.current.push(inputValue);
+    redoStack.current = [];
+  }, [inputValue]);
 
   const jsonStats = useMemo(() => calculateJsonStats(parsedData), [parsedData]);
 
@@ -251,16 +263,74 @@ function JsonPreviewPage() {
   const handleFormat = useCallback(() => {
     const result = formatJson(inputValue);
     if (result.success) {
+      pushUndo();
       setInputValue(result.formatted);
     }
-  }, [inputValue, setInputValue]);
+  }, [inputValue, setInputValue, pushUndo]);
 
   const handleMinify = useCallback(() => {
     const result = parseJson(inputValue);
     if (result.success) {
+      pushUndo();
       setInputValue(JSON.stringify(result.data));
     }
-  }, [inputValue, setInputValue]);
+  }, [inputValue, setInputValue, pushUndo]);
+
+  const handleConvertKeys = useCallback((converterFn) => {
+    if (!parsedData) return;
+    pushUndo();
+    const converted = convertJsonKeys(parsedData, converterFn);
+    const json = JSON.stringify(converted, null, 2);
+    handleInputChange(json);
+    setInputValue(json);
+    setKeyCaseOpen(false);
+  }, [parsedData, handleInputChange, setInputValue, pushUndo]);
+
+  // Close keys dropdown on outside click
+  useEffect(() => {
+    if (!keyCaseOpen) return;
+    const handler = (e) => {
+      if (keyCaseRef.current && !keyCaseRef.current.contains(e.target)) {
+        setKeyCaseOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [keyCaseOpen]);
+
+  // ── Undo / Redo ──────────────────────────────────────────────────────────
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.current.length === 0) return;
+    redoStack.current.push(inputValue);
+    const prev = undoStack.current.pop();
+    handleInputChange(prev);
+    setInputValue(prev);
+  }, [inputValue, handleInputChange, setInputValue]);
+
+  const handleRedo = useCallback(() => {
+    if (redoStack.current.length === 0) return;
+    undoStack.current.push(inputValue);
+    const next = redoStack.current.pop();
+    handleInputChange(next);
+    setInputValue(next);
+  }, [inputValue, handleInputChange, setInputValue]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        if (undoStack.current.length === 0) return; // let browser handle native undo
+        e.preventDefault();
+        handleUndo();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
+        if (redoStack.current.length === 0) return; // let browser handle native redo
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [handleUndo, handleRedo]);
 
   const handleDownload = useCallback(() => {
     if (!parsedData) return;
@@ -276,12 +346,14 @@ function JsonPreviewPage() {
 
   const handleValueEdit = useCallback((path, newValue) => {
     if (!parsedData) return;
+    pushUndo();
     const newData = setValueAtPath(parsedData, path, newValue);
     setParsedData(newData);
     setInputValue(JSON.stringify(newData, null, 2));
-  }, [parsedData, setParsedData, setInputValue]);
+  }, [parsedData, setParsedData, setInputValue, pushUndo]);
 
   const handleClear = useCallback(() => {
+    if (inputValue) pushUndo();
     setInputValue('');
     handleInputChange('');
     setSearchQuery('');
@@ -449,6 +521,42 @@ function JsonPreviewPage() {
               }} />
               <FormatButton onClick={handleFormat} label="Format" />
               <FormatButton onClick={handleMinify} label="Minify" />
+              {parsedData && (
+                <div className="relative" ref={keyCaseRef}>
+                  <button
+                    onClick={() => setKeyCaseOpen((p) => !p)}
+                    className={`px-2 py-1 text-xs rounded transition-colors flex items-center gap-0.5 ${
+                      keyCaseOpen
+                        ? 'bg-[var(--accent-color)] text-white'
+                        : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)]'
+                    }`}
+                  >
+                    Keys
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
+                      <path fillRule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {keyCaseOpen && (
+                    <div className="absolute top-full left-0 mt-1 z-50 w-36 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg py-1">
+                      {[
+                        { label: 'camelCase', fn: toCamelCase },
+                        { label: 'snake_case', fn: toSnakeCase },
+                        { label: 'PascalCase', fn: toPascalCase },
+                        { label: 'kebab-case', fn: toKebabCase },
+                        { label: 'CONSTANT_CASE', fn: toConstantCase },
+                      ].map(({ label, fn }) => (
+                        <button
+                          key={label}
+                          onClick={() => handleConvertKeys(fn)}
+                          className="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors"
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {parsedData && (
                 <FormatButton onClick={handleDownload} label="Download" />
               )}
