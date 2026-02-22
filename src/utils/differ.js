@@ -1,7 +1,7 @@
 /**
  * Compare two JSON values and return diff information
  */
-export function diffJson(left, right, path = []) {
+export function diffJson(left, right, path = [], options = {}) {
   const diffs = [];
 
   const leftType = getType(left);
@@ -37,7 +37,7 @@ export function diffJson(left, right, path = []) {
 
   // Handle arrays
   if (leftType === 'array') {
-    diffs.push(...diffArraySmart(left, right, path));
+    diffs.push(...diffArraySmart(left, right, path, options));
     return diffs;
   }
 
@@ -62,7 +62,7 @@ export function diffJson(left, right, path = []) {
         leftType: getType(left[key]),
       });
     } else {
-      diffs.push(...diffJson(left[key], right[key], [...path, key]));
+      diffs.push(...diffJson(left[key], right[key], [...path, key], options));
     }
   }
 
@@ -116,7 +116,7 @@ function detectArrayKey(leftArr, rightArr) {
   return null;
 }
 
-function diffArrayByIndex(left, right, path) {
+function diffArrayByIndex(left, right, path, options = {}) {
   const diffs = [];
   const maxLen = Math.max(left.length, right.length);
   for (let i = 0; i < maxLen; i++) {
@@ -135,13 +135,13 @@ function diffArrayByIndex(left, right, path) {
         leftType: getType(left[i]),
       });
     } else {
-      diffs.push(...diffJson(left[i], right[i], [...path, i]));
+      diffs.push(...diffJson(left[i], right[i], [...path, i], options));
     }
   }
   return diffs;
 }
 
-function diffArrayByKey(left, right, path, keyField) {
+function diffArrayByKey(left, right, path, keyField, options = {}) {
   const diffs = [];
 
   // Build lookup maps: keyValue → { index, item }
@@ -196,7 +196,7 @@ function diffArrayByKey(left, right, path, keyField) {
       }
 
       // Recurse for content diffs (always use left index as canonical path)
-      const contentDiffs = diffJson(leftItem, rightItem, [...path, leftIdx]);
+      const contentDiffs = diffJson(leftItem, rightItem, [...path, leftIdx], options);
       // If item moved, duplicate content diffs to the right index path too
       if (leftIdx !== rightIdx) {
         for (const cd of contentDiffs) {
@@ -226,17 +226,17 @@ function diffArrayByKey(left, right, path, keyField) {
   return diffs;
 }
 
-function diffArraySmart(left, right, path) {
+function diffArraySmart(left, right, path, options = {}) {
   // Fallback to index-based for: arrays >10K items, empty arrays
   if (left.length > 10000 || right.length > 10000) {
-    return diffArrayByIndex(left, right, path);
+    return diffArrayByIndex(left, right, path, options);
   }
 
-  const keyField = detectArrayKey(left, right);
+  const keyField = options.arrayMatchKey || detectArrayKey(left, right);
   if (keyField) {
-    return diffArrayByKey(left, right, path, keyField);
+    return diffArrayByKey(left, right, path, keyField, options);
   }
-  return diffArrayByIndex(left, right, path);
+  return diffArrayByIndex(left, right, path, options);
 }
 
 function getType(value) {

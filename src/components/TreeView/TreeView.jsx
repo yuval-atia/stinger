@@ -1,7 +1,11 @@
 import { useMemo, useEffect } from 'react';
 import TreeNode from './TreeNode';
+import VirtualizedTree from './VirtualizedTree';
+import { flattenTree, buildPathIndex } from '../../utils/flattenTree';
 
-function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, currentDiffPath, jsonpathMatches }) {
+const VIRTUALIZE_THRESHOLD = 500; // Use virtual scrolling above this many visible nodes
+
+function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, showPinHint, currentDiffPath, jsonpathMatches, onDeleteNode, onAddKey, onAddArrayItem, containerRef, scrollToPath }) {
   const { matches, expandedPaths, matchList } = useMemo(() => {
     if (!searchQuery.trim()) {
       return { matches: new Set(), expandedPaths: new Set(), matchList: [] };
@@ -35,6 +39,48 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
   // Get current match path for highlighting
   const currentMatchPath = matchList[currentMatchIndex] || null;
 
+  // Flatten tree for virtual scrolling
+  const flatNodes = useMemo(() => {
+    return flattenTree(data, mergedExpandedPaths, {
+      matches,
+      filterMode,
+      searchQuery,
+      diffMap,
+      side,
+    });
+  }, [data, mergedExpandedPaths, matches, filterMode, searchQuery, diffMap, side]);
+
+  const pathIndex = useMemo(() => buildPathIndex(flatNodes), [flatNodes]);
+
+  const useVirtual = flatNodes.length > VIRTUALIZE_THRESHOLD;
+
+  if (useVirtual && containerRef) {
+    return (
+      <VirtualizedTree
+        flatNodes={flatNodes}
+        pathIndex={pathIndex}
+        containerRef={containerRef}
+        searchQuery={searchQuery}
+        matches={matches}
+        currentMatchPath={currentMatchPath}
+        onValueEdit={onValueEdit}
+        onTogglePath={onTogglePath}
+        diffMap={diffMap}
+        side={side}
+        pinnedPaths={pinnedPaths}
+        onTogglePin={onTogglePin}
+        showPinHint={showPinHint}
+        currentDiffPath={currentDiffPath}
+        jsonpathMatches={jsonpathMatches}
+        onDeleteNode={onDeleteNode}
+        onAddKey={onAddKey}
+        onAddArrayItem={onAddArrayItem}
+        onBreadcrumbPath={onBreadcrumbPath}
+        scrollToPath={scrollToPath}
+      />
+    );
+  }
+
   return (
     <div className="tree-view font-mono text-sm">
       <TreeNode
@@ -55,8 +101,12 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
         onBreadcrumbPath={onBreadcrumbPath}
         pinnedPaths={pinnedPaths}
         onTogglePin={onTogglePin}
+        showPinHint={showPinHint}
         currentDiffPath={currentDiffPath}
         jsonpathMatches={jsonpathMatches}
+        onDeleteNode={onDeleteNode}
+        onAddKey={onAddKey}
+        onAddArrayItem={onAddArrayItem}
       />
     </div>
   );

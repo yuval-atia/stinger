@@ -11,6 +11,7 @@ function JsonComparePage() {
   const [activeSearch, setActiveSearch] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [diffOnly, setDiffOnly] = useState(false);
+  const [arrayMatchKey, setArrayMatchKey] = useState('');
 
   // ── Hash state restoration on mount ──────────────────────────────────────
   useEffect(() => {
@@ -24,6 +25,7 @@ function JsonComparePage() {
           if (state.l) left.handleInputChange(state.l);
           if (state.r) right.handleInputChange(state.r);
           if (state.do) setDiffOnly(true);
+          if (state.ak) setArrayMatchKey(state.ak);
         }
       } catch {
         // Invalid hash — silently ignore
@@ -65,7 +67,8 @@ function JsonComparePage() {
     leftJson: left.inputValue,
     rightJson: right.inputValue,
     diffOnly,
-  }), [left.inputValue, right.inputValue, diffOnly]);
+    arrayMatchKey,
+  }), [left.inputValue, right.inputValue, diffOnly, arrayMatchKey]);
 
   return (
     <DiffView
@@ -84,6 +87,8 @@ function JsonComparePage() {
       onSwap={handleSwap}
       diffOnly={diffOnly}
       onDiffOnlyChange={handleDiffOnlyChange}
+      arrayMatchKey={arrayMatchKey}
+      onArrayMatchKeyChange={setArrayMatchKey}
       shareData={shareData}
     />
   );

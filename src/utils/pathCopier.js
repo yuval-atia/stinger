@@ -81,3 +81,56 @@ export function setValueAtPath(obj, segments, value) {
 
   return result;
 }
+
+/**
+ * Delete a node at a given path (returns new object, immutable)
+ */
+export function deleteAtPath(obj, segments) {
+  if (segments.length === 0) return obj;
+  if (segments.length === 1) {
+    const key = segments[0];
+    if (Array.isArray(obj)) {
+      const result = [...obj];
+      result.splice(key, 1);
+      return result;
+    }
+    const { [key]: _, ...rest } = obj;
+    return rest;
+  }
+
+  const [first, ...rest] = segments;
+  const isArray = Array.isArray(obj);
+  const result = isArray ? [...obj] : { ...obj };
+  result[first] = deleteAtPath(obj[first], rest);
+  return result;
+}
+
+/**
+ * Add a key to an object at the given parent path (returns new object, immutable)
+ */
+export function addKeyToObject(obj, parentPath, key, value) {
+  if (parentPath.length === 0) {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) return obj;
+    return { ...obj, [key]: value };
+  }
+  const [first, ...rest] = parentPath;
+  const isArray = Array.isArray(obj);
+  const result = isArray ? [...obj] : { ...obj };
+  result[first] = addKeyToObject(obj[first], rest, key, value);
+  return result;
+}
+
+/**
+ * Append an item to an array at the given parent path (returns new object, immutable)
+ */
+export function appendToArray(obj, parentPath, value) {
+  if (parentPath.length === 0) {
+    if (!Array.isArray(obj)) return obj;
+    return [...obj, value];
+  }
+  const [first, ...rest] = parentPath;
+  const isArray = Array.isArray(obj);
+  const result = isArray ? [...obj] : { ...obj };
+  result[first] = appendToArray(obj[first], rest, value);
+  return result;
+}

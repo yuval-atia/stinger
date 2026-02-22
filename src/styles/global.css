@@ -288,6 +288,25 @@ select:focus-visible {
   background-color: rgba(167, 139, 250, 0.15);
 }
 
+/* Character-level diff highlights */
+.char-diff-remove {
+  background-color: #fecaca;
+  text-decoration: line-through;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.dark .char-diff-remove {
+  background-color: #991b1b;
+}
+.char-diff-add {
+  background-color: #bbf7d0;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.dark .char-diff-add {
+  background-color: #166534;
+}
+
 .tree-node-enter {
   opacity: 0;
   transform: translateY(-10px);

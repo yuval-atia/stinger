@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { buildPath, copyToClipboard } from '../../utils/pathCopier';
 import { getValueType, getPreview } from '../../utils/jsonParser';
 import { getDiffType, pathHasDiff } from '../../utils/differ';
+import { charDiff } from '../../utils/charDiff';
 import { isImageUrl } from '../../utils/imageDetector';
 import { detectDateFormat } from '../../utils/dateDetector';
 import { detectNestedJson } from '../../utils/nestedJsonDetector';
@@ -32,8 +33,12 @@ function TreeNode({
   onBreadcrumbPath,
   pinnedPaths,
   onTogglePin,
+  showPinHint,
   currentDiffPath,
   jsonpathMatches,
+  onDeleteNode,
+  onAddKey,
+  onAddArrayItem,
 }) {
   const nodeRef = useRef(null);
   const pathStr = path.join('.');
@@ -49,6 +54,11 @@ function TreeNode({
 
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
+  const [copyMenuOpen, setCopyMenuOpen] = useState(false);
+  const copyMenuRef = useRef(null);
+  const [isAddingKey, setIsAddingKey] = useState(false);
+  const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyValue, setNewKeyValue] = useState('');
 
   // Scroll into view when this is the current match
   useEffect(() => {
@@ -69,6 +79,18 @@ function TreeNode({
       });
     }
   }, [isCurrentDiffMatch]);
+
+  // Close copy menu on outside click
+  useEffect(() => {
+    if (!copyMenuOpen) return;
+    const handler = (e) => {
+      if (copyMenuRef.current && !copyMenuRef.current.contains(e.target)) {
+        setCopyMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [copyMenuOpen]);
 
   const valueType = getValueType(value);
   const isExpandable = valueType === 'object' || valueType === 'array';
@@ -97,6 +119,21 @@ function TreeNode({
     const valueString = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
     await copyToClipboard(valueString);
     showToast('Value copied');
+    setCopyMenuOpen(false);
+  }, [value, showToast]);
+
+  const handleCopyMinified = useCallback(async () => {
+    await copyToClipboard(JSON.stringify(value));
+    showToast('Minified JSON copied');
+    setCopyMenuOpen(false);
+  }, [value, showToast]);
+
+  const handleCopyKeys = useCallback(async () => {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      await copyToClipboard(JSON.stringify(Object.keys(value)));
+      showToast('Keys copied');
+    }
+    setCopyMenuOpen(false);
   }, [value, showToast]);
 
   const handleStartEdit = useCallback(() => {
@@ -223,11 +260,35 @@ function TreeNode({
 
     switch (valueType) {
       case 'string': {
-        const stringContent = (
-          <span className="json-string cursor-pointer" onDoubleClick={handleStartEdit}>
-            "{highlightText(value)}"
-          </span>
-        );
+        // Character-level diff for changed strings in compare mode
+        let stringContent;
+        if (diffType === 'changed' && diffEntry && typeof diffEntry.leftValue === 'string' && typeof diffEntry.rightValue === 'string') {
+          const segments = charDiff(diffEntry.leftValue, diffEntry.rightValue);
+          if (segments && side) {
+            stringContent = (
+              <span className="json-string cursor-pointer" onDoubleClick={handleStartEdit}>
+                "{segments.map((seg, idx) => {
+                  if (seg.type === 'equal') return <span key={idx}>{seg.value}</span>;
+                  if (side === 'left' && seg.type === 'remove') return <span key={idx} className="char-diff-remove">{seg.value}</span>;
+                  if (side === 'right' && seg.type === 'add') return <span key={idx} className="char-diff-add">{seg.value}</span>;
+                  return null;
+                })}"
+              </span>
+            );
+          } else {
+            stringContent = (
+              <span className="json-string cursor-pointer" onDoubleClick={handleStartEdit}>
+                "{highlightText(value)}"
+              </span>
+            );
+          }
+        } else {
+          stringContent = (
+            <span className="json-string cursor-pointer" onDoubleClick={handleStartEdit}>
+              "{highlightText(value)}"
+            </span>
+          );
+        }
 
         if (isImageUrl(value)) {
           return <ImagePreview url={value}>{stringContent}</ImagePreview>;
@@ -351,8 +412,12 @@ function TreeNode({
             onBreadcrumbPath={onBreadcrumbPath}
             pinnedPaths={pinnedPaths}
             onTogglePin={onTogglePin}
+            showPinHint={showPinHint}
             currentDiffPath={currentDiffPath}
             jsonpathMatches={jsonpathMatches}
+            onDeleteNode={onDeleteNode}
+            onAddKey={onAddKey}
+            onAddArrayItem={onAddArrayItem}
           />
         ))}
       </div>
@@ -416,12 +481,15 @@ function TreeNode({
         {/* Action buttons */}
         <div className="flex-shrink-0 flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
           {!isRoot && onTogglePin && (
-            <span className={`transition-opacity ${isPinned ? '' : 'opacity-0 group-hover:opacity-100'}`}>
+            <span className={`transition-opacity relative ${isPinned ? '' : showPinHint && path.length === 1 && isExpandable ? 'opacity-40' : 'opacity-0 group-hover:opacity-100'}`}>
               <CopyButton onClick={() => onTogglePin(pathStr)} tooltip={isPinned ? 'Unpin node' : 'Pin node'} size="sm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 translate-y-0.5">
                   <path d="M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" />
                 </svg>
               </CopyButton>
+              {showPinHint && path.length === 1 && isExpandable && !isPinned && (
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[var(--accent-color)] rounded-full animate-pulse" />
+              )}
             </span>
           )}
           {!isRoot && (
@@ -431,16 +499,136 @@ function TreeNode({
               </CopyButton>
             </span>
           )}
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <CopyButton onClick={handleCopyValue} tooltip="Copy value" size="sm">
-              📄
-            </CopyButton>
-          </span>
+          {isExpandable ? (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity relative" ref={copyMenuRef}>
+              <CopyButton
+                onClick={() => setCopyMenuOpen((p) => !p)}
+                tooltip={valueType === 'object' ? `Copy object (${Object.keys(value).length} keys)` : `Copy array (${value.length} items)`}
+                size="sm"
+              >
+                📄
+              </CopyButton>
+              {copyMenuOpen && (
+                <div className="absolute top-full right-0 mt-1 z-50 w-32 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg py-1">
+                  <button onClick={handleCopyValue} className="w-full text-left px-3 py-1.5 text-xs hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors">
+                    Copy JSON
+                  </button>
+                  <button onClick={handleCopyMinified} className="w-full text-left px-3 py-1.5 text-xs hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors">
+                    Copy minified
+                  </button>
+                  {valueType === 'object' && (
+                    <button onClick={handleCopyKeys} className="w-full text-left px-3 py-1.5 text-xs hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors">
+                      Copy keys
+                    </button>
+                  )}
+                </div>
+              )}
+            </span>
+          ) : (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <CopyButton onClick={handleCopyValue} tooltip="Copy value" size="sm">
+                📄
+              </CopyButton>
+            </span>
+          )}
+          {/* Add button for expandable nodes */}
+          {isExpandable && onDeleteNode && (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <CopyButton
+                onClick={() => {
+                  if (valueType === 'array') {
+                    onAddArrayItem(path);
+                  } else {
+                    setIsAddingKey(true);
+                    setNewKeyName('');
+                    setNewKeyValue('');
+                  }
+                }}
+                tooltip={valueType === 'array' ? 'Add item' : 'Add key'}
+                size="sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                  <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                </svg>
+              </CopyButton>
+            </span>
+          )}
+          {/* Delete button for non-root nodes */}
+          {!isRoot && onDeleteNode && (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <CopyButton onClick={() => onDeleteNode(path)} tooltip="Delete node" size="sm">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[var(--error-color)]">
+                  <path fillRule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clipRule="evenodd" />
+                </svg>
+              </CopyButton>
+            </span>
+          )}
         </div>
       </div>
 
       {/* Children */}
       {renderChildren()}
+
+      {/* Inline add-key form */}
+      {isAddingKey && isExpanded && valueType === 'object' && (
+        <div className="pl-8 py-1 flex items-center gap-1">
+          <input
+            type="text"
+            value={newKeyName}
+            onChange={(e) => setNewKeyName(e.target.value)}
+            placeholder="key"
+            autoFocus
+            className="w-24 px-1.5 py-0.5 text-xs rounded border border-[var(--accent-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none font-mono"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && newKeyName.trim()) {
+                let val = newKeyValue.trim();
+                try { val = JSON.parse(val); } catch { /* keep as string */ }
+                onAddKey(path, newKeyName.trim(), val || null);
+                setIsAddingKey(false);
+              } else if (e.key === 'Escape') {
+                setIsAddingKey(false);
+              }
+            }}
+          />
+          <span className="text-[var(--text-secondary)] text-xs">:</span>
+          <input
+            type="text"
+            value={newKeyValue}
+            onChange={(e) => setNewKeyValue(e.target.value)}
+            placeholder="value"
+            className="w-24 px-1.5 py-0.5 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none font-mono"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && newKeyName.trim()) {
+                let val = newKeyValue.trim();
+                try { val = JSON.parse(val); } catch { /* keep as string */ }
+                onAddKey(path, newKeyName.trim(), val || null);
+                setIsAddingKey(false);
+              } else if (e.key === 'Escape') {
+                setIsAddingKey(false);
+              }
+            }}
+          />
+          <button
+            onClick={() => {
+              if (newKeyName.trim()) {
+                let val = newKeyValue.trim();
+                try { val = JSON.parse(val); } catch { /* keep as string */ }
+                onAddKey(path, newKeyName.trim(), val || null);
+              }
+              setIsAddingKey(false);
+            }}
+            className="text-xs px-1.5 py-0.5 rounded bg-[var(--accent-color)] text-white hover:opacity-80"
+          >
+            Add
+          </button>
+          <button
+            onClick={() => setIsAddingKey(false)}
+            className="text-xs px-1.5 py-0.5 rounded bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,12 +8,13 @@ import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
 import { useJsonParser } from '../hooks/useJsonParser';
 import { parseJson, formatJson, getValueType } from '../utils/jsonParser';
-import { setValueAtPath } from '../utils/pathCopier';
+import { setValueAtPath, deleteAtPath, addKeyToObject, appendToArray } from '../utils/pathCopier';
 import { calculateJsonStats } from '../utils/jsonStats';
 import { resolveHashState, stripHash } from '../utils/shareCompression';
 import { inferDepthFromPaths } from '../utils/depthDetector';
 import { evaluateJsonPath } from '../utils/jsonpath';
 import { convertJsonKeys, toCamelCase, toSnakeCase, toPascalCase, toKebabCase, toConstantCase } from '../utils/caseConverter';
+import { sortObjectKeys } from '../utils/sortKeys';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -102,13 +103,18 @@ function JsonPreviewPage() {
   const [jsonPathResultsOpen, setJsonPathResultsOpen] = useState(true);
 
   const [keyCaseOpen, setKeyCaseOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [pinHintDismissed, setPinHintDismissed] = useState(() => localStorage.getItem('stinger-pin-hint-dismissed') === 'true');
+  const [scrollToPath, setScrollToPath] = useState(null);
 
   const inputTextareaRef = useRef(null);
   const treeScrollRef = useRef(null);
   const currentPinIndexRef = useRef(0);
   const keyCaseRef = useRef(null);
+  const sortRef = useRef(null);
   const undoStack = useRef([]);
   const redoStack = useRef([]);
+  const searchDebounceRef = useRef(null);
 
   /** Save current value before a transform action */
   const pushUndo = useCallback(() => {
@@ -232,10 +238,14 @@ function JsonPreviewPage() {
         next.delete(pathStr);
       } else {
         next.add(pathStr);
+        if (!pinHintDismissed) {
+          setPinHintDismissed(true);
+          localStorage.setItem('stinger-pin-hint-dismissed', 'true');
+        }
       }
       return next;
     });
-  }, []);
+  }, [pinHintDismissed]);
 
   const handleClearPins = useCallback(() => {
     setPinnedPaths(new Set());
@@ -249,7 +259,9 @@ function JsonPreviewPage() {
     currentPinIndexRef.current = index + 1;
     const targetPath = paths[index];
 
-    // Find the pinned node in the DOM
+    // Use scrollToPath for virtual tree, fallback to DOM query
+    setScrollToPath(targetPath);
+    // Also try DOM approach for non-virtualized trees
     const container = treeScrollRef.current;
     if (!container) return;
     const el = container.querySelector(`[data-pinned-path="${CSS.escape(targetPath)}"]`);
@@ -286,17 +298,30 @@ function JsonPreviewPage() {
     setKeyCaseOpen(false);
   }, [parsedData, handleInputChange, setInputValue, pushUndo]);
 
+  const handleSortKeys = useCallback((direction) => {
+    if (!parsedData) return;
+    pushUndo();
+    const sorted = sortObjectKeys(parsedData, direction);
+    const json = JSON.stringify(sorted, null, 2);
+    handleInputChange(json);
+    setInputValue(json);
+    setSortOpen(false);
+  }, [parsedData, handleInputChange, setInputValue, pushUndo]);
+
   // Close keys dropdown on outside click
   useEffect(() => {
-    if (!keyCaseOpen) return;
+    if (!keyCaseOpen && !sortOpen) return;
     const handler = (e) => {
       if (keyCaseRef.current && !keyCaseRef.current.contains(e.target)) {
         setKeyCaseOpen(false);
       }
+      if (sortRef.current && !sortRef.current.contains(e.target)) {
+        setSortOpen(false);
+      }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [keyCaseOpen]);
+  }, [keyCaseOpen, sortOpen]);
 
   // ── Undo / Redo ──────────────────────────────────────────────────────────
 
@@ -332,6 +357,11 @@ function JsonPreviewPage() {
     return () => document.removeEventListener('keydown', handler);
   }, [handleUndo, handleRedo]);
 
+  // Cleanup search debounce on unmount
+  useEffect(() => {
+    return () => clearTimeout(searchDebounceRef.current);
+  }, []);
+
   const handleDownload = useCallback(() => {
     if (!parsedData) return;
     const json = JSON.stringify(parsedData, null, 2);
@@ -348,6 +378,41 @@ function JsonPreviewPage() {
     if (!parsedData) return;
     pushUndo();
     const newData = setValueAtPath(parsedData, path, newValue);
+    setParsedData(newData);
+    setInputValue(JSON.stringify(newData, null, 2));
+  }, [parsedData, setParsedData, setInputValue, pushUndo]);
+
+  const handleDeleteNode = useCallback((path) => {
+    if (!parsedData) return;
+    pushUndo();
+    const newData = deleteAtPath(parsedData, path);
+    setParsedData(newData);
+    setInputValue(JSON.stringify(newData, null, 2));
+    // Clean pinned paths that start with this path
+    const pathStr = path.join('.');
+    setPinnedPaths((prev) => {
+      const next = new Set(prev);
+      for (const p of prev) {
+        if (p === pathStr || p.startsWith(pathStr + '.')) {
+          next.delete(p);
+        }
+      }
+      return next;
+    });
+  }, [parsedData, setParsedData, setInputValue, pushUndo]);
+
+  const handleAddKey = useCallback((parentPath, key, value) => {
+    if (!parsedData) return;
+    pushUndo();
+    const newData = addKeyToObject(parsedData, parentPath, key, value);
+    setParsedData(newData);
+    setInputValue(JSON.stringify(newData, null, 2));
+  }, [parsedData, setParsedData, setInputValue, pushUndo]);
+
+  const handleAddArrayItem = useCallback((parentPath) => {
+    if (!parsedData) return;
+    pushUndo();
+    const newData = appendToArray(parsedData, parentPath, null);
     setParsedData(newData);
     setInputValue(JSON.stringify(newData, null, 2));
   }, [parsedData, setParsedData, setInputValue, pushUndo]);
@@ -411,10 +476,17 @@ function JsonPreviewPage() {
   const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
     if (!value.trim()) {
+      clearTimeout(searchDebounceRef.current);
       setActiveSearch('');
       setMatchCount(0);
       setCurrentMatchIndex(0);
       setFilterMode(false);
+    } else {
+      clearTimeout(searchDebounceRef.current);
+      searchDebounceRef.current = setTimeout(() => {
+        setCurrentMatchIndex(0);
+        setActiveSearch(value);
+      }, 300);
     }
   }, []);
 
@@ -426,6 +498,7 @@ function JsonPreviewPage() {
       return;
     }
 
+    clearTimeout(searchDebounceRef.current);
     setIsSearching(true);
     setCurrentMatchIndex(0);
     setTimeout(() => {
@@ -553,6 +626,39 @@ function JsonPreviewPage() {
                           {label}
                         </button>
                       ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              {parsedData && (
+                <div className="relative" ref={sortRef}>
+                  <button
+                    onClick={() => setSortOpen((p) => !p)}
+                    className={`px-2 py-1 text-xs rounded transition-colors flex items-center gap-0.5 ${
+                      sortOpen
+                        ? 'bg-[var(--accent-color)] text-white'
+                        : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)]'
+                    }`}
+                  >
+                    Sort
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
+                      <path fillRule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {sortOpen && (
+                    <div className="absolute top-full left-0 mt-1 z-50 w-28 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg py-1">
+                      <button
+                        onClick={() => handleSortKeys('asc')}
+                        className="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors"
+                      >
+                        A &rarr; Z
+                      </button>
+                      <button
+                        onClick={() => handleSortKeys('desc')}
+                        className="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors"
+                      >
+                        Z &rarr; A
+                      </button>
                     </div>
                   )}
                 </div>
@@ -738,7 +844,13 @@ function JsonPreviewPage() {
                 onBreadcrumbPath={handleBreadcrumbPath}
                 pinnedPaths={pinnedPaths}
                 onTogglePin={handleTogglePin}
+                showPinHint={!pinHintDismissed}
+                onDeleteNode={handleDeleteNode}
+                onAddKey={handleAddKey}
+                onAddArrayItem={handleAddArrayItem}
                 jsonpathMatches={queryMode === 'jsonpath' ? jsonPathResults.matchPaths : undefined}
+                containerRef={treeScrollRef}
+                scrollToPath={scrollToPath}
               />
             ) : parseError ? (
               <div className="text-[var(--error-color)] text-sm">

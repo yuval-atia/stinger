@@ -72,9 +72,10 @@ export async function decompressState(base64url) {
 }
 
 /** Build the minimal state object for diff share (v2) */
-export function buildDiffShareState({ leftJson, rightJson, diffOnly }) {
+export function buildDiffShareState({ leftJson, rightJson, diffOnly, arrayMatchKey }) {
   const state = { v: 2, l: leftJson, r: rightJson };
   if (diffOnly) state.do = true;
+  if (arrayMatchKey) state.ak = arrayMatchKey;
   return state;
 }
 
@@ -82,8 +83,8 @@ export function buildDiffShareState({ leftJson, rightJson, diffOnly }) {
  * Compress and check if the inline diff URL fits.
  * Returns { compressed, inlineUrl, needsWorker }.
  */
-export async function compressAndCheckDiff({ leftJson, rightJson, diffOnly }) {
-  const stateObj = buildDiffShareState({ leftJson, rightJson, diffOnly });
+export async function compressAndCheckDiff({ leftJson, rightJson, diffOnly, arrayMatchKey }) {
+  const stateObj = buildDiffShareState({ leftJson, rightJson, diffOnly, arrayMatchKey });
   const compressed = await compressState(stateObj);
   const base = window.location.origin + '/compare';
   const inlineUrl = `${base}#state=${compressed}`;

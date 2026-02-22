@@ -18,6 +18,8 @@ function DiffView({
   onSwap,
   diffOnly: controlledDiffOnly,
   onDiffOnlyChange,
+  arrayMatchKey,
+  onArrayMatchKeyChange,
   shareData,
 }) {
   // Support both controlled (from page) and uncontrolled diffOnly
@@ -33,10 +35,14 @@ function DiffView({
     if (leftData === null || rightData === null) {
       return { diffs: [], diffMap: new Map() };
     }
-    const diffs = diffJson(leftData, rightData);
+    const options = {};
+    if (arrayMatchKey && arrayMatchKey.trim()) {
+      options.arrayMatchKey = arrayMatchKey.trim();
+    }
+    const diffs = diffJson(leftData, rightData, [], options);
     const diffMap = createDiffMap(diffs);
     return { diffs, diffMap };
-  }, [leftData, rightData]);
+  }, [leftData, rightData, arrayMatchKey]);
 
   const stats = useMemo(() => {
     const added = diffs.filter((d) => d.type === 'added').length;
@@ -242,6 +248,21 @@ function DiffView({
             </>
           )}
 
+          {/* Array match key input */}
+          {onArrayMatchKeyChange && (
+            <div className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+              <span className="whitespace-nowrap">Match by:</span>
+              <input
+                type="text"
+                value={arrayMatchKey}
+                onChange={(e) => onArrayMatchKeyChange(e.target.value)}
+                placeholder="auto"
+                className="w-20 px-1.5 py-0.5 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-color)]"
+                title="Custom array match key (e.g. id, name). Leave empty for auto-detect."
+              />
+            </div>
+          )}
+
           <div className="flex-1" />
 
           {/* Controls */}
@@ -357,6 +378,7 @@ function DiffView({
                   controlledExpandedPaths={leftMergedExpanded}
                   onTogglePath={handleLeftToggle}
                   currentDiffPath={currentDiffPath}
+                  containerRef={leftTreeRef}
                 />
               ) : leftError ? (
                 <div className="text-[var(--error-color)] text-sm">
@@ -403,6 +425,7 @@ function DiffView({
                   controlledExpandedPaths={rightMergedExpanded}
                   onTogglePath={handleRightToggle}
                   currentDiffPath={currentDiffPath}
+                  containerRef={rightTreeRef}
                 />
               ) : rightError ? (
                 <div className="text-[var(--error-color)] text-sm">
