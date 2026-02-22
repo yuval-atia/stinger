@@ -82,6 +82,12 @@
 - **CSS** — Format and minify CSS stylesheets
 - **HTML** — Format and minify HTML markup
 
+## Packages
+
+| Package | Description | npm |
+|---------|-------------|-----|
+| [`@stingr/json-viewer`](packages/json-viewer) | Standalone JSON tree viewer React component with virtual scrolling, search, inline editing, diffing, and node pinning | [![npm](https://img.shields.io/npm/v/@stingr/json-viewer)](https://www.npmjs.com/package/@stingr/json-viewer) |
+
 ## Tech Stack
 
 - React 18 + Vite
