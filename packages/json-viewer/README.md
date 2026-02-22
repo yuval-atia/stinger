@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://stingr.dev">
+    <img src="https://raw.githubusercontent.com/yuval-atia/stinger/main/src/assets/stingr_logo.svg" alt="stingr.dev" width="250" />
+  </a>
+</p>
+
 # @stingr/json-viewer
 
 A full-featured JSON tree viewer React component with virtual scrolling, search, inline editing, node pinning, and character-level diffs.
