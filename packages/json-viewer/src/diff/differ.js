@@ -69,13 +69,12 @@ export function diffJson(left, right, path = [], options = {}) {
   return diffs;
 }
 
-// ── Smart array matching ─────────────────────────────────────────────────────
+// -- Smart array matching --
 
 const CANDIDATE_KEYS = ['id', '_id', 'key', 'name', 'uuid', 'slug'];
 
 /** Check if a candidate key field is unique across both arrays */
 function detectArrayKey(leftArr, rightArr) {
-  // Only consider arrays where at least 50% of items are objects
   const totalLen = leftArr.length + rightArr.length;
   const objCount = leftArr.filter((v) => v && typeof v === 'object' && !Array.isArray(v)).length +
                    rightArr.filter((v) => v && typeof v === 'object' && !Array.isArray(v)).length;
@@ -107,7 +106,6 @@ function detectArrayKey(leftArr, rightArr) {
       }
     }
 
-    // Key must be present and unique on both sides
     if (leftHasKey === leftVals.size && leftHasKey > 0 &&
         rightHasKey === rightVals.size && rightHasKey > 0) {
       return key;
@@ -144,7 +142,6 @@ function diffArrayByIndex(left, right, path, options = {}) {
 function diffArrayByKey(left, right, path, keyField, options = {}) {
   const diffs = [];
 
-  // Build lookup maps: keyValue → { index, item }
   const leftMap = new Map();
   const rightMap = new Map();
 
@@ -162,11 +159,9 @@ function diffArrayByKey(left, right, path, keyField, options = {}) {
 
   const matched = new Set();
 
-  // Walk left items
   for (const [keyVal, { index: leftIdx, item: leftItem }] of leftMap) {
     const rightEntry = rightMap.get(keyVal);
     if (!rightEntry) {
-      // Removed
       diffs.push({
         type: 'removed',
         path: [...path, leftIdx],
@@ -178,7 +173,6 @@ function diffArrayByKey(left, right, path, keyField, options = {}) {
       const { index: rightIdx, item: rightItem } = rightEntry;
 
       if (leftIdx !== rightIdx) {
-        // Moved — emit move markers at both indices
         diffs.push({
           type: 'moved',
           path: [...path, leftIdx],
@@ -195,13 +189,10 @@ function diffArrayByKey(left, right, path, keyField, options = {}) {
         });
       }
 
-      // Recurse for content diffs (always use left index as canonical path)
       const contentDiffs = diffJson(leftItem, rightItem, [...path, leftIdx], options);
-      // If item moved, duplicate content diffs to the right index path too
       if (leftIdx !== rightIdx) {
         for (const cd of contentDiffs) {
           diffs.push(cd);
-          // Also create a copy at the right-side index
           const relPath = cd.path.slice(path.length + 1);
           diffs.push({ ...cd, path: [...path, rightIdx, ...relPath] });
         }
@@ -211,7 +202,6 @@ function diffArrayByKey(left, right, path, keyField, options = {}) {
     }
   }
 
-  // Walk right items for added ones
   for (const [keyVal, { index: rightIdx, item: rightItem }] of rightMap) {
     if (!matched.has(keyVal) && !leftMap.has(keyVal)) {
       diffs.push({
@@ -227,7 +217,6 @@ function diffArrayByKey(left, right, path, keyField, options = {}) {
 }
 
 function diffArraySmart(left, right, path, options = {}) {
-  // Fallback to index-based for: arrays >10K items, empty arrays
   if (left.length > 10000 || right.length > 10000) {
     return diffArrayByIndex(left, right, path, options);
   }

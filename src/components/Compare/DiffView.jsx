@@ -1,9 +1,10 @@
 import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import JsonInput from '../Editor/JsonInput';
-import TreeView from '../TreeView/TreeView';
+import { TreeView, TreeProvider } from '@stingr/json-viewer';
+import { diffJson, createDiffMap } from '@stingr/json-viewer/diff';
 import ShareButton from '../common/ShareButton';
 import { InfoButton } from '../common/InfoTooltip';
-import { diffJson, createDiffMap, pathHasDiff } from '../../utils/differ';
+import { useToast } from '../common/Toast';
 
 function DiffView({
   leftInput,
@@ -22,6 +23,7 @@ function DiffView({
   onArrayMatchKeyChange,
   shareData,
 }) {
+  const { showToast } = useToast();
   // Support both controlled (from page) and uncontrolled diffOnly
   const [internalDiffOnly, setInternalDiffOnly] = useState(false);
   const diffOnly = controlledDiffOnly !== undefined ? controlledDiffOnly : internalDiffOnly;
@@ -369,26 +371,30 @@ function DiffView({
               <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Left Tree</span>
             </div>
             <div className="flex-1 overflow-auto p-4" ref={leftTreeRef}>
-              {leftData !== null ? (
-                <TreeView
-                  data={leftData}
-                  searchQuery={searchQuery}
-                  diffMap={diffMap}
-                  side="left"
-                  controlledExpandedPaths={leftMergedExpanded}
-                  onTogglePath={handleLeftToggle}
-                  currentDiffPath={currentDiffPath}
-                  containerRef={leftTreeRef}
-                />
-              ) : leftError ? (
-                <div className="text-[var(--error-color)] text-sm">
-                  <span className="font-medium">Parse Error:</span> {leftError}
-                </div>
-              ) : (
-                <div className="text-[var(--text-secondary)] text-sm">
-                  Enter JSON to compare
-                </div>
-              )}
+              <TreeProvider onNotify={showToast}>
+                {leftData !== null ? (
+                  <div className="sjt">
+                    <TreeView
+                      data={leftData}
+                      searchQuery={searchQuery}
+                      diffMap={diffMap}
+                      side="left"
+                      controlledExpandedPaths={leftMergedExpanded}
+                      onTogglePath={handleLeftToggle}
+                      currentDiffPath={currentDiffPath}
+                      containerRef={leftTreeRef}
+                    />
+                  </div>
+                ) : leftError ? (
+                  <div className="text-[var(--error-color)] text-sm">
+                    <span className="font-medium">Parse Error:</span> {leftError}
+                  </div>
+                ) : (
+                  <div className="text-[var(--text-secondary)] text-sm">
+                    Enter JSON to compare
+                  </div>
+                )}
+              </TreeProvider>
             </div>
           </div>
         </div>
@@ -416,26 +422,30 @@ function DiffView({
               <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Right Tree</span>
             </div>
             <div className="flex-1 overflow-auto p-4" ref={rightTreeRef}>
-              {rightData !== null ? (
-                <TreeView
-                  data={rightData}
-                  searchQuery={searchQuery}
-                  diffMap={diffMap}
-                  side="right"
-                  controlledExpandedPaths={rightMergedExpanded}
-                  onTogglePath={handleRightToggle}
-                  currentDiffPath={currentDiffPath}
-                  containerRef={rightTreeRef}
-                />
-              ) : rightError ? (
-                <div className="text-[var(--error-color)] text-sm">
-                  <span className="font-medium">Parse Error:</span> {rightError}
-                </div>
-              ) : (
-                <div className="text-[var(--text-secondary)] text-sm">
-                  Enter JSON to compare
-                </div>
-              )}
+              <TreeProvider onNotify={showToast}>
+                {rightData !== null ? (
+                  <div className="sjt">
+                    <TreeView
+                      data={rightData}
+                      searchQuery={searchQuery}
+                      diffMap={diffMap}
+                      side="right"
+                      controlledExpandedPaths={rightMergedExpanded}
+                      onTogglePath={handleRightToggle}
+                      currentDiffPath={currentDiffPath}
+                      containerRef={rightTreeRef}
+                    />
+                  </div>
+                ) : rightError ? (
+                  <div className="text-[var(--error-color)] text-sm">
+                    <span className="font-medium">Parse Error:</span> {rightError}
+                  </div>
+                ) : (
+                  <div className="text-[var(--text-secondary)] text-sm">
+                    Enter JSON to compare
+                  </div>
+                )}
+              </TreeProvider>
             </div>
           </div>
         </div>

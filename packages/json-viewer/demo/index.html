@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@stingr/json-viewer Demo</title>
+  <link rel="stylesheet" href="../dist/styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime"
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+    body.dark-page {
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+
+    .demo-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dark-page .demo-header {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    .demo-header h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .demo-header code {
+      font-size: 13px;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #6366f1;
+    }
+    .dark-page .demo-header code {
+      background: #334155;
+      color: #818cf8;
+    }
+
+    .demo-layout {
+      display: flex;
+      height: calc(100vh - 57px);
+    }
+
+    /* Controls sidebar */
+    .demo-controls {
+      width: 280px;
+      flex-shrink: 0;
+      padding: 16px;
+      border-right: 1px solid #e5e7eb;
+      background: #fff;
+      overflow-y: auto;
+    }
+    .dark-page .demo-controls {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    .control-group {
+      margin-bottom: 16px;
+    }
+    .control-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .dark-page .control-group label {
+      color: #94a3b8;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 5px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #374151;
+    }
+    .dark-page .btn {
+      background: #334155;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+    .btn:hover { border-color: #6366f1; color: #6366f1; }
+    .btn.active {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: #fff;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+    .toggle-row span {
+      font-size: 13px;
+    }
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      border-radius: 10px;
+      background: #d1d5db;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: none;
+    }
+    .dark-page .toggle { background: #475569; }
+    .toggle.on { background: #6366f1; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(16px); }
+
+    .select-input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+      color: #374151;
+    }
+    .dark-page .select-input {
+      background: #334155;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+
+    .number-input {
+      width: 80px;
+      padding: 5px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+      color: #374151;
+    }
+    .dark-page .number-input {
+      background: #334155;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+
+    .separator {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 12px 0;
+    }
+    .dark-page .separator { border-color: #334155; }
+
+    /* Viewer area */
+    .demo-viewer {
+      flex: 1;
+      padding: 24px;
+      overflow: auto;
+    }
+    .viewer-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      height: 100%;
+      overflow: hidden;
+    }
+    .dark-page .viewer-card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .event-log {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .dark-page .event-log { color: #94a3b8; }
+    .event-log div {
+      padding: 2px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-family: monospace;
+    }
+    .dark-page .event-log div { border-color: #1e293b; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { JsonViewer } from '../dist/index.js';
+
+    const h = React.createElement;
+
+    const SAMPLE_DATA = {
+      name: "Stinger JSON Viewer",
+      version: "0.1.0",
+      description: "A full-featured JSON tree viewer React component",
+      repository: {
+        type: "git",
+        url: "https://github.com/anthropics/stinger"
+      },
+      features: [
+        "Virtual scrolling",
+        "Search with highlighting",
+        "Inline editing",
+        "Node pinning",
+        "Character-level diffs",
+        "Date detection",
+        "Image preview",
+        "URL detection",
+        "Nested JSON detection"
+      ],
+      config: {
+        theme: "auto",
+        virtualizeThreshold: 500,
+        defaultExpandDepth: 1
+      },
+      stats: {
+        stars: 1240,
+        forks: 87,
+        openIssues: 12,
+        lastPublished: "2026-02-22T10:30:00.000Z",
+        downloads: {
+          weekly: 4521,
+          monthly: 18340,
+          total: 124000
+        }
+      },
+      maintainers: [
+        { id: 1, name: "Alice", role: "lead", avatar: "https://i.imgur.com/7bMqy9s.png" },
+        { id: 2, name: "Bob", role: "contributor", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" },
+        { id: 3, name: "Charlie", role: "contributor" }
+      ],
+      peerDependencies: {
+        react: ">=18",
+        "react-dom": ">=18"
+      },
+      keywords: ["json", "viewer", "tree", "react", "virtual-scroll", "diff"],
+      license: "MIT",
+      isPublished: true,
+      deprecated: null,
+      nestedJson: '{"embedded": true, "count": 42}'
+    };
+
+    const SAMPLE_DATASETS = {
+      default: SAMPLE_DATA,
+      small: { greeting: "Hello", count: 42, active: true, tags: ["a", "b"] },
+      array: [
+        { id: 1, name: "Item 1", status: "active", createdAt: "1708617600" },
+        { id: 2, name: "Item 2", status: "inactive", createdAt: "1708704000" },
+        { id: 3, name: "Item 3", status: "active", createdAt: "1708790400" },
+      ],
+      deep: {
+        level1: {
+          level2: {
+            level3: {
+              level4: {
+                level5: {
+                  value: "deeply nested",
+                  timestamp: "2026-02-22T15:30:00Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      large: generateLargeData(),
+    };
+
+    function generateLargeData() {
+      const data = { users: [] };
+      for (let i = 0; i < 100; i++) {
+        data.users.push({
+          id: i + 1,
+          name: `User ${i + 1}`,
+          email: `user${i + 1}@example.com`,
+          active: Math.random() > 0.3,
+          score: Math.round(Math.random() * 1000),
+          tags: ["tag" + (i % 5), "tag" + (i % 3)],
+        });
+      }
+      return data;
+    }
+
+    function Toggle({ value, onChange, label }) {
+      return h('div', { className: 'toggle-row' },
+        h('span', null, label),
+        h('button', {
+          className: `toggle ${value ? 'on' : ''}`,
+          onClick: () => onChange(!value),
+        })
+      );
+    }
+
+    function App() {
+      const [theme, setTheme] = React.useState('dark');
+      const [searchable, setSearchable] = React.useState(true);
+      const [editable, setEditable] = React.useState(false);
+      const [expandDepth, setExpandDepth] = React.useState(1);
+      const [height, setHeight] = React.useState(0);
+      const [dataset, setDataset] = React.useState('default');
+      const [data, setData] = React.useState(SAMPLE_DATASETS.default);
+      const [events, setEvents] = React.useState([]);
+
+      React.useEffect(() => {
+        document.body.className = theme === 'dark' ? 'dark-page' : '';
+      }, [theme]);
+
+      const addEvent = React.useCallback((msg) => {
+        setEvents(prev => [{ time: new Date().toLocaleTimeString(), msg }, ...prev].slice(0, 20));
+      }, []);
+
+      const handleDatasetChange = React.useCallback((e) => {
+        const key = e.target.value;
+        setDataset(key);
+        setData(SAMPLE_DATASETS[key]);
+      }, []);
+
+      const handleEdit = React.useCallback((op) => {
+        addEvent(`onEdit: ${op.type} at ${JSON.stringify(op.path)}`);
+      }, [addEvent]);
+
+      const handleCopy = React.useCallback((info) => {
+        addEvent(`onCopy: ${info.type} at ${JSON.stringify(info.path)}`);
+      }, [addEvent]);
+
+      const handleSelect = React.useCallback((path, value) => {
+        addEvent(`onSelect: ${JSON.stringify(path)}`);
+      }, [addEvent]);
+
+      const handleNotify = React.useCallback((message) => {
+        addEvent(`onNotify: ${message}`);
+      }, [addEvent]);
+
+      const viewerKey = `${dataset}-${expandDepth}`;
+
+      return h('div', null,
+        // Header
+        h('div', { className: 'demo-header' },
+          h('h1', null, '@stingr/json-viewer'),
+          h('code', null, 'npm i @stingr/json-viewer')
+        ),
+
+        // Layout
+        h('div', { className: 'demo-layout' },
+
+          // Sidebar controls
+          h('div', { className: 'demo-controls' },
+
+            h('div', { className: 'control-group' },
+              h('label', null, 'Dataset'),
+              h('select', {
+                className: 'select-input',
+                value: dataset,
+                onChange: handleDatasetChange,
+              },
+                h('option', { value: 'default' }, 'Package Info (mixed types)'),
+                h('option', { value: 'small' }, 'Small Object'),
+                h('option', { value: 'array' }, 'Array of Objects'),
+                h('option', { value: 'deep' }, 'Deeply Nested'),
+                h('option', { value: 'large' }, 'Large (100 users)'),
+              )
+            ),
+
+            h('hr', { className: 'separator' }),
+
+            h('div', { className: 'control-group' },
+              h('label', null, 'Theme'),
+              h('div', { className: 'btn-group' },
+                ['light', 'dark'].map(t =>
+                  h('button', {
+                    key: t,
+                    className: `btn ${theme === t ? 'active' : ''}`,
+                    onClick: () => setTheme(t),
+                  }, t)
+                )
+              )
+            ),
+
+            h('hr', { className: 'separator' }),
+
+            h('div', { className: 'control-group' },
+              Toggle({ label: 'Searchable', value: searchable, onChange: setSearchable }),
+            ),
+
+            h('div', { className: 'control-group' },
+              Toggle({ label: 'Editable', value: editable, onChange: setEditable }),
+            ),
+
+            h('div', { className: 'control-group' },
+              h('label', null, 'Default Expand Depth'),
+              h('div', { className: 'btn-group' },
+                [0, 1, 2, 3].map(d =>
+                  h('button', {
+                    key: d,
+                    className: `btn ${expandDepth === d ? 'active' : ''}`,
+                    onClick: () => setExpandDepth(d),
+                  }, String(d))
+                )
+              )
+            ),
+
+            h('div', { className: 'control-group' },
+              h('label', null, 'Fixed Height (0 = auto)'),
+              h('input', {
+                type: 'number',
+                className: 'number-input',
+                value: height,
+                min: 0,
+                step: 100,
+                onChange: (e) => setHeight(Number(e.target.value)),
+              })
+            ),
+
+            h('hr', { className: 'separator' }),
+
+            h('div', { className: 'control-group' },
+              h('label', null, 'Event Log'),
+              h('div', { className: 'event-log' },
+                events.length === 0
+                  ? h('div', { style: { fontStyle: 'italic' } }, 'Interact with the tree to see events...')
+                  : events.map((e, i) =>
+                      h('div', { key: i },
+                        h('span', { style: { opacity: 0.5 } }, e.time + ' '),
+                        e.msg
+                      )
+                    )
+              )
+            ),
+          ),
+
+          // Viewer
+          h('div', { className: 'demo-viewer' },
+            h('div', { className: 'viewer-card' },
+              h(JsonViewer, {
+                key: viewerKey,
+                data: data,
+                theme: theme,
+                searchable: searchable,
+                editable: editable,
+                defaultExpandDepth: expandDepth,
+                height: height || undefined,
+                onEdit: handleEdit,
+                onCopy: handleCopy,
+                onSelect: handleSelect,
+                onNotify: handleNotify,
+              })
+            )
+          )
+        )
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(h(App));
+  </script>
+</body>
+</html>

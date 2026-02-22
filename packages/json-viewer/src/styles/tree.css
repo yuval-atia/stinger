@@ -1,0 +1,71 @@
+/* Tree node styles */
+.sjt .tree-node {
+  position: relative;
+}
+
+.sjt .tree-node.diff-added {
+  background-color: var(--sjt-diff-add);
+  border-radius: 2px;
+}
+
+.sjt .tree-node.diff-removed {
+  background-color: var(--sjt-diff-remove);
+  border-radius: 2px;
+}
+
+.sjt .tree-node.diff-changed {
+  background-color: var(--sjt-diff-change);
+  border-radius: 2px;
+}
+
+.sjt .tree-node .has-diff-children::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--sjt-accent-color);
+  border-radius: 1px;
+}
+
+.sjt .tree-node button {
+  font-size: 8px;
+  transition: transform 0.15s ease;
+}
+
+.sjt .tree-node button:hover {
+  transform: scale(1.2);
+}
+
+.sjt .tree-node input {
+  font-family: inherit;
+}
+
+/* Animation for expanding nodes */
+.sjt .tree-node > .sjt-pl-4 {
+  animation: sjt-slideDown 0.15s ease-out;
+}
+
+@keyframes sjt-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tree node enter animation */
+.sjt .tree-node-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.sjt .tree-node-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 150ms, transform 150ms;
+}

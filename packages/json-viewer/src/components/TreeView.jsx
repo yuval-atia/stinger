@@ -1,13 +1,15 @@
 import { useMemo, useEffect } from 'react';
-import TreeNode from './TreeNode';
-import VirtualizedTree from './VirtualizedTree';
-import { flattenTree, buildPathIndex } from '../../utils/flattenTree';
+import TreeNode from './TreeNode.jsx';
+import VirtualizedTree from './VirtualizedTree.jsx';
+import { flattenTree, buildPathIndex } from '../utils/flattenTree.js';
 
-const VIRTUALIZE_THRESHOLD = 500; // Use virtual scrolling above this many visible nodes
+const VIRTUALIZE_THRESHOLD = 500;
 
-function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, showPinHint, currentDiffPath, jsonpathMatches, onDeleteNode, onAddKey, onAddArrayItem, containerRef, scrollToPath }) {
+function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, showPinHint, currentDiffPath, jsonpathMatches, onDeleteNode, onAddKey, onAddArrayItem, containerRef, scrollToPath, virtualizeThreshold }) {
+  const threshold = virtualizeThreshold ?? VIRTUALIZE_THRESHOLD;
+
   const { matches, expandedPaths, matchList } = useMemo(() => {
-    if (!searchQuery.trim()) {
+    if (!searchQuery || !searchQuery.trim()) {
       return { matches: new Set(), expandedPaths: new Set(), matchList: [] };
     }
 
@@ -20,12 +22,10 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
     return { matches: matchPaths, expandedPaths: pathsToExpand, matchList: orderedMatches };
   }, [data, searchQuery]);
 
-  // Report match count and expanded paths to parent
   useEffect(() => {
     onMatchCountChange?.(matchList.length, expandedPaths);
   }, [matchList.length, expandedPaths, onMatchCountChange]);
 
-  // Merge controlled paths with search paths
   const mergedExpandedPaths = useMemo(() => {
     const merged = new Set(expandedPaths);
     if (controlledExpandedPaths) {
@@ -36,10 +36,8 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
     return merged;
   }, [expandedPaths, controlledExpandedPaths]);
 
-  // Get current match path for highlighting
   const currentMatchPath = matchList[currentMatchIndex] || null;
 
-  // Flatten tree for virtual scrolling
   const flatNodes = useMemo(() => {
     return flattenTree(data, mergedExpandedPaths, {
       matches,
@@ -52,7 +50,7 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
 
   const pathIndex = useMemo(() => buildPathIndex(flatNodes), [flatNodes]);
 
-  const useVirtual = flatNodes.length > VIRTUALIZE_THRESHOLD;
+  const useVirtual = flatNodes.length > threshold;
 
   if (useVirtual && containerRef) {
     return (
@@ -82,7 +80,7 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
   }
 
   return (
-    <div className="tree-view font-mono text-sm">
+    <div className="tree-view sjt-font-mono sjt-text-sm">
       <TreeNode
         keyName={null}
         value={data}
@@ -161,7 +159,6 @@ function searchInValue(value, path, query, matchPaths, pathsToExpand, orderedMat
   if (typeof value === 'object') {
     Object.entries(value).forEach(([key, val]) => {
       const keyPath = [...path, key];
-      // Check if key matches
       if (key.toLowerCase().includes(query)) {
         const keyPathStr = keyPath.join('.');
         matchPaths.add(keyPathStr);
@@ -174,7 +171,6 @@ function searchInValue(value, path, query, matchPaths, pathsToExpand, orderedMat
 }
 
 function addParentPaths(path, pathsToExpand) {
-  // Add all parent paths so they get expanded
   for (let i = 0; i <= path.length; i++) {
     const parentPath = path.slice(0, i).join('.');
     pathsToExpand.add(parentPath);

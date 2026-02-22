@@ -1,0 +1,65 @@
+{
+  "name": "@stingr/json-viewer",
+  "version": "0.1.0",
+  "description": "A full-featured JSON tree viewer React component with virtual scrolling, search, diff, editing, and pinning",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./diff": {
+      "types": "./dist/diff.d.ts",
+      "import": "./dist/diff.js",
+      "require": "./dist/diff.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
+    "./styles": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && postcss src/styles/index.css -o dist/styles.css && cp src/types/*.d.ts dist/",
+    "dev": "tsup --watch",
+    "demo": "npm run build && npx serve ."
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.1",
+    "tailwindcss": "^3.4.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "json",
+    "viewer",
+    "tree",
+    "react",
+    "json-viewer",
+    "json-tree",
+    "virtual-scroll",
+    "diff"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/stinger",
+    "directory": "packages/json-viewer"
+  },
+  "homepage": "https://stingr.dev"
+}

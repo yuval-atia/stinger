@@ -1,0 +1,35 @@
+@import './variables.css';
+@import './syntax.css';
+@import './search.css';
+@import './diff.css';
+@import './tree.css';
+@import './toast.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scoped scrollbar for tree containers */
+.sjt ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.sjt ::-webkit-scrollbar-track {
+  background: var(--sjt-bg-secondary);
+  border-radius: 4px;
+}
+
+.sjt ::-webkit-scrollbar-thumb {
+  background: var(--sjt-border-color);
+  border-radius: 4px;
+}
+
+.sjt ::-webkit-scrollbar-thumb:hover {
+  background: var(--sjt-text-secondary);
+}
+
+.sjt {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sjt-border-color) var(--sjt-bg-secondary);
+}

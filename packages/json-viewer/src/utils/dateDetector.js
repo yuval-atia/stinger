@@ -6,16 +6,15 @@ const UNIX_MS_PATTERN = /^[0-9]{13}$/;
 const ISO_8601_PATTERN = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{1,3})?(Z|[+-]\d{2}:?\d{2})?)?$/;
 // Common date formats
 const COMMON_DATE_PATTERNS = [
-  /^\d{4}\/\d{2}\/\d{2}$/, // 2024/02/03
-  /^\d{2}\/\d{2}\/\d{4}$/, // 02/03/2024
-  /^\d{2}-\d{2}-\d{4}$/, // 02-03-2024
-  /^[A-Z][a-z]{2}\s\d{1,2},?\s\d{4}$/, // Feb 3, 2024 or Feb 3 2024
-  /^\d{1,2}\s[A-Z][a-z]{2}\s\d{4}$/, // 3 Feb 2024
+  /^\d{4}\/\d{2}\/\d{2}$/,
+  /^\d{2}\/\d{2}\/\d{4}$/,
+  /^\d{2}-\d{2}-\d{4}$/,
+  /^[A-Z][a-z]{2}\s\d{1,2},?\s\d{4}$/,
+  /^\d{1,2}\s[A-Z][a-z]{2}\s\d{4}$/,
 ];
 
-// Reasonable date range (1970 to 2100)
 const MIN_TIMESTAMP = 0;
-const MAX_TIMESTAMP = 4102444800; // 2100-01-01
+const MAX_TIMESTAMP = 4102444800;
 const MIN_TIMESTAMP_MS = 0;
 const MAX_TIMESTAMP_MS = 4102444800000;
 
@@ -24,7 +23,6 @@ export function detectDateFormat(str) {
 
   const trimmed = str.trim();
 
-  // Check Unix timestamp in seconds
   if (UNIX_SECONDS_PATTERN.test(trimmed)) {
     const num = parseInt(trimmed, 10);
     if (num >= MIN_TIMESTAMP && num <= MAX_TIMESTAMP) {
@@ -36,7 +34,6 @@ export function detectDateFormat(str) {
     }
   }
 
-  // Check Unix timestamp in milliseconds
   if (UNIX_MS_PATTERN.test(trimmed)) {
     const num = parseInt(trimmed, 10);
     if (num >= MIN_TIMESTAMP_MS && num <= MAX_TIMESTAMP_MS) {
@@ -48,7 +45,6 @@ export function detectDateFormat(str) {
     }
   }
 
-  // Check ISO 8601
   if (ISO_8601_PATTERN.test(trimmed)) {
     const date = new Date(trimmed);
     if (!isNaN(date.getTime())) {
@@ -60,7 +56,6 @@ export function detectDateFormat(str) {
     }
   }
 
-  // Check common date patterns
   for (const pattern of COMMON_DATE_PATTERNS) {
     if (pattern.test(trimmed)) {
       const date = new Date(trimmed);

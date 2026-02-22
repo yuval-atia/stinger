@@ -22,7 +22,6 @@ function wordDiff(strA, strB) {
 }
 
 function tokenize(str) {
-  // Split into words and whitespace tokens
   const result = [];
   const regex = /(\S+|\s+)/g;
   let match;
@@ -40,7 +39,6 @@ function lcs(tokensA, tokensB) {
   const m = tokensA.length;
   const n = tokensB.length;
 
-  // Build LCS table
   const dp = Array.from({ length: m + 1 }, () => new Uint16Array(n + 1));
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
@@ -52,7 +50,6 @@ function lcs(tokensA, tokensB) {
     }
   }
 
-  // Backtrack to get diff
   const segments = [];
   let i = m, j = n;
 
@@ -72,7 +69,6 @@ function lcs(tokensA, tokensB) {
 
   segments.reverse();
 
-  // Merge consecutive same-type segments
   const merged = [];
   for (const seg of segments) {
     if (merged.length > 0 && merged[merged.length - 1].type === seg.type) {

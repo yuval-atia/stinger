@@ -10,7 +10,8 @@ const UrlLink = ({ url, children }) => {
       {children}
       <span
         onClick={handleClick}
-        className="text-[var(--text-secondary)] text-xs opacity-60 cursor-pointer ml-1"
+        className="sjt-text-xs sjt-cursor-pointer sjt-ml-1"
+        style={{ color: 'var(--sjt-text-secondary)', opacity: 0.6 }}
         title="Click to open URL in new tab"
       >
         🔗

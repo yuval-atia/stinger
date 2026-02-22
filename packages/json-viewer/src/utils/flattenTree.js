@@ -1,18 +1,8 @@
-import { getValueType, getPreview } from './jsonParser';
+import { getValueType, getPreview } from './jsonParser.js';
 
 /**
  * Flatten a JSON tree into a flat array of visible nodes.
  * Only expanded nodes have their children included.
- *
- * @param {*} data - The JSON value
- * @param {Set} expandedPaths - Set of expanded path strings
- * @param {Object} options
- * @param {Set} [options.matches] - Set of matching path strings (for filter mode)
- * @param {boolean} [options.filterMode] - If true, only show paths with matches
- * @param {string} [options.searchQuery] - Search query for filter matching
- * @param {Map} [options.diffMap] - Diff map for compare mode
- * @param {string} [options.side] - 'left' or 'right' for compare mode
- * @returns {Array} Flat array of node descriptors
  */
 export function flattenTree(data, expandedPaths, options = {}) {
   const result = [];
@@ -46,7 +36,6 @@ export function flattenTree(data, expandedPaths, options = {}) {
         ? value.map((v, i) => [i, v])
         : Object.entries(value);
 
-      // In filter mode, only show children that match or have matching descendants
       const filteredEntries = filterMode && searchQuery && matches?.size > 0
         ? entries.filter(([key]) => {
             const childPath = [...path, key];

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 
 const ImagePreview = ({ url, children }) => {
   const [showPreview, setShowPreview] = useState(false);
-  const [imageState, setImageState] = useState('idle'); // idle, loading, loaded, error
+  const [imageState, setImageState] = useState('idle');
   const [errorType, setErrorType] = useState(null);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const timeoutRef = useRef(null);
@@ -13,8 +13,8 @@ const ImagePreview = ({ url, children }) => {
     if (iconRef.current) {
       const rect = iconRef.current.getBoundingClientRect();
       setPosition({
-        top: rect.top - 8, // Position above the icon
-        left: Math.min(rect.right, window.innerWidth - 220), // Keep within viewport
+        top: rect.top - 8,
+        left: Math.min(rect.right, window.innerWidth - 220),
       });
     }
   }, []);
@@ -43,7 +43,6 @@ const ImagePreview = ({ url, children }) => {
 
   const handleImageError = useCallback(() => {
     const isCrossOrigin = !url.startsWith('data:') && !url.startsWith(window.location.origin);
-
     if (isCrossOrigin) {
       setErrorType('cors');
     } else {
@@ -52,7 +51,6 @@ const ImagePreview = ({ url, children }) => {
     setImageState('error');
   }, [url]);
 
-  // Update position on scroll
   useEffect(() => {
     if (showPreview) {
       const handleScroll = () => updatePosition();
@@ -64,7 +62,10 @@ const ImagePreview = ({ url, children }) => {
   const renderPreviewContent = () => {
     if (imageState === 'loading') {
       return (
-        <div className="flex items-center justify-center w-32 h-20 text-xs text-[var(--text-secondary)]">
+        <div
+          className="sjt-flex sjt-items-center sjt-justify-center sjt-text-xs"
+          style={{ width: '8rem', height: '5rem', color: 'var(--sjt-text-secondary)' }}
+        >
           Loading...
         </div>
       );
@@ -72,9 +73,9 @@ const ImagePreview = ({ url, children }) => {
 
     if (imageState === 'error') {
       return (
-        <div className="flex flex-col items-center justify-center w-40 p-2 text-xs text-center">
-          <span className="text-red-400 mb-1">Failed to load image</span>
-          <span className="text-[var(--text-secondary)]">
+        <div className="sjt-flex sjt-flex-col sjt-items-center sjt-justify-center sjt-p-2 sjt-text-xs sjt-text-center" style={{ width: '10rem' }}>
+          <span style={{ color: '#f87171' }} className="sjt-mb-1">Failed to load image</span>
+          <span style={{ color: 'var(--sjt-text-secondary)' }}>
             {errorType === 'cors'
               ? 'CORS policy blocked the request'
               : 'Image could not be loaded'}
@@ -87,43 +88,46 @@ const ImagePreview = ({ url, children }) => {
   };
 
   const previewPopup = showPreview && createPortal(
-    <div
-      className="fixed z-[9999] p-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg shadow-lg"
-      style={{
-        top: position.top,
-        left: position.left,
-        transform: 'translateY(-100%)',
-        minWidth: '80px',
-      }}
-    >
-      <img
-        src={url}
-        alt="Preview"
-        loading="lazy"
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        className={`max-w-[200px] max-h-[150px] object-contain rounded ${
-          imageState === 'loaded' ? 'block' : 'hidden'
-        }`}
-      />
-      {imageState !== 'loaded' && renderPreviewContent()}
+    <div className="sjt">
+      <div
+        className="sjt-fixed sjt-z-[9999] sjt-p-1 sjt-rounded-lg sjt-shadow-lg"
+        style={{
+          top: position.top,
+          left: position.left,
+          transform: 'translateY(-100%)',
+          minWidth: '80px',
+          backgroundColor: 'var(--sjt-bg-secondary)',
+          border: '1px solid var(--sjt-border-color)',
+        }}
+      >
+        <img
+          src={url}
+          alt="Preview"
+          loading="lazy"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          className={`sjt-rounded ${imageState === 'loaded' ? 'sjt-block' : 'sjt-hidden'}`}
+          style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'contain' }}
+        />
+        {imageState !== 'loaded' && renderPreviewContent()}
+      </div>
     </div>,
     document.body
   );
 
   return (
-    <span className="inline-flex items-center gap-1">
-      <span className="truncate max-w-[300px]">{children}</span>
+    <span className="sjt-inline-flex sjt-items-center sjt-gap-1">
+      <span className="sjt-truncate" style={{ maxWidth: '300px' }}>{children}</span>
       <span
         ref={iconRef}
-        className="text-[var(--text-secondary)] text-xs opacity-60 cursor-pointer flex-shrink-0"
+        className="sjt-text-xs sjt-cursor-pointer sjt-flex-shrink-0"
+        style={{ color: 'var(--sjt-text-secondary)', opacity: 0.6 }}
         title="Image URL - hover to preview"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         🖼️
       </span>
-
       {previewPopup}
     </span>
   );

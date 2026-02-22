@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import FlatTreeNode from './FlatTreeNode';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import FlatTreeNode from './FlatTreeNode.jsx';
 
 const ROW_HEIGHT = 28;
 const OVERSCAN = 10;
@@ -30,7 +30,6 @@ function VirtualizedTree({
   const [containerHeight, setContainerHeight] = useState(600);
   const innerRef = useRef(null);
 
-  // Observe container size
   useEffect(() => {
     const el = containerRef?.current;
     if (!el) return;
@@ -46,7 +45,6 @@ function VirtualizedTree({
     return () => observer.disconnect();
   }, [containerRef]);
 
-  // Listen to scroll events
   useEffect(() => {
     const el = containerRef?.current;
     if (!el) return;
@@ -58,7 +56,6 @@ function VirtualizedTree({
     return () => el.removeEventListener('scroll', onScroll);
   }, [containerRef]);
 
-  // Scroll to path when requested
   useEffect(() => {
     if (!scrollToPath || !pathIndex || !containerRef?.current) return;
     const idx = pathIndex.get(scrollToPath);
@@ -71,14 +68,12 @@ function VirtualizedTree({
     }
   }, [scrollToPath, pathIndex, containerRef, containerHeight]);
 
-  // Scroll to current search match
   useEffect(() => {
     if (!currentMatchPath || !pathIndex || !containerRef?.current) return;
     const idx = pathIndex.get(currentMatchPath);
     if (idx !== undefined) {
       const targetTop = idx * ROW_HEIGHT;
       const currentScroll = containerRef.current.scrollTop;
-      // Only scroll if the match is outside the visible area
       if (targetTop < currentScroll || targetTop > currentScroll + containerHeight - ROW_HEIGHT) {
         containerRef.current.scrollTo({
           top: targetTop - containerHeight / 2 + ROW_HEIGHT / 2,
@@ -88,7 +83,6 @@ function VirtualizedTree({
     }
   }, [currentMatchPath, pathIndex, containerRef, containerHeight]);
 
-  // Scroll to current diff match
   useEffect(() => {
     if (!currentDiffPath || !pathIndex || !containerRef?.current) return;
     const idx = pathIndex.get(currentDiffPath);
@@ -106,7 +100,6 @@ function VirtualizedTree({
 
   const totalHeight = flatNodes.length * ROW_HEIGHT;
 
-  // Calculate visible range
   const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN);
   const endIndex = Math.min(
     flatNodes.length,
@@ -121,7 +114,7 @@ function VirtualizedTree({
     <div
       ref={innerRef}
       style={{ height: `${totalHeight}px`, position: 'relative' }}
-      className="tree-view font-mono text-sm"
+      className="tree-view sjt-font-mono sjt-text-sm"
     >
       {visibleNodes.map((node, i) => {
         const index = startIndex + i;

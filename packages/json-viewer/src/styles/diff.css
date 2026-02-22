@@ -1,0 +1,54 @@
+/* Diff highlights */
+.sjt .diff-moved {
+  background-color: var(--sjt-diff-move);
+  border-radius: 4px;
+}
+
+.sjt .diff-current-match {
+  background-color: rgba(59, 130, 246, 0.15);
+  box-shadow: inset 0 0 0 2px var(--sjt-accent-color);
+  border-radius: 4px;
+}
+.dark .sjt .diff-current-match,
+.sjt.dark .diff-current-match {
+  background-color: rgba(96, 165, 250, 0.12);
+}
+
+.sjt .pinned-node {
+  border-left: 3px solid var(--sjt-accent-color);
+  background-color: rgba(59, 130, 246, 0.12);
+}
+.dark .sjt .pinned-node,
+.sjt.dark .pinned-node {
+  background-color: rgba(96, 165, 250, 0.12);
+}
+
+.sjt .jsonpath-match {
+  background-color: rgba(139, 92, 246, 0.15);
+  border-radius: 4px;
+}
+.dark .sjt .jsonpath-match,
+.sjt.dark .jsonpath-match {
+  background-color: rgba(167, 139, 250, 0.15);
+}
+
+/* Character-level diff highlights */
+.sjt .char-diff-remove {
+  background-color: #fecaca;
+  text-decoration: line-through;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.dark .sjt .char-diff-remove,
+.sjt.dark .char-diff-remove {
+  background-color: #991b1b;
+}
+.sjt .char-diff-add {
+  background-color: #bbf7d0;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.dark .sjt .char-diff-add,
+.sjt.dark .char-diff-add {
+  background-color: #166534;
+}

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App'
 import { ToastProvider } from './components/common/Toast'
+import '@stingr/json-viewer/styles'
 import './styles/global.css'
 
 // Lazy-load pages for code splitting

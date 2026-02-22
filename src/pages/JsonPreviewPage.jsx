@@ -1,14 +1,15 @@
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import JsonInput from '../components/Editor/JsonInput';
-import TreeView from '../components/TreeView/TreeView';
+import { TreeView, TreeProvider } from '@stingr/json-viewer';
 import SearchBar from '../components/Search/SearchBar';
 import FormatButton from '../components/common/FormatButton';
 import ShareButton from '../components/common/ShareButton';
 import { InfoButton } from '../components/common/InfoTooltip';
 import ScrollToTop from '../components/common/ScrollToTop';
+import { useToast } from '../components/common/Toast';
 import { useJsonParser } from '../hooks/useJsonParser';
 import { parseJson, formatJson, getValueType } from '../utils/jsonParser';
-import { setValueAtPath, deleteAtPath, addKeyToObject, appendToArray } from '../utils/pathCopier';
+import { setValueAtPath, deleteAtPath, addKeyToObject, appendToArray } from '@stingr/json-viewer/utils';
 import { calculateJsonStats } from '../utils/jsonStats';
 import { resolveHashState, stripHash } from '../utils/shareCompression';
 import { inferDepthFromPaths } from '../utils/depthDetector';
@@ -79,6 +80,7 @@ function Breadcrumb({ path, onNavigate }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function JsonPreviewPage() {
+  const { showToast } = useToast();
   const {
     inputValue,
     setInputValue,
@@ -104,7 +106,6 @@ function JsonPreviewPage() {
 
   const [keyCaseOpen, setKeyCaseOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [pinHintDismissed, setPinHintDismissed] = useState(() => localStorage.getItem('stinger-pin-hint-dismissed') === 'true');
   const [scrollToPath, setScrollToPath] = useState(null);
 
   const inputTextareaRef = useRef(null);
@@ -238,14 +239,10 @@ function JsonPreviewPage() {
         next.delete(pathStr);
       } else {
         next.add(pathStr);
-        if (!pinHintDismissed) {
-          setPinHintDismissed(true);
-          localStorage.setItem('stinger-pin-hint-dismissed', 'true');
-        }
       }
       return next;
     });
-  }, [pinHintDismissed]);
+  }, []);
 
   const handleClearPins = useCallback(() => {
     setPinnedPaths(new Set());
@@ -831,36 +828,39 @@ function JsonPreviewPage() {
           )}
 
           <div className="flex-1 overflow-auto p-4" ref={treeScrollRef}>
-            {parsedData !== null ? (
-              <TreeView
-                data={parsedData}
-                searchQuery={queryMode === 'search' ? activeSearch : ''}
-                onValueEdit={handleValueEdit}
-                currentMatchIndex={currentMatchIndex}
-                onMatchCountChange={handleMatchCountChange}
-                controlledExpandedPaths={effectiveExpandedPaths}
-                onTogglePath={handleTogglePath}
-                filterMode={filterMode}
-                onBreadcrumbPath={handleBreadcrumbPath}
-                pinnedPaths={pinnedPaths}
-                onTogglePin={handleTogglePin}
-                showPinHint={!pinHintDismissed}
-                onDeleteNode={handleDeleteNode}
-                onAddKey={handleAddKey}
-                onAddArrayItem={handleAddArrayItem}
-                jsonpathMatches={queryMode === 'jsonpath' ? jsonPathResults.matchPaths : undefined}
-                containerRef={treeScrollRef}
-                scrollToPath={scrollToPath}
-              />
-            ) : parseError ? (
-              <div className="text-[var(--error-color)] text-sm">
-                <span className="font-medium">Parse Error:</span> {parseError}
-              </div>
-            ) : (
-              <div className="text-[var(--text-secondary)] text-sm">
-                Enter JSON or JavaScript object to view tree
-              </div>
-            )}
+            <TreeProvider onNotify={showToast}>
+              {parsedData !== null ? (
+                <div className="sjt">
+                  <TreeView
+                    data={parsedData}
+                    searchQuery={queryMode === 'search' ? activeSearch : ''}
+                    onValueEdit={handleValueEdit}
+                    currentMatchIndex={currentMatchIndex}
+                    onMatchCountChange={handleMatchCountChange}
+                    controlledExpandedPaths={effectiveExpandedPaths}
+                    onTogglePath={handleTogglePath}
+                    filterMode={filterMode}
+                    onBreadcrumbPath={handleBreadcrumbPath}
+                    pinnedPaths={pinnedPaths}
+                    onTogglePin={handleTogglePin}
+                    onDeleteNode={handleDeleteNode}
+                    onAddKey={handleAddKey}
+                    onAddArrayItem={handleAddArrayItem}
+                    jsonpathMatches={queryMode === 'jsonpath' ? jsonPathResults.matchPaths : undefined}
+                    containerRef={treeScrollRef}
+                    scrollToPath={scrollToPath}
+                  />
+                </div>
+              ) : parseError ? (
+                <div className="text-[var(--error-color)] text-sm">
+                  <span className="font-medium">Parse Error:</span> {parseError}
+                </div>
+              ) : (
+                <div className="text-[var(--text-secondary)] text-sm">
+                  Enter JSON or JavaScript object to view tree
+                </div>
+              )}
+            </TreeProvider>
           </div>
           <ScrollToTop containerRef={treeScrollRef} />
         </div>

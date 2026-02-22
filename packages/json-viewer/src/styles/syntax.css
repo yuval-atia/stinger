@@ -1,0 +1,12 @@
+/* JSON syntax highlighting */
+.sjt .json-string { color: #22c55e; }
+.sjt .json-number { color: #3b82f6; }
+.sjt .json-boolean { color: #f97316; }
+.sjt .json-null { color: #a855f7; }
+.sjt .json-key { color: #ec4899; }
+
+.dark .sjt .json-string, .sjt.dark .json-string { color: #4ade80; }
+.dark .sjt .json-number, .sjt.dark .json-number { color: #60a5fa; }
+.dark .sjt .json-boolean, .sjt.dark .json-boolean { color: #fb923c; }
+.dark .sjt .json-null, .sjt.dark .json-null { color: #c084fc; }
+.dark .sjt .json-key, .sjt.dark .json-key { color: #f472b6; }

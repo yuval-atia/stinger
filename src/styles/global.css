@@ -36,6 +36,24 @@
   --jsonpath-color: #a78bfa;
 }
 
+/* Map package CSS variables to stinger's variables */
+:root {
+  --sjt-bg-primary: var(--bg-primary);
+  --sjt-bg-secondary: var(--bg-secondary);
+  --sjt-text-primary: var(--text-primary);
+  --sjt-text-secondary: var(--text-secondary);
+  --sjt-border-color: var(--border-color);
+  --sjt-accent-color: var(--accent-color);
+  --sjt-error-color: var(--error-color);
+  --sjt-success-color: var(--success-color);
+  --sjt-diff-add: var(--diff-add);
+  --sjt-diff-remove: var(--diff-remove);
+  --sjt-diff-change: var(--diff-change);
+  --sjt-diff-move: var(--diff-move);
+  --sjt-diff-move-text: var(--diff-move-text);
+  --sjt-jsonpath-color: var(--jsonpath-color);
+}
+
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
