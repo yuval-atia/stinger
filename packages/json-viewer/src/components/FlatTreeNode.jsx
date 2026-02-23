@@ -58,22 +58,9 @@ function FlatTreeNode({
 
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
-  const [copyMenuOpen, setCopyMenuOpen] = useState(false);
-  const copyMenuRef = useRef(null);
   const [isAddingKey, setIsAddingKey] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
   const [newKeyValue, setNewKeyValue] = useState('');
-
-  useEffect(() => {
-    if (!copyMenuOpen) return;
-    const handler = (e) => {
-      if (copyMenuRef.current && !copyMenuRef.current.contains(e.target)) {
-        setCopyMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [copyMenuOpen]);
 
   const diffType = diffMap ? getDiffType(diffMap, path) : null;
   const hasDiffInChildren = diffMap && isExpandable ? pathHasDiff(diffMap, path) : false;
@@ -100,25 +87,6 @@ function FlatTreeNode({
     await copyToClipboard(valueString);
     showNotification('Value copied');
     onCopy({ type: 'value', path, value: valueString });
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-
-  const handleCopyMinified = useCallback(async () => {
-    const valueString = JSON.stringify(value);
-    await copyToClipboard(valueString);
-    showNotification('Minified JSON copied');
-    onCopy({ type: 'minified', path, value: valueString });
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-
-  const handleCopyKeys = useCallback(async () => {
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      const keysString = JSON.stringify(Object.keys(value));
-      await copyToClipboard(keysString);
-      showNotification('Keys copied');
-      onCopy({ type: 'keys', path, value: keysString });
-    }
-    setCopyMenuOpen(false);
   }, [value, path, showNotification, onCopy]);
 
   const handleStartEdit = useCallback(() => {
@@ -318,24 +286,9 @@ function FlatTreeNode({
                 <CopyButton onClick={handleCopyPath} tooltip="Copy path" size="sm">📋</CopyButton>
               </span>
             )}
-            {isExpandable ? (
-              <span className="sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity sjt-relative" ref={copyMenuRef}>
-                <CopyButton onClick={() => setCopyMenuOpen((p) => !p)} tooltip={valueType === 'object' ? `Copy object (${childCount} keys)` : `Copy array (${childCount} items)`} size="sm">📄</CopyButton>
-                {copyMenuOpen && (
-                  <div className="sjt-absolute sjt-top-full sjt-right-0 sjt-mt-1 sjt-z-50 sjt-rounded-lg sjt-shadow-lg sjt-py-1" style={{ width: '8rem', backgroundColor: 'var(--sjt-bg-primary)', border: '1px solid var(--sjt-border-color)' }}>
-                    <button onClick={handleCopyValue} className="sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors" style={{ color: 'var(--sjt-text-primary)' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--sjt-bg-secondary)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}>Copy JSON</button>
-                    <button onClick={handleCopyMinified} className="sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors" style={{ color: 'var(--sjt-text-primary)' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--sjt-bg-secondary)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}>Copy minified</button>
-                    {valueType === 'object' && (
-                      <button onClick={handleCopyKeys} className="sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors" style={{ color: 'var(--sjt-text-primary)' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--sjt-bg-secondary)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}>Copy keys</button>
-                    )}
-                  </div>
-                )}
-              </span>
-            ) : (
-              <span className="sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity">
-                <CopyButton onClick={handleCopyValue} tooltip="Copy value" size="sm">📄</CopyButton>
-              </span>
-            )}
+            <span className="sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity">
+              <CopyButton onClick={handleCopyValue} tooltip={isExpandable ? 'Copy JSON' : 'Copy value'} size="sm">📄</CopyButton>
+            </span>
             {isExpandable && onDeleteNode && (
               <span className="sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity">
                 <CopyButton

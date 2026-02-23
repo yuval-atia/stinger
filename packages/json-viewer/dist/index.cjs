@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var chunkE3D2SPQW_cjs = require('./chunk-E3D2SPQW.cjs');
+var chunkENLJ6X3T_cjs = require('./chunk-ENLJ6X3T.cjs');
 var chunkLWZCANR6_cjs = require('./chunk-LWZCANR6.cjs');
 var chunkR44OFLPH_cjs = require('./chunk-R44OFLPH.cjs');
 var react = require('react');
@@ -401,7 +401,7 @@ function JsonViewer({
     containerStyle.height = typeof height === "number" ? `${height}px` : height;
     containerStyle.overflow = "auto";
   }
-  return /* @__PURE__ */ jsxRuntime.jsx(chunkE3D2SPQW_cjs.TreeProvider, { onNotify, onCopy, children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: ["sjt", theme === "dark" ? "dark" : "", className].filter(Boolean).join(" "), style: containerStyle, ref: height ? containerRef : void 0, children: [
+  return /* @__PURE__ */ jsxRuntime.jsx(chunkENLJ6X3T_cjs.TreeProvider, { onNotify, onCopy, children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: ["sjt", theme === "dark" ? "dark" : "", className].filter(Boolean).join(" "), style: containerStyle, ref: height ? containerRef : void 0, children: [
     searchable && data && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-mb-2", children: /* @__PURE__ */ jsxRuntime.jsx(
       SearchBar_default,
       {
@@ -424,7 +424,7 @@ function JsonViewer({
         className: "sjt-overflow-auto",
         style: !height ? { maxHeight: "100%" } : void 0,
         children: /* @__PURE__ */ jsxRuntime.jsx(
-          chunkE3D2SPQW_cjs.TreeView_default,
+          chunkENLJ6X3T_cjs.TreeView_default,
           {
             data,
             searchQuery: tree.search.activeQuery,
@@ -454,11 +454,11 @@ var JsonViewer_default = JsonViewer;
 
 Object.defineProperty(exports, "TreeProvider", {
   enumerable: true,
-  get: function () { return chunkE3D2SPQW_cjs.TreeProvider; }
+  get: function () { return chunkENLJ6X3T_cjs.TreeProvider; }
 });
 Object.defineProperty(exports, "TreeView", {
   enumerable: true,
-  get: function () { return chunkE3D2SPQW_cjs.TreeView_default; }
+  get: function () { return chunkENLJ6X3T_cjs.TreeView_default; }
 });
 exports.JsonViewer = JsonViewer_default;
 exports.default = JsonViewer_default;

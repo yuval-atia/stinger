@@ -1,15 +1,13 @@
-'use strict';
-
-var chunkLWZCANR6_cjs = require('./chunk-LWZCANR6.cjs');
-var chunkR44OFLPH_cjs = require('./chunk-R44OFLPH.cjs');
-var react = require('react');
-var jsxRuntime = require('react/jsx-runtime');
-var reactDom = require('react-dom');
+import { getDiffType, pathHasDiff, charDiff } from './chunk-3QC7PK4F.js';
+import { buildPath, copyToClipboard, isImageUrl, detectDateFormat, detectNestedJson, isUrl, formatDateInfo, flattenTree, buildPathIndex, getValueType, getPreview } from './chunk-7OZTLRJC.js';
+import { lazy, createContext, memo, useState, useCallback, useContext, useRef, useEffect, Suspense, useMemo } from 'react';
+import { jsxs, Fragment, jsx } from 'react/jsx-runtime';
+import { createPortal } from 'react-dom';
 
 function CopyButton({ onClick, tooltip, children, size = "md" }) {
-  const [showTooltip, setShowTooltip] = react.useState(false);
-  const [tooltipPos, setTooltipPos] = react.useState({ top: 0, left: 0 });
-  const buttonRef = react.useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef(null);
   const sizeClasses = {
     sm: "sjt-w-5 sjt-h-5 sjt-text-xs",
     md: "sjt-w-6 sjt-h-6 sjt-text-sm",
@@ -28,8 +26,8 @@ function CopyButton({ onClick, tooltip, children, size = "md" }) {
   const handleMouseLeave = () => {
     setShowTooltip(false);
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       "button",
       {
         ref: buttonRef,
@@ -51,7 +49,7 @@ function CopyButton({ onClick, tooltip, children, size = "md" }) {
         children
       }
     ),
-    showTooltip && tooltip && /* @__PURE__ */ jsxRuntime.jsxs(
+    showTooltip && tooltip && /* @__PURE__ */ jsxs(
       "div",
       {
         className: "sjt-fixed -sjt-translate-x-1/2 -sjt-translate-y-full sjt-px-2 sjt-py-1 sjt-text-xs sjt-rounded sjt-whitespace-nowrap sjt-pointer-events-none sjt-z-[9999]",
@@ -63,7 +61,7 @@ function CopyButton({ onClick, tooltip, children, size = "md" }) {
         },
         children: [
           tooltip,
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "div",
             {
               className: "sjt-absolute sjt-top-full sjt-left-1/2 -sjt-translate-x-1/2",
@@ -77,13 +75,13 @@ function CopyButton({ onClick, tooltip, children, size = "md" }) {
 }
 var CopyButton_default = CopyButton;
 var ImagePreview = ({ url, children }) => {
-  const [showPreview, setShowPreview] = react.useState(false);
-  const [imageState, setImageState] = react.useState("idle");
-  const [errorType, setErrorType] = react.useState(null);
-  const [position, setPosition] = react.useState({ top: 0, left: 0 });
-  const timeoutRef = react.useRef(null);
-  const iconRef = react.useRef(null);
-  const updatePosition = react.useCallback(() => {
+  const [showPreview, setShowPreview] = useState(false);
+  const [imageState, setImageState] = useState("idle");
+  const [errorType, setErrorType] = useState(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const timeoutRef = useRef(null);
+  const iconRef = useRef(null);
+  const updatePosition = useCallback(() => {
     if (iconRef.current) {
       const rect = iconRef.current.getBoundingClientRect();
       setPosition({
@@ -92,7 +90,7 @@ var ImagePreview = ({ url, children }) => {
       });
     }
   }, []);
-  const handleMouseEnter = react.useCallback(() => {
+  const handleMouseEnter = useCallback(() => {
     timeoutRef.current = setTimeout(() => {
       updatePosition();
       setShowPreview(true);
@@ -101,17 +99,17 @@ var ImagePreview = ({ url, children }) => {
       }
     }, 300);
   }, [imageState, updatePosition]);
-  const handleMouseLeave = react.useCallback(() => {
+  const handleMouseLeave = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
     setShowPreview(false);
   }, []);
-  const handleImageLoad = react.useCallback(() => {
+  const handleImageLoad = useCallback(() => {
     setImageState("loaded");
   }, []);
-  const handleImageError = react.useCallback(() => {
+  const handleImageError = useCallback(() => {
     const isCrossOrigin = !url.startsWith("data:") && !url.startsWith(window.location.origin);
     if (isCrossOrigin) {
       setErrorType("cors");
@@ -120,7 +118,7 @@ var ImagePreview = ({ url, children }) => {
     }
     setImageState("error");
   }, [url]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (showPreview) {
       const handleScroll = () => updatePosition();
       window.addEventListener("scroll", handleScroll, true);
@@ -129,7 +127,7 @@ var ImagePreview = ({ url, children }) => {
   }, [showPreview, updatePosition]);
   const renderPreviewContent = () => {
     if (imageState === "loading") {
-      return /* @__PURE__ */ jsxRuntime.jsx(
+      return /* @__PURE__ */ jsx(
         "div",
         {
           className: "sjt-flex sjt-items-center sjt-justify-center sjt-text-xs",
@@ -139,15 +137,15 @@ var ImagePreview = ({ url, children }) => {
       );
     }
     if (imageState === "error") {
-      return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-flex sjt-flex-col sjt-items-center sjt-justify-center sjt-p-2 sjt-text-xs sjt-text-center", style: { width: "10rem" }, children: [
-        /* @__PURE__ */ jsxRuntime.jsx("span", { style: { color: "#f87171" }, className: "sjt-mb-1", children: "Failed to load image" }),
-        /* @__PURE__ */ jsxRuntime.jsx("span", { style: { color: "var(--sjt-text-secondary)" }, children: errorType === "cors" ? "CORS policy blocked the request" : "Image could not be loaded" })
+      return /* @__PURE__ */ jsxs("div", { className: "sjt-flex sjt-flex-col sjt-items-center sjt-justify-center sjt-p-2 sjt-text-xs sjt-text-center", style: { width: "10rem" }, children: [
+        /* @__PURE__ */ jsx("span", { style: { color: "#f87171" }, className: "sjt-mb-1", children: "Failed to load image" }),
+        /* @__PURE__ */ jsx("span", { style: { color: "var(--sjt-text-secondary)" }, children: errorType === "cors" ? "CORS policy blocked the request" : "Image could not be loaded" })
       ] });
     }
     return null;
   };
-  const previewPopup = showPreview && reactDom.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt", children: /* @__PURE__ */ jsxRuntime.jsxs(
+  const previewPopup = showPreview && createPortal(
+    /* @__PURE__ */ jsx("div", { className: "sjt", children: /* @__PURE__ */ jsxs(
       "div",
       {
         className: "sjt-fixed sjt-z-[9999] sjt-p-1 sjt-rounded-lg sjt-shadow-lg",
@@ -160,7 +158,7 @@ var ImagePreview = ({ url, children }) => {
           border: "1px solid var(--sjt-border-color)"
         },
         children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "img",
             {
               src: url,
@@ -178,9 +176,9 @@ var ImagePreview = ({ url, children }) => {
     ) }),
     document.body
   );
-  return /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
-    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-truncate", style: { maxWidth: "300px" }, children }),
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
+    /* @__PURE__ */ jsx("span", { className: "sjt-truncate", style: { maxWidth: "300px" }, children }),
+    /* @__PURE__ */ jsx(
       "span",
       {
         ref: iconRef,
@@ -197,11 +195,11 @@ var ImagePreview = ({ url, children }) => {
 };
 var ImagePreview_default = ImagePreview;
 var DatePreview = ({ dateInfo, children }) => {
-  const [showPreview, setShowPreview] = react.useState(false);
-  const [position, setPosition] = react.useState({ top: 0, left: 0 });
-  const iconRef = react.useRef(null);
-  const formattedInfo = chunkR44OFLPH_cjs.formatDateInfo(dateInfo);
-  const updatePosition = react.useCallback(() => {
+  const [showPreview, setShowPreview] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const iconRef = useRef(null);
+  const formattedInfo = formatDateInfo(dateInfo);
+  const updatePosition = useCallback(() => {
     if (iconRef.current) {
       const rect = iconRef.current.getBoundingClientRect();
       setPosition({
@@ -210,22 +208,22 @@ var DatePreview = ({ dateInfo, children }) => {
       });
     }
   }, []);
-  const handleMouseEnter = react.useCallback(() => {
+  const handleMouseEnter = useCallback(() => {
     updatePosition();
     setShowPreview(true);
   }, [updatePosition]);
-  const handleMouseLeave = react.useCallback(() => {
+  const handleMouseLeave = useCallback(() => {
     setShowPreview(false);
   }, []);
-  react.useEffect(() => {
+  useEffect(() => {
     if (showPreview) {
       const handleScroll = () => updatePosition();
       window.addEventListener("scroll", handleScroll, true);
       return () => window.removeEventListener("scroll", handleScroll, true);
     }
   }, [showPreview, updatePosition]);
-  const previewPopup = showPreview && reactDom.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt", children: /* @__PURE__ */ jsxRuntime.jsx(
+  const previewPopup = showPreview && createPortal(
+    /* @__PURE__ */ jsx("div", { className: "sjt", children: /* @__PURE__ */ jsx(
       "div",
       {
         className: "sjt-fixed sjt-z-[9999] sjt-p-3 sjt-rounded-lg sjt-shadow-lg sjt-text-sm",
@@ -237,27 +235,27 @@ var DatePreview = ({ dateInfo, children }) => {
           backgroundColor: "var(--sjt-bg-secondary)",
           border: "1px solid var(--sjt-border-color)"
         },
-        children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-space-y-2", children: [
-          /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "Format Type" }),
-            /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-font-medium", style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.type })
+        children: /* @__PURE__ */ jsxs("div", { className: "sjt-space-y-2", children: [
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "Format Type" }),
+            /* @__PURE__ */ jsx("div", { className: "sjt-font-medium", style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.type })
           ] }),
-          /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "Local Time" }),
-            /* @__PURE__ */ jsxRuntime.jsx("div", { style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.formatted })
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "Local Time" }),
+            /* @__PURE__ */ jsx("div", { style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.formatted })
           ] }),
-          /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "ISO 8601" }),
-            /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-font-mono sjt-text-xs", style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.iso })
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("div", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)", marginBottom: "2px" }, children: "ISO 8601" }),
+            /* @__PURE__ */ jsx("div", { className: "sjt-font-mono sjt-text-xs", style: { color: "var(--sjt-text-primary)" }, children: formattedInfo.iso })
           ] })
         ] })
       }
     ) }),
     document.body
   );
-  return /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
+  return /* @__PURE__ */ jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
     children,
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "span",
       {
         ref: iconRef,
@@ -274,17 +272,17 @@ var DatePreview = ({ dateInfo, children }) => {
 };
 var DatePreview_default = DatePreview;
 var Modal = ({ isOpen, onClose, title, children }) => {
-  const handleEscape = react.useCallback((e) => {
+  const handleEscape = useCallback((e) => {
     if (e.key === "Escape") {
       onClose();
     }
   }, [onClose]);
-  const handleBackdropClick = react.useCallback((e) => {
+  const handleBackdropClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   }, [onClose]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
@@ -295,14 +293,14 @@ var Modal = ({ isOpen, onClose, title, children }) => {
     }
   }, [isOpen, handleEscape]);
   if (!isOpen) return null;
-  return reactDom.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt", children: /* @__PURE__ */ jsxRuntime.jsx(
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "sjt", children: /* @__PURE__ */ jsx(
       "div",
       {
         className: "sjt-fixed sjt-inset-0 sjt-z-[9999] sjt-flex sjt-items-center sjt-justify-center sjt-p-4",
         style: { backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" },
         onClick: handleBackdropClick,
-        children: /* @__PURE__ */ jsxRuntime.jsxs(
+        children: /* @__PURE__ */ jsxs(
           "div",
           {
             className: "sjt-rounded-lg sjt-shadow-2xl sjt-w-full sjt-flex sjt-flex-col",
@@ -313,13 +311,13 @@ var Modal = ({ isOpen, onClose, title, children }) => {
               maxHeight: "80vh"
             },
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 "div",
                 {
                   className: "sjt-flex sjt-items-center sjt-justify-between sjt-px-4 sjt-py-3",
                   style: { borderBottom: "1px solid var(--sjt-border-color)" },
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx(
+                    /* @__PURE__ */ jsx(
                       "h2",
                       {
                         className: "sjt-text-lg sjt-font-semibold",
@@ -327,7 +325,7 @@ var Modal = ({ isOpen, onClose, title, children }) => {
                         children: title
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntime.jsx(
+                    /* @__PURE__ */ jsx(
                       "button",
                       {
                         onClick: onClose,
@@ -342,13 +340,13 @@ var Modal = ({ isOpen, onClose, title, children }) => {
                           e.currentTarget.style.color = "var(--sjt-text-secondary)";
                         },
                         "aria-label": "Close modal",
-                        children: /* @__PURE__ */ jsxRuntime.jsx("svg", { className: "sjt-w-5 sjt-h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntime.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) })
+                        children: /* @__PURE__ */ jsx("svg", { className: "sjt-w-5 sjt-h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) })
                       }
                     )
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-flex-1 sjt-overflow-auto sjt-p-4", children })
+              /* @__PURE__ */ jsx("div", { className: "sjt-flex-1 sjt-overflow-auto sjt-p-4", children })
             ]
           }
         )
@@ -358,18 +356,18 @@ var Modal = ({ isOpen, onClose, title, children }) => {
   );
 };
 var Modal_default = Modal;
-var LazyTreeView = react.lazy(() => import('./TreeView-LJHTEDT2.cjs'));
+var LazyTreeView = lazy(() => import('./TreeView-GTXBAHYP.js'));
 var NestedJsonPreview = ({ nestedJson, children }) => {
-  const [isModalOpen, setIsModalOpen] = react.useState(false);
-  const [expandedPaths, setExpandedPaths] = react.useState(/* @__PURE__ */ new Set());
-  const handleOpen = react.useCallback(() => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedPaths, setExpandedPaths] = useState(/* @__PURE__ */ new Set());
+  const handleOpen = useCallback(() => {
     setIsModalOpen(true);
     setExpandedPaths(/* @__PURE__ */ new Set());
   }, []);
-  const handleClose = react.useCallback(() => {
+  const handleClose = useCallback(() => {
     setIsModalOpen(false);
   }, []);
-  const handleTogglePath = react.useCallback((pathStr, isExpanded) => {
+  const handleTogglePath = useCallback((pathStr, isExpanded) => {
     setExpandedPaths((prev) => {
       const next = new Set(prev);
       if (isExpanded) {
@@ -381,9 +379,9 @@ var NestedJsonPreview = ({ nestedJson, children }) => {
     });
   }, []);
   const title = nestedJson.isArray ? `Nested JSON Array (${nestedJson.parsed.length} items)` : `Nested JSON Object (${Object.keys(nestedJson.parsed).length} keys)`;
-  return /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
-    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-truncate", style: { maxWidth: "300px" }, children }),
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("span", { className: "sjt-inline-flex sjt-items-center sjt-gap-1", children: [
+    /* @__PURE__ */ jsx("span", { className: "sjt-truncate", style: { maxWidth: "300px" }, children }),
+    /* @__PURE__ */ jsx(
       "span",
       {
         onClick: handleOpen,
@@ -393,7 +391,7 @@ var NestedJsonPreview = ({ nestedJson, children }) => {
         children: "\u{1F4E6}"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(Modal_default, { isOpen: isModalOpen, onClose: handleClose, title, children: /* @__PURE__ */ jsxRuntime.jsxs(
+    /* @__PURE__ */ jsx(Modal_default, { isOpen: isModalOpen, onClose: handleClose, title, children: /* @__PURE__ */ jsxs(
       "div",
       {
         className: "sjt-rounded-lg sjt-p-4",
@@ -402,7 +400,7 @@ var NestedJsonPreview = ({ nestedJson, children }) => {
           border: "1px solid var(--sjt-border-color)"
         },
         children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "div",
             {
               className: "sjt-text-xs sjt-mb-3 sjt-pb-2",
@@ -413,7 +411,7 @@ var NestedJsonPreview = ({ nestedJson, children }) => {
               children: "This string value contains embedded JSON. Below is the parsed content:"
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-font-mono sjt-text-sm", children: /* @__PURE__ */ jsxRuntime.jsx(react.Suspense, { fallback: /* @__PURE__ */ jsxRuntime.jsx("div", { style: { color: "var(--sjt-text-secondary)" }, children: "Loading..." }), children: /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx("div", { className: "sjt-font-mono sjt-text-sm", children: /* @__PURE__ */ jsx(Suspense, { fallback: /* @__PURE__ */ jsx("div", { style: { color: "var(--sjt-text-secondary)" }, children: "Loading..." }), children: /* @__PURE__ */ jsx(
             LazyTreeView,
             {
               data: nestedJson.parsed,
@@ -429,12 +427,12 @@ var NestedJsonPreview = ({ nestedJson, children }) => {
 };
 var NestedJsonPreview_default = NestedJsonPreview;
 var UrlLink = ({ url, children }) => {
-  const handleClick = react.useCallback(() => {
+  const handleClick = useCallback(() => {
     window.open(url, "_blank", "noopener,noreferrer");
   }, [url]);
-  return /* @__PURE__ */ jsxRuntime.jsxs("span", { children: [
+  return /* @__PURE__ */ jsxs("span", { children: [
     children,
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "span",
       {
         onClick: handleClick,
@@ -449,8 +447,8 @@ var UrlLink = ({ url, children }) => {
 var UrlLink_default = UrlLink;
 function InternalToast({ toasts }) {
   if (!toasts || toasts.length === 0) return null;
-  return reactDom.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt", children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-fixed sjt-top-4 sjt-right-4 sjt-z-[9999] sjt-flex sjt-flex-col sjt-gap-2", children: toasts.map((toast) => /* @__PURE__ */ jsxRuntime.jsxs(
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "sjt", children: /* @__PURE__ */ jsx("div", { className: "sjt-fixed sjt-top-4 sjt-right-4 sjt-z-[9999] sjt-flex sjt-flex-col sjt-gap-2", children: toasts.map((toast) => /* @__PURE__ */ jsxs(
       "div",
       {
         className: "sjt-flex sjt-items-center sjt-gap-2 sjt-px-3 sjt-py-2 sjt-rounded-lg sjt-shadow-lg sjt-animate-toast-in",
@@ -459,7 +457,7 @@ function InternalToast({ toasts }) {
           border: "1px solid var(--sjt-border-color, #e5e7eb)"
         },
         children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "span",
             {
               className: "sjt-w-5 sjt-h-5 sjt-flex sjt-items-center sjt-justify-center sjt-rounded-full sjt-text-white sjt-text-xs",
@@ -467,7 +465,7 @@ function InternalToast({ toasts }) {
               children: "\u2713"
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "span",
             {
               className: "sjt-text-sm",
@@ -483,10 +481,10 @@ function InternalToast({ toasts }) {
   );
 }
 var InternalToast_default = InternalToast;
-var TreeContext = react.createContext(null);
+var TreeContext = createContext(null);
 function TreeProvider({ onNotify, onCopy, children }) {
-  const [toasts, setToasts] = react.useState([]);
-  const showNotification = react.useCallback((message) => {
+  const [toasts, setToasts] = useState([]);
+  const showNotification = useCallback((message) => {
     if (onNotify) {
       onNotify(message);
       return;
@@ -497,18 +495,18 @@ function TreeProvider({ onNotify, onCopy, children }) {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 2e3);
   }, [onNotify]);
-  const handleCopy = react.useCallback((info) => {
+  const handleCopy = useCallback((info) => {
     if (onCopy) {
       onCopy(info);
     }
   }, [onCopy]);
-  return /* @__PURE__ */ jsxRuntime.jsxs(TreeContext.Provider, { value: { showNotification, onCopy: handleCopy }, children: [
+  return /* @__PURE__ */ jsxs(TreeContext.Provider, { value: { showNotification, onCopy: handleCopy }, children: [
     children,
-    !onNotify && /* @__PURE__ */ jsxRuntime.jsx(InternalToast_default, { toasts })
+    !onNotify && /* @__PURE__ */ jsx(InternalToast_default, { toasts })
   ] });
 }
 function useTreeContext() {
-  const context = react.useContext(TreeContext);
+  const context = useContext(TreeContext);
   if (!context) {
     throw new Error("useTreeContext must be used within a TreeProvider");
   }
@@ -539,7 +537,7 @@ function TreeNode({
   onAddKey,
   onAddArrayItem
 }) {
-  const nodeRef = react.useRef(null);
+  const nodeRef = useRef(null);
   const pathStr = path.join(".");
   const isCurrentMatch = currentMatchPath === pathStr;
   const isCurrentDiffMatch = currentDiffPath === pathStr;
@@ -547,39 +545,27 @@ function TreeNode({
   const { showNotification, onCopy } = useTreeContext();
   const isPinned = pinnedPaths == null ? void 0 : pinnedPaths.has(pathStr);
   const isExpanded = isRoot || ((expandedPaths == null ? void 0 : expandedPaths.has(pathStr)) ?? false);
-  const [isEditing, setIsEditing] = react.useState(false);
-  const [editValue, setEditValue] = react.useState("");
-  const [copyMenuOpen, setCopyMenuOpen] = react.useState(false);
-  const copyMenuRef = react.useRef(null);
-  const [isAddingKey, setIsAddingKey] = react.useState(false);
-  const [newKeyName, setNewKeyName] = react.useState("");
-  const [newKeyValue, setNewKeyValue] = react.useState("");
-  react.useEffect(() => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+  const [isAddingKey, setIsAddingKey] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyValue, setNewKeyValue] = useState("");
+  useEffect(() => {
     if (isCurrentMatch && nodeRef.current) {
       nodeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [isCurrentMatch]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (isCurrentDiffMatch && nodeRef.current) {
       nodeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [isCurrentDiffMatch]);
-  react.useEffect(() => {
-    if (!copyMenuOpen) return;
-    const handler = (e) => {
-      if (copyMenuRef.current && !copyMenuRef.current.contains(e.target)) {
-        setCopyMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [copyMenuOpen]);
-  const valueType = chunkR44OFLPH_cjs.getValueType(value);
+  const valueType = getValueType(value);
   const isExpandable = valueType === "object" || valueType === "array";
   const isMatch = matches == null ? void 0 : matches.has(pathStr);
-  const diffType = diffMap ? chunkLWZCANR6_cjs.getDiffType(diffMap, path) : null;
-  const hasDiffInChildren = diffMap && isExpandable ? chunkLWZCANR6_cjs.pathHasDiff(diffMap, path) : false;
-  const handleToggle = react.useCallback(() => {
+  const diffType = diffMap ? getDiffType(diffMap, path) : null;
+  const hasDiffInChildren = diffMap && isExpandable ? pathHasDiff(diffMap, path) : false;
+  const handleToggle = useCallback(() => {
     if (!isRoot && onTogglePath) {
       onTogglePath(pathStr, !isExpanded);
     }
@@ -587,42 +573,25 @@ function TreeNode({
       onBreadcrumbPath(path);
     }
   }, [isRoot, onTogglePath, pathStr, isExpanded, onBreadcrumbPath, path]);
-  const handleCopyPath = react.useCallback(async () => {
-    const pathString = chunkR44OFLPH_cjs.buildPath(path);
-    await chunkR44OFLPH_cjs.copyToClipboard(pathString);
+  const handleCopyPath = useCallback(async () => {
+    const pathString = buildPath(path);
+    await copyToClipboard(pathString);
     showNotification("Path copied");
     onCopy({ type: "path", path, value: pathString });
   }, [path, showNotification, onCopy]);
-  const handleCopyValue = react.useCallback(async () => {
+  const handleCopyValue = useCallback(async () => {
     const valueString = typeof value === "string" ? value : JSON.stringify(value, null, 2);
-    await chunkR44OFLPH_cjs.copyToClipboard(valueString);
+    await copyToClipboard(valueString);
     showNotification("Value copied");
     onCopy({ type: "value", path, value: valueString });
-    setCopyMenuOpen(false);
   }, [value, path, showNotification, onCopy]);
-  const handleCopyMinified = react.useCallback(async () => {
-    const valueString = JSON.stringify(value);
-    await chunkR44OFLPH_cjs.copyToClipboard(valueString);
-    showNotification("Minified JSON copied");
-    onCopy({ type: "minified", path, value: valueString });
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-  const handleCopyKeys = react.useCallback(async () => {
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      const keysString = JSON.stringify(Object.keys(value));
-      await chunkR44OFLPH_cjs.copyToClipboard(keysString);
-      showNotification("Keys copied");
-      onCopy({ type: "keys", path, value: keysString });
-    }
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-  const handleStartEdit = react.useCallback(() => {
+  const handleStartEdit = useCallback(() => {
     if (!onValueEdit) return;
     if (isExpandable) return;
     setEditValue(typeof value === "string" ? value : JSON.stringify(value));
     setIsEditing(true);
   }, [value, isExpandable, onValueEdit]);
-  const handleSaveEdit = react.useCallback(() => {
+  const handleSaveEdit = useCallback(() => {
     if (!onValueEdit) return;
     let newValue = editValue;
     try {
@@ -636,10 +605,10 @@ function TreeNode({
     onValueEdit(path, newValue);
     setIsEditing(false);
   }, [editValue, path, onValueEdit]);
-  const handleCancelEdit = react.useCallback(() => {
+  const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
   }, []);
-  const handleKeyDown = react.useCallback(
+  const handleKeyDown = useCallback(
     (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -671,7 +640,7 @@ function TreeNode({
       const isLargeValue = editValue.length > 50 || editValue.includes("\n");
       if (isLargeValue) {
         const lineCount = Math.min(10, Math.max(3, editValue.split("\n").length));
-        return /* @__PURE__ */ jsxRuntime.jsx(
+        return /* @__PURE__ */ jsx(
           "textarea",
           {
             value: editValue,
@@ -701,7 +670,7 @@ function TreeNode({
           }
         );
       }
-      return /* @__PURE__ */ jsxRuntime.jsx(
+      return /* @__PURE__ */ jsx(
         "input",
         {
           type: "text",
@@ -731,9 +700,9 @@ function TreeNode({
       const lowerText = text.toLowerCase();
       const index = lowerText.indexOf(query);
       if (index === -1) return text;
-      return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      return /* @__PURE__ */ jsxs(Fragment, { children: [
         text.substring(0, index),
-        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "highlight-match", children: text.substring(index, index + query.length) }),
+        /* @__PURE__ */ jsx("span", { className: "highlight-match", children: text.substring(index, index + query.length) }),
         text.substring(index + query.length)
       ] });
     };
@@ -741,68 +710,68 @@ function TreeNode({
       case "string": {
         let stringContent;
         if (diffType === "changed" && diffEntry && typeof diffEntry.leftValue === "string" && typeof diffEntry.rightValue === "string") {
-          const segments = chunkLWZCANR6_cjs.charDiff(diffEntry.leftValue, diffEntry.rightValue);
+          const segments = charDiff(diffEntry.leftValue, diffEntry.rightValue);
           if (segments && side) {
-            stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+            stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
               '"',
               segments.map((seg, idx) => {
-                if (seg.type === "equal") return /* @__PURE__ */ jsxRuntime.jsx("span", { children: seg.value }, idx);
-                if (side === "left" && seg.type === "remove") return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "char-diff-remove", children: seg.value }, idx);
-                if (side === "right" && seg.type === "add") return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "char-diff-add", children: seg.value }, idx);
+                if (seg.type === "equal") return /* @__PURE__ */ jsx("span", { children: seg.value }, idx);
+                if (side === "left" && seg.type === "remove") return /* @__PURE__ */ jsx("span", { className: "char-diff-remove", children: seg.value }, idx);
+                if (side === "right" && seg.type === "add") return /* @__PURE__ */ jsx("span", { className: "char-diff-add", children: seg.value }, idx);
                 return null;
               }),
               '"'
             ] });
           } else {
-            stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+            stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
               '"',
               highlightText(value),
               '"'
             ] });
           }
         } else {
-          stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+          stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
             '"',
             highlightText(value),
             '"'
           ] });
         }
-        if (chunkR44OFLPH_cjs.isImageUrl(value)) {
-          return /* @__PURE__ */ jsxRuntime.jsx(ImagePreview_default, { url: value, children: stringContent });
+        if (isImageUrl(value)) {
+          return /* @__PURE__ */ jsx(ImagePreview_default, { url: value, children: stringContent });
         }
-        const dateInfo = chunkR44OFLPH_cjs.detectDateFormat(value);
+        const dateInfo = detectDateFormat(value);
         if (dateInfo) {
-          return /* @__PURE__ */ jsxRuntime.jsx(DatePreview_default, { dateInfo, children: stringContent });
+          return /* @__PURE__ */ jsx(DatePreview_default, { dateInfo, children: stringContent });
         }
-        const nestedJson = chunkR44OFLPH_cjs.detectNestedJson(value);
+        const nestedJson = detectNestedJson(value);
         if (nestedJson) {
-          return /* @__PURE__ */ jsxRuntime.jsx(NestedJsonPreview_default, { nestedJson, children: stringContent });
+          return /* @__PURE__ */ jsx(NestedJsonPreview_default, { nestedJson, children: stringContent });
         }
-        if (chunkR44OFLPH_cjs.isUrl(value)) {
-          return /* @__PURE__ */ jsxRuntime.jsx(UrlLink_default, { url: value, children: stringContent });
+        if (isUrl(value)) {
+          return /* @__PURE__ */ jsx(UrlLink_default, { url: value, children: stringContent });
         }
         return stringContent;
       }
       case "number":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-number sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
+        return /* @__PURE__ */ jsx("span", { className: "json-number sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
       case "boolean":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-boolean sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
+        return /* @__PURE__ */ jsx("span", { className: "json-boolean sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
       case "null":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-null sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText("null") });
+        return /* @__PURE__ */ jsx("span", { className: "json-null sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText("null") });
       case "array":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: chunkR44OFLPH_cjs.getPreview(value) });
+        return /* @__PURE__ */ jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: getPreview(value) });
       case "object":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: chunkR44OFLPH_cjs.getPreview(value) });
+        return /* @__PURE__ */ jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: getPreview(value) });
       default:
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { children: String(value) });
+        return /* @__PURE__ */ jsx("span", { children: String(value) });
     }
   };
-  const handleNodeClick = react.useCallback(() => {
+  const handleNodeClick = useCallback(() => {
     if (onBreadcrumbPath && path.length > 0) {
       onBreadcrumbPath(path);
     }
   }, [onBreadcrumbPath, path]);
-  const childHasMatch = react.useCallback((childPath) => {
+  const childHasMatch = useCallback((childPath) => {
     if (!matches) return false;
     const childPathStr = childPath.join(".");
     for (const matchPath of matches) {
@@ -816,7 +785,7 @@ function TreeNode({
     if (!isExpandable || !isExpanded) return null;
     const entries = valueType === "array" ? value.map((v, i) => [i, v]) : Object.entries(value);
     if (entries.length === 0) {
-      return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-pl-4 sjt-text-xs sjt-italic", style: { color: "var(--sjt-text-secondary)" }, children: valueType === "array" ? "empty array" : "empty object" });
+      return /* @__PURE__ */ jsx("div", { className: "sjt-pl-4 sjt-text-xs sjt-italic", style: { color: "var(--sjt-text-secondary)" }, children: valueType === "array" ? "empty array" : "empty object" });
     }
     const filteredEntries = filterMode && searchQuery && (matches == null ? void 0 : matches.size) > 0 ? entries.filter(([key]) => {
       const childPath = [...path, key];
@@ -825,7 +794,7 @@ function TreeNode({
     if (filterMode && filteredEntries.length === 0) {
       return null;
     }
-    return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "sjt-pl-4", style: { borderLeft: "1px solid var(--sjt-border-color)" }, children: filteredEntries.map(([key, val]) => /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx("div", { className: "sjt-pl-4", style: { borderLeft: "1px solid var(--sjt-border-color)" }, children: filteredEntries.map(([key, val]) => /* @__PURE__ */ jsx(
       TreeNode,
       {
         keyName: key,
@@ -854,8 +823,8 @@ function TreeNode({
       key
     )) });
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: `tree-node ${getDiffClass()}`, ref: nodeRef, children: [
-    /* @__PURE__ */ jsxRuntime.jsxs(
+  return /* @__PURE__ */ jsxs("div", { className: `tree-node ${getDiffClass()}`, ref: nodeRef, children: [
+    /* @__PURE__ */ jsxs(
       "div",
       {
         className: `sjt-flex sjt-items-center sjt-gap-1 sjt-py-0.5 sjt-group sjt-rounded sjt-px-1 -sjt-mx-1 ${isCurrentMatch ? "search-current-match" : isMatch ? "search-other-match" : ""} ${isCurrentDiffMatch ? "diff-current-match" : ""} ${isJsonPathMatch ? "jsonpath-match" : ""} ${hasDiffInChildren && !diffType ? "has-diff-children" : ""} ${isExpandable ? "sjt-cursor-pointer" : ""} ${isPinned ? "pinned-node" : ""}`,
@@ -869,7 +838,7 @@ function TreeNode({
         onClick: isExpandable ? handleToggle : handleNodeClick,
         "data-pinned-path": isPinned ? pathStr : void 0,
         children: [
-          isExpandable ? /* @__PURE__ */ jsxRuntime.jsx(
+          isExpandable ? /* @__PURE__ */ jsx(
             "button",
             {
               onClick: handleToggle,
@@ -877,9 +846,9 @@ function TreeNode({
               style: { color: "var(--sjt-text-secondary)" },
               children: isExpanded ? "\u25BC" : "\u25B6"
             }
-          ) : /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-w-4 sjt-flex-shrink-0" }),
-          keyName !== null && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntime.jsx(
+          ) : /* @__PURE__ */ jsx("span", { className: "sjt-w-4 sjt-flex-shrink-0" }),
+          keyName !== null && /* @__PURE__ */ jsxs(Fragment, { children: [
+            /* @__PURE__ */ jsx(
               "span",
               {
                 className: "json-key sjt-cursor-pointer",
@@ -888,7 +857,7 @@ function TreeNode({
                 children: typeof keyName === "number" ? `[${keyName}]` : keyName
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsx(
+            /* @__PURE__ */ jsx(
               "span",
               {
                 className: isExpandable ? "sjt-cursor-pointer" : "",
@@ -898,42 +867,16 @@ function TreeNode({
               }
             )
           ] }),
-          diffType === "moved" && diffEntry && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-text-[10px] sjt-px-1 sjt-py-0.5 sjt-rounded sjt-whitespace-nowrap", style: { backgroundColor: "var(--sjt-diff-move)", color: "var(--sjt-diff-move-text)" }, children: diffEntry.side === "left" ? `moved to [${diffEntry.toIndex}]` : `moved from [${diffEntry.fromIndex}]` }),
-          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-flex-1", onClick: isExpandable ? void 0 : (e) => e.stopPropagation(), children: renderValue() }),
-          /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-flex-shrink-0 sjt-flex sjt-items-center sjt-gap-1", onClick: (e) => e.stopPropagation(), children: [
-            !isRoot && onTogglePin && /* @__PURE__ */ jsxRuntime.jsxs("span", { className: `sjt-transition-opacity sjt-relative ${isPinned ? "" : showPinHint && path.length === 1 && isExpandable ? "sjt-opacity-40" : "sjt-opacity-0 group-hover:sjt-opacity-100"}`, children: [
-              /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: () => onTogglePin(pathStr), tooltip: isPinned ? "Unpin node" : "Pin node", size: "sm", children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-4 sjt-h-4 sjt-translate-y-0.5", children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" }) }) }),
-              showPinHint && path.length === 1 && isExpandable && !isPinned && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-absolute -sjt-top-0.5 -sjt-right-0.5 sjt-w-1.5 sjt-h-1.5 sjt-rounded-full sjt-animate-pulse", style: { backgroundColor: "var(--sjt-accent-color)" } })
+          diffType === "moved" && diffEntry && /* @__PURE__ */ jsx("span", { className: "sjt-text-[10px] sjt-px-1 sjt-py-0.5 sjt-rounded sjt-whitespace-nowrap", style: { backgroundColor: "var(--sjt-diff-move)", color: "var(--sjt-diff-move-text)" }, children: diffEntry.side === "left" ? `moved to [${diffEntry.toIndex}]` : `moved from [${diffEntry.fromIndex}]` }),
+          /* @__PURE__ */ jsx("span", { className: "sjt-flex-1", onClick: isExpandable ? void 0 : (e) => e.stopPropagation(), children: renderValue() }),
+          /* @__PURE__ */ jsxs("div", { className: "sjt-flex-shrink-0 sjt-flex sjt-items-center sjt-gap-1", onClick: (e) => e.stopPropagation(), children: [
+            !isRoot && onTogglePin && /* @__PURE__ */ jsxs("span", { className: `sjt-transition-opacity sjt-relative ${isPinned ? "" : showPinHint && path.length === 1 && isExpandable ? "sjt-opacity-40" : "sjt-opacity-0 group-hover:sjt-opacity-100"}`, children: [
+              /* @__PURE__ */ jsx(CopyButton_default, { onClick: () => onTogglePin(pathStr), tooltip: isPinned ? "Unpin node" : "Pin node", size: "sm", children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-4 sjt-h-4 sjt-translate-y-0.5", children: /* @__PURE__ */ jsx("path", { d: "M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" }) }) }),
+              showPinHint && path.length === 1 && isExpandable && !isPinned && /* @__PURE__ */ jsx("span", { className: "sjt-absolute -sjt-top-0.5 -sjt-right-0.5 sjt-w-1.5 sjt-h-1.5 sjt-rounded-full sjt-animate-pulse", style: { backgroundColor: "var(--sjt-accent-color)" } })
             ] }),
-            !isRoot && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: handleCopyPath, tooltip: "Copy path", size: "sm", children: "\u{1F4CB}" }) }),
-            isExpandable ? /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity sjt-relative", ref: copyMenuRef, children: [
-              /* @__PURE__ */ jsxRuntime.jsx(
-                CopyButton_default,
-                {
-                  onClick: () => setCopyMenuOpen((p) => !p),
-                  tooltip: valueType === "object" ? `Copy object (${Object.keys(value).length} keys)` : `Copy array (${value.length} items)`,
-                  size: "sm",
-                  children: "\u{1F4C4}"
-                }
-              ),
-              copyMenuOpen && /* @__PURE__ */ jsxRuntime.jsxs(
-                "div",
-                {
-                  className: "sjt-absolute sjt-top-full sjt-right-0 sjt-mt-1 sjt-z-50 sjt-rounded-lg sjt-shadow-lg sjt-py-1",
-                  style: {
-                    width: "8rem",
-                    backgroundColor: "var(--sjt-bg-primary)",
-                    border: "1px solid var(--sjt-border-color)"
-                  },
-                  children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyValue, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy JSON" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyMinified, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy minified" }),
-                    valueType === "object" && /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyKeys, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy keys" })
-                  ]
-                }
-              )
-            ] }) : /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: handleCopyValue, tooltip: "Copy value", size: "sm", children: "\u{1F4C4}" }) }),
-            isExpandable && onDeleteNode && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(
+            !isRoot && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: handleCopyPath, tooltip: "Copy path", size: "sm", children: "\u{1F4CB}" }) }),
+            /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: handleCopyValue, tooltip: isExpandable ? "Copy JSON" : "Copy value", size: "sm", children: "\u{1F4C4}" }) }),
+            isExpandable && onDeleteNode && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(
               CopyButton_default,
               {
                 onClick: () => {
@@ -947,17 +890,17 @@ function TreeNode({
                 },
                 tooltip: valueType === "array" ? "Add item" : "Add key",
                 size: "sm",
-                children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" }) })
+                children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", children: /* @__PURE__ */ jsx("path", { d: "M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" }) })
               }
             ) }),
-            !isRoot && onDeleteNode && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: () => onDeleteNode(path), tooltip: "Delete node", size: "sm", children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", style: { color: "var(--sjt-error-color)" }, children: /* @__PURE__ */ jsxRuntime.jsx("path", { fillRule: "evenodd", d: "M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z", clipRule: "evenodd" }) }) }) })
+            !isRoot && onDeleteNode && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: () => onDeleteNode(path), tooltip: "Delete node", size: "sm", children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", style: { color: "var(--sjt-error-color)" }, children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z", clipRule: "evenodd" }) }) }) })
           ] })
         ]
       }
     ),
     renderChildren(),
-    isAddingKey && isExpanded && valueType === "object" && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-pl-8 sjt-py-1 sjt-flex sjt-items-center sjt-gap-1", children: [
-      /* @__PURE__ */ jsxRuntime.jsx(
+    isAddingKey && isExpanded && valueType === "object" && /* @__PURE__ */ jsxs("div", { className: "sjt-pl-8 sjt-py-1 sjt-flex sjt-items-center sjt-gap-1", children: [
+      /* @__PURE__ */ jsx(
         "input",
         {
           type: "text",
@@ -990,8 +933,8 @@ function TreeNode({
           }
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)" }, children: ":" }),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx("span", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)" }, children: ":" }),
+      /* @__PURE__ */ jsx(
         "input",
         {
           type: "text",
@@ -1023,7 +966,7 @@ function TreeNode({
           }
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           onClick: () => {
@@ -1042,7 +985,7 @@ function TreeNode({
           children: "Add"
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           onClick: () => setIsAddingKey(false),
@@ -1095,27 +1038,15 @@ function FlatTreeNode({
   const isJsonPathMatch = jsonpathMatches == null ? void 0 : jsonpathMatches.has(pathStr);
   const isPinned = pinnedPaths == null ? void 0 : pinnedPaths.has(pathStr);
   const isMatch = matches == null ? void 0 : matches.has(pathStr);
-  const [isEditing, setIsEditing] = react.useState(false);
-  const [editValue, setEditValue] = react.useState("");
-  const [copyMenuOpen, setCopyMenuOpen] = react.useState(false);
-  const copyMenuRef = react.useRef(null);
-  const [isAddingKey, setIsAddingKey] = react.useState(false);
-  const [newKeyName, setNewKeyName] = react.useState("");
-  const [newKeyValue, setNewKeyValue] = react.useState("");
-  react.useEffect(() => {
-    if (!copyMenuOpen) return;
-    const handler = (e) => {
-      if (copyMenuRef.current && !copyMenuRef.current.contains(e.target)) {
-        setCopyMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [copyMenuOpen]);
-  const diffType = diffMap ? chunkLWZCANR6_cjs.getDiffType(diffMap, path) : null;
-  const hasDiffInChildren = diffMap && isExpandable ? chunkLWZCANR6_cjs.pathHasDiff(diffMap, path) : false;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+  const [isAddingKey, setIsAddingKey] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyValue, setNewKeyValue] = useState("");
+  const diffType = diffMap ? getDiffType(diffMap, path) : null;
+  const hasDiffInChildren = diffMap && isExpandable ? pathHasDiff(diffMap, path) : false;
   const diffEntry = diffMap ? diffMap.get(pathStr) : null;
-  const handleToggle = react.useCallback(() => {
+  const handleToggle = useCallback(() => {
     if (!isRoot && onTogglePath) {
       onTogglePath(pathStr, !isExpanded);
     }
@@ -1123,41 +1054,24 @@ function FlatTreeNode({
       onBreadcrumbPath(path);
     }
   }, [isRoot, onTogglePath, pathStr, isExpanded, onBreadcrumbPath, path]);
-  const handleCopyPath = react.useCallback(async () => {
-    const pathString = chunkR44OFLPH_cjs.buildPath(path);
-    await chunkR44OFLPH_cjs.copyToClipboard(pathString);
+  const handleCopyPath = useCallback(async () => {
+    const pathString = buildPath(path);
+    await copyToClipboard(pathString);
     showNotification("Path copied");
     onCopy({ type: "path", path, value: pathString });
   }, [path, showNotification, onCopy]);
-  const handleCopyValue = react.useCallback(async () => {
+  const handleCopyValue = useCallback(async () => {
     const valueString = typeof value === "string" ? value : JSON.stringify(value, null, 2);
-    await chunkR44OFLPH_cjs.copyToClipboard(valueString);
+    await copyToClipboard(valueString);
     showNotification("Value copied");
     onCopy({ type: "value", path, value: valueString });
-    setCopyMenuOpen(false);
   }, [value, path, showNotification, onCopy]);
-  const handleCopyMinified = react.useCallback(async () => {
-    const valueString = JSON.stringify(value);
-    await chunkR44OFLPH_cjs.copyToClipboard(valueString);
-    showNotification("Minified JSON copied");
-    onCopy({ type: "minified", path, value: valueString });
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-  const handleCopyKeys = react.useCallback(async () => {
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      const keysString = JSON.stringify(Object.keys(value));
-      await chunkR44OFLPH_cjs.copyToClipboard(keysString);
-      showNotification("Keys copied");
-      onCopy({ type: "keys", path, value: keysString });
-    }
-    setCopyMenuOpen(false);
-  }, [value, path, showNotification, onCopy]);
-  const handleStartEdit = react.useCallback(() => {
+  const handleStartEdit = useCallback(() => {
     if (!onValueEdit || isExpandable) return;
     setEditValue(typeof value === "string" ? value : JSON.stringify(value));
     setIsEditing(true);
   }, [value, isExpandable, onValueEdit]);
-  const handleSaveEdit = react.useCallback(() => {
+  const handleSaveEdit = useCallback(() => {
     if (!onValueEdit) return;
     let newValue = editValue;
     try {
@@ -1171,8 +1085,8 @@ function FlatTreeNode({
     onValueEdit(path, newValue);
     setIsEditing(false);
   }, [editValue, path, onValueEdit]);
-  const handleCancelEdit = react.useCallback(() => setIsEditing(false), []);
-  const handleKeyDown = react.useCallback((e) => {
+  const handleCancelEdit = useCallback(() => setIsEditing(false), []);
+  const handleKeyDown = useCallback((e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSaveEdit();
@@ -1180,7 +1094,7 @@ function FlatTreeNode({
       handleCancelEdit();
     }
   }, [handleSaveEdit, handleCancelEdit]);
-  const handleNodeClick = react.useCallback(() => {
+  const handleNodeClick = useCallback(() => {
     if (onBreadcrumbPath && path.length > 0) onBreadcrumbPath(path);
   }, [onBreadcrumbPath, path]);
   const getDiffClass = () => {
@@ -1204,15 +1118,15 @@ function FlatTreeNode({
     const lowerText = text.toLowerCase();
     const index = lowerText.indexOf(query);
     if (index === -1) return text;
-    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+    return /* @__PURE__ */ jsxs(Fragment, { children: [
       text.substring(0, index),
-      /* @__PURE__ */ jsxRuntime.jsx("span", { className: "highlight-match", children: text.substring(index, index + query.length) }),
+      /* @__PURE__ */ jsx("span", { className: "highlight-match", children: text.substring(index, index + query.length) }),
       text.substring(index + query.length)
     ] });
   };
   const renderValue = () => {
     if (isEditing) {
-      return /* @__PURE__ */ jsxRuntime.jsx(
+      return /* @__PURE__ */ jsx(
         "input",
         {
           type: "text",
@@ -1237,61 +1151,61 @@ function FlatTreeNode({
       case "string": {
         let stringContent;
         if (diffType === "changed" && diffEntry && typeof diffEntry.leftValue === "string" && typeof diffEntry.rightValue === "string") {
-          const segments = chunkLWZCANR6_cjs.charDiff(diffEntry.leftValue, diffEntry.rightValue);
+          const segments = charDiff(diffEntry.leftValue, diffEntry.rightValue);
           if (segments && side) {
-            stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+            stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
               '"',
               segments.map((seg, idx) => {
-                if (seg.type === "equal") return /* @__PURE__ */ jsxRuntime.jsx("span", { children: seg.value }, idx);
-                if (side === "left" && seg.type === "remove") return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "char-diff-remove", children: seg.value }, idx);
-                if (side === "right" && seg.type === "add") return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "char-diff-add", children: seg.value }, idx);
+                if (seg.type === "equal") return /* @__PURE__ */ jsx("span", { children: seg.value }, idx);
+                if (side === "left" && seg.type === "remove") return /* @__PURE__ */ jsx("span", { className: "char-diff-remove", children: seg.value }, idx);
+                if (side === "right" && seg.type === "add") return /* @__PURE__ */ jsx("span", { className: "char-diff-add", children: seg.value }, idx);
                 return null;
               }),
               '"'
             ] });
           } else {
-            stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+            stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
               '"',
               highlightText(value),
               '"'
             ] });
           }
         } else {
-          stringContent = /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
+          stringContent = /* @__PURE__ */ jsxs("span", { className: "json-string sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: [
             '"',
             highlightText(value),
             '"'
           ] });
         }
-        if (chunkR44OFLPH_cjs.isImageUrl(value)) return /* @__PURE__ */ jsxRuntime.jsx(ImagePreview_default, { url: value, children: stringContent });
-        const dateInfo = chunkR44OFLPH_cjs.detectDateFormat(value);
-        if (dateInfo) return /* @__PURE__ */ jsxRuntime.jsx(DatePreview_default, { dateInfo, children: stringContent });
-        const nestedJson = chunkR44OFLPH_cjs.detectNestedJson(value);
-        if (nestedJson) return /* @__PURE__ */ jsxRuntime.jsx(NestedJsonPreview_default, { nestedJson, children: stringContent });
-        if (chunkR44OFLPH_cjs.isUrl(value)) return /* @__PURE__ */ jsxRuntime.jsx(UrlLink_default, { url: value, children: stringContent });
+        if (isImageUrl(value)) return /* @__PURE__ */ jsx(ImagePreview_default, { url: value, children: stringContent });
+        const dateInfo = detectDateFormat(value);
+        if (dateInfo) return /* @__PURE__ */ jsx(DatePreview_default, { dateInfo, children: stringContent });
+        const nestedJson = detectNestedJson(value);
+        if (nestedJson) return /* @__PURE__ */ jsx(NestedJsonPreview_default, { nestedJson, children: stringContent });
+        if (isUrl(value)) return /* @__PURE__ */ jsx(UrlLink_default, { url: value, children: stringContent });
         return stringContent;
       }
       case "number":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-number sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
+        return /* @__PURE__ */ jsx("span", { className: "json-number sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
       case "boolean":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-boolean sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
+        return /* @__PURE__ */ jsx("span", { className: "json-boolean sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText(String(value)) });
       case "null":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-null sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText("null") });
+        return /* @__PURE__ */ jsx("span", { className: "json-null sjt-cursor-pointer", onDoubleClick: handleStartEdit, children: highlightText("null") });
       case "array":
       case "object":
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: preview });
+        return /* @__PURE__ */ jsx("span", { className: "sjt-cursor-pointer", style: { color: "var(--sjt-text-secondary)" }, onClick: handleToggle, children: preview });
       default:
-        return /* @__PURE__ */ jsxRuntime.jsx("span", { children: String(value) });
+        return /* @__PURE__ */ jsx("span", { children: String(value) });
     }
   };
   const showEmptyHint = isExpandable && isExpanded && childCount === 0;
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       "div",
       {
         className: `tree-node ${getDiffClass()}`,
         style,
-        children: /* @__PURE__ */ jsxRuntime.jsxs(
+        children: /* @__PURE__ */ jsxs(
           "div",
           {
             className: `sjt-flex sjt-items-center sjt-gap-1 sjt-py-0.5 sjt-group sjt-rounded sjt-px-1 ${isCurrentMatch ? "search-current-match" : isMatch ? "search-other-match" : ""} ${isCurrentDiffMatch ? "diff-current-match" : ""} ${isJsonPathMatch ? "jsonpath-match" : ""} ${hasDiffInChildren && !diffType ? "has-diff-children" : ""} ${isExpandable ? "sjt-cursor-pointer" : ""} ${isPinned ? "pinned-node" : ""}`,
@@ -1299,31 +1213,24 @@ function FlatTreeNode({
             "data-pinned-path": isPinned ? pathStr : void 0,
             style: { paddingLeft: `${depth * 16 + 4}px`, height: `${ROW_HEIGHT}px` },
             children: [
-              isExpandable ? /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleToggle, className: "sjt-w-4 sjt-h-4 sjt-flex sjt-items-center sjt-justify-center sjt-flex-shrink-0", style: { color: "var(--sjt-text-secondary)" }, children: isExpanded ? "\u25BC" : "\u25B6" }) : /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-w-4 sjt-flex-shrink-0" }),
-              keyName !== null && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "json-key sjt-cursor-pointer", onClick: isExpandable ? handleToggle : void 0, children: typeof keyName === "number" ? `[${keyName}]` : keyName }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: isExpandable ? "sjt-cursor-pointer" : "", style: { color: "var(--sjt-text-secondary)" }, onClick: isExpandable ? handleToggle : void 0, children: ":" })
+              isExpandable ? /* @__PURE__ */ jsx("button", { onClick: handleToggle, className: "sjt-w-4 sjt-h-4 sjt-flex sjt-items-center sjt-justify-center sjt-flex-shrink-0", style: { color: "var(--sjt-text-secondary)" }, children: isExpanded ? "\u25BC" : "\u25B6" }) : /* @__PURE__ */ jsx("span", { className: "sjt-w-4 sjt-flex-shrink-0" }),
+              keyName !== null && /* @__PURE__ */ jsxs(Fragment, { children: [
+                /* @__PURE__ */ jsx("span", { className: "json-key sjt-cursor-pointer", onClick: isExpandable ? handleToggle : void 0, children: typeof keyName === "number" ? `[${keyName}]` : keyName }),
+                /* @__PURE__ */ jsx("span", { className: isExpandable ? "sjt-cursor-pointer" : "", style: { color: "var(--sjt-text-secondary)" }, onClick: isExpandable ? handleToggle : void 0, children: ":" })
               ] }),
-              diffType === "moved" && diffEntry && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-text-[10px] sjt-px-1 sjt-py-0.5 sjt-rounded sjt-whitespace-nowrap", style: { backgroundColor: "var(--sjt-diff-move)", color: "var(--sjt-diff-move-text)" }, children: diffEntry.side === "left" ? `moved to [${diffEntry.toIndex}]` : `moved from [${diffEntry.fromIndex}]` }),
-              /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-flex-1 sjt-truncate", onClick: isExpandable ? void 0 : (e) => e.stopPropagation(), children: [
+              diffType === "moved" && diffEntry && /* @__PURE__ */ jsx("span", { className: "sjt-text-[10px] sjt-px-1 sjt-py-0.5 sjt-rounded sjt-whitespace-nowrap", style: { backgroundColor: "var(--sjt-diff-move)", color: "var(--sjt-diff-move-text)" }, children: diffEntry.side === "left" ? `moved to [${diffEntry.toIndex}]` : `moved from [${diffEntry.fromIndex}]` }),
+              /* @__PURE__ */ jsxs("span", { className: "sjt-flex-1 sjt-truncate", onClick: isExpandable ? void 0 : (e) => e.stopPropagation(), children: [
                 renderValue(),
-                showEmptyHint && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-text-xs sjt-italic sjt-ml-1", style: { color: "var(--sjt-text-secondary)" }, children: valueType === "array" ? "empty array" : "empty object" })
+                showEmptyHint && /* @__PURE__ */ jsx("span", { className: "sjt-text-xs sjt-italic sjt-ml-1", style: { color: "var(--sjt-text-secondary)" }, children: valueType === "array" ? "empty array" : "empty object" })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-flex-shrink-0 sjt-flex sjt-items-center sjt-gap-1", onClick: (e) => e.stopPropagation(), children: [
-                !isRoot && onTogglePin && /* @__PURE__ */ jsxRuntime.jsxs("span", { className: `sjt-transition-opacity sjt-relative ${isPinned ? "" : showPinHint && path.length === 1 && isExpandable ? "sjt-opacity-40" : "sjt-opacity-0 group-hover:sjt-opacity-100"}`, children: [
-                  /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: () => onTogglePin(pathStr), tooltip: isPinned ? "Unpin node" : "Pin node", size: "sm", children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-4 sjt-h-4 sjt-translate-y-0.5", children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" }) }) }),
-                  showPinHint && path.length === 1 && isExpandable && !isPinned && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-absolute -sjt-top-0.5 -sjt-right-0.5 sjt-w-1.5 sjt-h-1.5 sjt-rounded-full sjt-animate-pulse", style: { backgroundColor: "var(--sjt-accent-color)" } })
+              /* @__PURE__ */ jsxs("div", { className: "sjt-flex-shrink-0 sjt-flex sjt-items-center sjt-gap-1", onClick: (e) => e.stopPropagation(), children: [
+                !isRoot && onTogglePin && /* @__PURE__ */ jsxs("span", { className: `sjt-transition-opacity sjt-relative ${isPinned ? "" : showPinHint && path.length === 1 && isExpandable ? "sjt-opacity-40" : "sjt-opacity-0 group-hover:sjt-opacity-100"}`, children: [
+                  /* @__PURE__ */ jsx(CopyButton_default, { onClick: () => onTogglePin(pathStr), tooltip: isPinned ? "Unpin node" : "Pin node", size: "sm", children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-4 sjt-h-4 sjt-translate-y-0.5", children: /* @__PURE__ */ jsx("path", { d: "M10.97 2.22a.75.75 0 0 1 1.06 0l1.75 1.75a.75.75 0 0 1-.177 1.206l-2.12 1.061a1.5 1.5 0 0 0-.653.737l-.706 1.765a.75.75 0 0 1-1.239.263L7.25 7.363 4.03 10.584a.75.75 0 0 1-1.06-1.061L6.189 6.3 4.555 4.665a.75.75 0 0 1 .263-1.238l1.765-.706a1.5 1.5 0 0 0 .737-.653l1.06-2.12a.75.75 0 0 1 1.207-.178l.382.383Z" }) }) }),
+                  showPinHint && path.length === 1 && isExpandable && !isPinned && /* @__PURE__ */ jsx("span", { className: "sjt-absolute -sjt-top-0.5 -sjt-right-0.5 sjt-w-1.5 sjt-h-1.5 sjt-rounded-full sjt-animate-pulse", style: { backgroundColor: "var(--sjt-accent-color)" } })
                 ] }),
-                !isRoot && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: handleCopyPath, tooltip: "Copy path", size: "sm", children: "\u{1F4CB}" }) }),
-                isExpandable ? /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity sjt-relative", ref: copyMenuRef, children: [
-                  /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: () => setCopyMenuOpen((p) => !p), tooltip: valueType === "object" ? `Copy object (${childCount} keys)` : `Copy array (${childCount} items)`, size: "sm", children: "\u{1F4C4}" }),
-                  copyMenuOpen && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "sjt-absolute sjt-top-full sjt-right-0 sjt-mt-1 sjt-z-50 sjt-rounded-lg sjt-shadow-lg sjt-py-1", style: { width: "8rem", backgroundColor: "var(--sjt-bg-primary)", border: "1px solid var(--sjt-border-color)" }, children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyValue, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy JSON" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyMinified, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy minified" }),
-                    valueType === "object" && /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: handleCopyKeys, className: "sjt-w-full sjt-text-left sjt-px-3 sjt-py-1.5 sjt-text-xs sjt-transition-colors", style: { color: "var(--sjt-text-primary)" }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = "var(--sjt-bg-secondary)", onMouseOut: (e) => e.currentTarget.style.backgroundColor = "", children: "Copy keys" })
-                  ] })
-                ] }) : /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: handleCopyValue, tooltip: "Copy value", size: "sm", children: "\u{1F4C4}" }) }),
-                isExpandable && onDeleteNode && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(
+                !isRoot && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: handleCopyPath, tooltip: "Copy path", size: "sm", children: "\u{1F4CB}" }) }),
+                /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: handleCopyValue, tooltip: isExpandable ? "Copy JSON" : "Copy value", size: "sm", children: "\u{1F4C4}" }) }),
+                isExpandable && onDeleteNode && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(
                   CopyButton_default,
                   {
                     onClick: () => {
@@ -1336,23 +1243,23 @@ function FlatTreeNode({
                     },
                     tooltip: valueType === "array" ? "Add item" : "Add key",
                     size: "sm",
-                    children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" }) })
+                    children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", children: /* @__PURE__ */ jsx("path", { d: "M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" }) })
                   }
                 ) }),
-                !isRoot && onDeleteNode && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsxRuntime.jsx(CopyButton_default, { onClick: () => onDeleteNode(path), tooltip: "Delete node", size: "sm", children: /* @__PURE__ */ jsxRuntime.jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", style: { color: "var(--sjt-error-color)" }, children: /* @__PURE__ */ jsxRuntime.jsx("path", { fillRule: "evenodd", d: "M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z", clipRule: "evenodd" }) }) }) })
+                !isRoot && onDeleteNode && /* @__PURE__ */ jsx("span", { className: "sjt-opacity-0 group-hover:sjt-opacity-100 sjt-transition-opacity", children: /* @__PURE__ */ jsx(CopyButton_default, { onClick: () => onDeleteNode(path), tooltip: "Delete node", size: "sm", children: /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16 16", fill: "currentColor", className: "sjt-w-3.5 sjt-h-3.5", style: { color: "var(--sjt-error-color)" }, children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z", clipRule: "evenodd" }) }) }) })
               ] })
             ]
           }
         )
       }
     ),
-    isAddingKey && isExpanded && valueType === "object" && /* @__PURE__ */ jsxRuntime.jsx(
+    isAddingKey && isExpanded && valueType === "object" && /* @__PURE__ */ jsx(
       "div",
       {
         style: { ...style, top: parseFloat(style.top) + ROW_HEIGHT, height: ROW_HEIGHT },
         className: "sjt-flex sjt-items-center sjt-gap-1",
-        children: /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { paddingLeft: `${(depth + 1) * 16 + 4}px` }, className: "sjt-flex sjt-items-center sjt-gap-1", children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+        children: /* @__PURE__ */ jsxs("div", { style: { paddingLeft: `${(depth + 1) * 16 + 4}px` }, className: "sjt-flex sjt-items-center sjt-gap-1", children: [
+          /* @__PURE__ */ jsx(
             "input",
             {
               type: "text",
@@ -1375,8 +1282,8 @@ function FlatTreeNode({
               }
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)" }, children: ":" }),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx("span", { className: "sjt-text-xs", style: { color: "var(--sjt-text-secondary)" }, children: ":" }),
+          /* @__PURE__ */ jsx(
             "input",
             {
               type: "text",
@@ -1398,7 +1305,7 @@ function FlatTreeNode({
               }
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: () => {
+          /* @__PURE__ */ jsx("button", { onClick: () => {
             if (newKeyName.trim()) {
               let val = newKeyValue.trim();
               try {
@@ -1409,13 +1316,13 @@ function FlatTreeNode({
             }
             setIsAddingKey(false);
           }, className: "sjt-text-xs sjt-rounded sjt-text-white", style: { padding: "2px 6px", backgroundColor: "var(--sjt-accent-color)" }, children: "Add" }),
-          /* @__PURE__ */ jsxRuntime.jsx("button", { onClick: () => setIsAddingKey(false), className: "sjt-text-xs sjt-rounded", style: { padding: "2px 6px", backgroundColor: "var(--sjt-bg-secondary)", color: "var(--sjt-text-secondary)" }, children: "Cancel" })
+          /* @__PURE__ */ jsx("button", { onClick: () => setIsAddingKey(false), className: "sjt-text-xs sjt-rounded", style: { padding: "2px 6px", backgroundColor: "var(--sjt-bg-secondary)", color: "var(--sjt-text-secondary)" }, children: "Cancel" })
         ] })
       }
     )
   ] });
 }
-var FlatTreeNode_default = react.memo(FlatTreeNode, (prev, next) => {
+var FlatTreeNode_default = memo(FlatTreeNode, (prev, next) => {
   var _a, _b, _c, _d, _e, _f;
   if (prev.node !== next.node) return false;
   if (prev.style.top !== next.style.top) return false;
@@ -1456,10 +1363,10 @@ function VirtualizedTree({
   onBreadcrumbPath,
   scrollToPath
 }) {
-  const [scrollTop, setScrollTop] = react.useState(0);
-  const [containerHeight, setContainerHeight] = react.useState(600);
-  const innerRef = react.useRef(null);
-  react.useEffect(() => {
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(600);
+  const innerRef = useRef(null);
+  useEffect(() => {
     const el = containerRef == null ? void 0 : containerRef.current;
     if (!el) return;
     const observer = new ResizeObserver((entries) => {
@@ -1471,7 +1378,7 @@ function VirtualizedTree({
     setContainerHeight(el.clientHeight);
     return () => observer.disconnect();
   }, [containerRef]);
-  react.useEffect(() => {
+  useEffect(() => {
     const el = containerRef == null ? void 0 : containerRef.current;
     if (!el) return;
     const onScroll = () => {
@@ -1480,7 +1387,7 @@ function VirtualizedTree({
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
   }, [containerRef]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (!scrollToPath || !pathIndex || !(containerRef == null ? void 0 : containerRef.current)) return;
     const idx = pathIndex.get(scrollToPath);
     if (idx !== void 0) {
@@ -1491,7 +1398,7 @@ function VirtualizedTree({
       });
     }
   }, [scrollToPath, pathIndex, containerRef, containerHeight]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (!currentMatchPath || !pathIndex || !(containerRef == null ? void 0 : containerRef.current)) return;
     const idx = pathIndex.get(currentMatchPath);
     if (idx !== void 0) {
@@ -1505,7 +1412,7 @@ function VirtualizedTree({
       }
     }
   }, [currentMatchPath, pathIndex, containerRef, containerHeight]);
-  react.useEffect(() => {
+  useEffect(() => {
     if (!currentDiffPath || !pathIndex || !(containerRef == null ? void 0 : containerRef.current)) return;
     const idx = pathIndex.get(currentDiffPath);
     if (idx !== void 0) {
@@ -1525,10 +1432,10 @@ function VirtualizedTree({
     flatNodes.length,
     Math.ceil((scrollTop + containerHeight) / ROW_HEIGHT2) + OVERSCAN
   );
-  const visibleNodes = react.useMemo(() => {
+  const visibleNodes = useMemo(() => {
     return flatNodes.slice(startIndex, endIndex);
   }, [flatNodes, startIndex, endIndex]);
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     "div",
     {
       ref: innerRef,
@@ -1536,7 +1443,7 @@ function VirtualizedTree({
       className: "tree-view sjt-font-mono sjt-text-sm",
       children: visibleNodes.map((node, i) => {
         const index = startIndex + i;
-        return /* @__PURE__ */ jsxRuntime.jsx(
+        return /* @__PURE__ */ jsx(
           FlatTreeNode_default,
           {
             node,
@@ -1574,7 +1481,7 @@ var VirtualizedTree_default = VirtualizedTree;
 var VIRTUALIZE_THRESHOLD = 500;
 function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchIndex, onMatchCountChange, controlledExpandedPaths, onTogglePath, filterMode, onBreadcrumbPath, pinnedPaths, onTogglePin, showPinHint, currentDiffPath, jsonpathMatches, onDeleteNode, onAddKey, onAddArrayItem, containerRef, scrollToPath, virtualizeThreshold }) {
   const threshold = virtualizeThreshold ?? VIRTUALIZE_THRESHOLD;
-  const { matches, expandedPaths, matchList } = react.useMemo(() => {
+  const { matches, expandedPaths, matchList } = useMemo(() => {
     if (!searchQuery || !searchQuery.trim()) {
       return { matches: /* @__PURE__ */ new Set(), expandedPaths: /* @__PURE__ */ new Set(), matchList: [] };
     }
@@ -1584,10 +1491,10 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
     searchInValue(data, [], searchQuery.toLowerCase(), matchPaths, pathsToExpand, orderedMatches);
     return { matches: matchPaths, expandedPaths: pathsToExpand, matchList: orderedMatches };
   }, [data, searchQuery]);
-  react.useEffect(() => {
+  useEffect(() => {
     onMatchCountChange == null ? void 0 : onMatchCountChange(matchList.length, expandedPaths);
   }, [matchList.length, expandedPaths, onMatchCountChange]);
-  const mergedExpandedPaths = react.useMemo(() => {
+  const mergedExpandedPaths = useMemo(() => {
     const merged = new Set(expandedPaths);
     if (controlledExpandedPaths) {
       for (const path of controlledExpandedPaths) {
@@ -1597,8 +1504,8 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
     return merged;
   }, [expandedPaths, controlledExpandedPaths]);
   const currentMatchPath = matchList[currentMatchIndex] || null;
-  const flatNodes = react.useMemo(() => {
-    return chunkR44OFLPH_cjs.flattenTree(data, mergedExpandedPaths, {
+  const flatNodes = useMemo(() => {
+    return flattenTree(data, mergedExpandedPaths, {
       matches,
       filterMode,
       searchQuery,
@@ -1606,10 +1513,10 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
       side
     });
   }, [data, mergedExpandedPaths, matches, filterMode, searchQuery, diffMap, side]);
-  const pathIndex = react.useMemo(() => chunkR44OFLPH_cjs.buildPathIndex(flatNodes), [flatNodes]);
+  const pathIndex = useMemo(() => buildPathIndex(flatNodes), [flatNodes]);
   const useVirtual = flatNodes.length > threshold;
   if (useVirtual && containerRef) {
-    return /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(
       VirtualizedTree_default,
       {
         flatNodes,
@@ -1635,7 +1542,7 @@ function TreeView({ data, searchQuery, onValueEdit, diffMap, side, currentMatchI
       }
     );
   }
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "tree-view sjt-font-mono sjt-text-sm", children: /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { className: "tree-view sjt-font-mono sjt-text-sm", children: /* @__PURE__ */ jsx(
     TreeNode_default,
     {
       keyName: null,
@@ -1725,5 +1632,4 @@ function addParentPaths(path, pathsToExpand) {
 }
 var TreeView_default = TreeView;
 
-exports.TreeProvider = TreeProvider;
-exports.TreeView_default = TreeView_default;
+export { TreeProvider, TreeView_default };

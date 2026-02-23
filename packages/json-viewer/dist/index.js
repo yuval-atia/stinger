@@ -1,5 +1,5 @@
-import { TreeProvider, TreeView_default } from './chunk-CITGC7YL.js';
-export { TreeProvider, TreeView_default as TreeView } from './chunk-CITGC7YL.js';
+import { TreeProvider, TreeView_default } from './chunk-6SEOQRO3.js';
+export { TreeProvider, TreeView_default as TreeView } from './chunk-6SEOQRO3.js';
 import { diffJson, createDiffMap } from './chunk-3QC7PK4F.js';
 import { flattenTree, buildPathIndex, getValueType } from './chunk-7OZTLRJC.js';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
