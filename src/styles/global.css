@@ -273,12 +273,18 @@ select:focus-visible {
   box-shadow: inset 0 -2px 0 var(--accent-color);
 }
 
-.pinned-node {
-  border-left: 3px solid var(--accent-color);
-  background-color: rgba(59, 130, 246, 0.12);
+.pinned-node::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #dc2626;
+  flex-shrink: 0;
+  box-shadow: 0 0 3px rgba(220, 38, 38, 0.4);
 }
-.dark .pinned-node {
-  background-color: rgba(96, 165, 250, 0.12);
+.dark .pinned-node::before {
+  background-color: #ef4444;
+  box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
 }
 
 /* Diff moved highlight */

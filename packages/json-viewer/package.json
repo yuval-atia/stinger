@@ -1,6 +1,6 @@
 {
   "name": "@stingr/json-viewer",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A full-featured JSON tree viewer React component with virtual scrolling, search, diff, editing, and pinning",
   "type": "module",
   "main": "./dist/index.cjs",
