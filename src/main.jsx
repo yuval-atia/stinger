@@ -8,20 +8,48 @@ import '@stingr/json-viewer/styles'
 import './styles/global.css'
 
 // Lazy-load pages for code splitting
-const JsonPreviewPage = lazy(() => import('./pages/JsonPreviewPage'))
-const JsonComparePage = lazy(() => import('./pages/JsonComparePage'))
-const GeneratePage = lazy(() => import('./pages/GeneratePage'))
-const EncodePage = lazy(() => import('./pages/EncodePage'))
-const HashPage = lazy(() => import('./pages/HashPage'))
-const ConvertPage = lazy(() => import('./pages/ConvertPage'))
-const TextToolsPage = lazy(() => import('./pages/TextToolsPage'))
-const FormatterPage = lazy(() => import('./pages/FormatterPage'))
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
-const TermsOfUsePage = lazy(() => import('./pages/TermsOfUsePage'))
-const ContactPage = lazy(() => import('./pages/ContactPage'))
-const ToolPage = lazy(() => import('./pages/ToolPage'))
-const ToolsIndexPage = lazy(() => import('./pages/ToolsIndexPage'))
+const pageImports = {
+  JsonPreviewPage: () => import('./pages/JsonPreviewPage'),
+  JsonComparePage: () => import('./pages/JsonComparePage'),
+  GeneratePage: () => import('./pages/GeneratePage'),
+  EncodePage: () => import('./pages/EncodePage'),
+  HashPage: () => import('./pages/HashPage'),
+  ConvertPage: () => import('./pages/ConvertPage'),
+  TextToolsPage: () => import('./pages/TextToolsPage'),
+  FormatterPage: () => import('./pages/FormatterPage'),
+  NotFoundPage: () => import('./pages/NotFoundPage'),
+  PrivacyPolicyPage: () => import('./pages/PrivacyPolicyPage'),
+  TermsOfUsePage: () => import('./pages/TermsOfUsePage'),
+  ContactPage: () => import('./pages/ContactPage'),
+  ToolPage: () => import('./pages/ToolPage'),
+  ToolsIndexPage: () => import('./pages/ToolsIndexPage'),
+}
+
+const JsonPreviewPage = lazy(pageImports.JsonPreviewPage)
+const JsonComparePage = lazy(pageImports.JsonComparePage)
+const GeneratePage = lazy(pageImports.GeneratePage)
+const EncodePage = lazy(pageImports.EncodePage)
+const HashPage = lazy(pageImports.HashPage)
+const ConvertPage = lazy(pageImports.ConvertPage)
+const TextToolsPage = lazy(pageImports.TextToolsPage)
+const FormatterPage = lazy(pageImports.FormatterPage)
+const NotFoundPage = lazy(pageImports.NotFoundPage)
+const PrivacyPolicyPage = lazy(pageImports.PrivacyPolicyPage)
+const TermsOfUsePage = lazy(pageImports.TermsOfUsePage)
+const ContactPage = lazy(pageImports.ContactPage)
+const ToolPage = lazy(pageImports.ToolPage)
+const ToolsIndexPage = lazy(pageImports.ToolsIndexPage)
+
+// Prefetch all page chunks once the app is idle
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(() => {
+    Object.values(pageImports).forEach(fn => fn())
+  })
+} else {
+  setTimeout(() => {
+    Object.values(pageImports).forEach(fn => fn())
+  }, 2000)
+}
 
 function PageLoader() {
   return (
