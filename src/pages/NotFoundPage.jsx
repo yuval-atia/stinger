@@ -4,7 +4,7 @@ function NotFoundPage() {
   return (
     <div className="flex items-center justify-center h-full">
       <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] p-8 max-w-md w-full text-center">
-        <h2 className="text-4xl font-bold mb-2">404</h2>
+        <h1 className="text-4xl font-bold mb-2">404</h1>
         <p className="text-[var(--text-secondary)] text-sm mb-6">Page not found</p>
         <Link
           to="/"

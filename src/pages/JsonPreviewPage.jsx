@@ -578,6 +578,7 @@ function JsonPreviewPage() {
 
   return (
     <div className="flex flex-col h-full gap-4">
+      <h1 className="sr-only">JSON Viewer & Tree Explorer</h1>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
         {/* Input Panel */}
         <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden relative">

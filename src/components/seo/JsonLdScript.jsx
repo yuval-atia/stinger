@@ -39,6 +39,29 @@ function JsonLdScript({ tool }) {
     document.head.appendChild(breadcrumbScript);
     scripts.push(breadcrumbScript);
 
+    // SoftwareApplication schema
+    const appSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: tool.title,
+      url: `${SITE_URL}/tools/${tool.slug}`,
+      description: tool.seo.description,
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires a modern web browser with JavaScript enabled',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    };
+
+    const appScript = document.createElement('script');
+    appScript.type = 'application/ld+json';
+    appScript.textContent = JSON.stringify(appSchema);
+    document.head.appendChild(appScript);
+    scripts.push(appScript);
+
     // FAQPage schema
     if (tool.faq && tool.faq.length > 0) {
       const faqSchema = {
