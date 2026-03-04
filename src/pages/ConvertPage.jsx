@@ -12,6 +12,11 @@ import ChmodCalculatorCard from '../components/Convert/ChmodCalculatorCard';
 import JsonToTsCard from '../components/Convert/JsonToTsCard';
 import HtmlToJsxCard from '../components/Convert/HtmlToJsxCard';
 import ContrastCheckerCard from '../components/Convert/ContrastCheckerCard';
+import CurlToCodeCard from '../components/Convert/CurlToCodeCard';
+import JsonPathCard from '../components/Convert/JsonPathCard';
+import XmlJsonCard from '../components/Convert/XmlJsonCard';
+import SubnetCalculatorCard from '../components/Convert/SubnetCalculatorCard';
+import HttpStatusCard from '../components/Convert/HttpStatusCard';
 
 function ConvertPage() {
   return (
@@ -22,7 +27,7 @@ function ConvertPage() {
         <span className="text-[var(--text-primary)]">Convert</span>
       </nav>
       <h1 className="text-xl font-bold mb-1">Timestamp, Color & Unit Converters</h1>
-      <p className="text-sm text-[var(--text-secondary)] mb-4">Convert Unix timestamps, colors, number bases, byte sizes, JSON/YAML, CSV/JSON, and cron expressions.</p>
+      <p className="text-sm text-[var(--text-secondary)] mb-4">Convert Unix timestamps, colors, number bases, byte sizes, JSON/YAML, CSV/JSON, XML/JSON, cron expressions, cURL commands, subnets, and more.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         <TimestampCard toolSlug="timestamp-converter" />
         <JsonYamlCard toolSlug="json-yaml-converter" />
@@ -37,6 +42,11 @@ function ConvertPage() {
         <JsonToTsCard toolSlug="json-to-typescript" />
         <HtmlToJsxCard toolSlug="html-to-jsx" />
         <ContrastCheckerCard toolSlug="contrast-checker" />
+        <CurlToCodeCard toolSlug="curl-to-code" />
+        <JsonPathCard toolSlug="jsonpath-evaluator" />
+        <XmlJsonCard toolSlug="xml-json-converter" />
+        <SubnetCalculatorCard toolSlug="subnet-calculator" />
+        <HttpStatusCard toolSlug="http-status-codes" />
       </div>
     </div>
   );

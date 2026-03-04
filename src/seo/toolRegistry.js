@@ -1042,6 +1042,141 @@ export const toolRegistry = [
     ],
   },
 
+  {
+    slug: 'curl-to-code',
+    title: 'cURL to Code',
+    category: 'convert',
+    seo: {
+      title: 'cURL to Code Converter - Fetch, Axios, Python, Go | Stingr',
+      description: 'Convert cURL commands to Fetch, Axios, Python requests, or Go net/http code. Free, private, 100% in-browser.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Convert/CurlToCodeCard'),
+    faq: [
+      {
+        question: 'What cURL flags are supported?',
+        answer: 'The parser handles -X (method), -H (headers), -d/--data/--data-raw (body), -u (basic auth), -A (user-agent), and automatically detects the URL. Flags like --compressed, -k, -L, and -s are recognized but ignored as they don\'t affect the generated code.',
+      },
+      {
+        question: 'Which languages can I convert cURL commands to?',
+        answer: 'Currently supports JavaScript Fetch API, Axios, Python requests, and Go net/http. Each output is idiomatic for the target language and includes headers and body handling.',
+      },
+      {
+        question: 'Does this tool send my cURL command to a server?',
+        answer: 'No. All parsing and code generation happens entirely in your browser. Your API keys, tokens, and request data never leave your machine.',
+      },
+    ],
+  },
+
+  {
+    slug: 'jsonpath-evaluator',
+    title: 'JSONPath Evaluator',
+    category: 'convert',
+    seo: {
+      title: 'JSONPath Evaluator Online - Test JSONPath Expressions | Stingr',
+      description: 'Test JSONPath expressions against JSON data and see matching values instantly. Supports dot notation, wildcards, filters, and recursive descent.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Convert/JsonPathCard'),
+    faq: [
+      {
+        question: 'What JSONPath syntax is supported?',
+        answer: 'Supports $ (root), .property (dot notation), [\'prop\'] (bracket notation), [0] (array index), [*] (wildcard), [0:5] (array slice), .. (recursive descent), and [?(@.field > value)] (filter expressions).',
+      },
+      {
+        question: 'How is JSONPath different from jq?',
+        answer: 'JSONPath uses $ as the root and dot/bracket notation (e.g., $.store.books[*].title), while jq uses . as root with pipe-based chaining (e.g., .store.books[].title). JSONPath is common in Java/JS libraries; jq is a standalone CLI tool with more powerful transformations.',
+      },
+      {
+        question: 'Can I use filter expressions?',
+        answer: 'Yes. Use [?(@.field op value)] syntax where op can be ==, !=, >, <, >=, or <=. For example, $.books[?(@.price > 10)] finds all books with price greater than 10.',
+      },
+    ],
+  },
+
+  {
+    slug: 'xml-json-converter',
+    title: 'XML ↔ JSON Converter',
+    category: 'convert',
+    seo: {
+      title: 'XML to JSON Converter Online - Bidirectional | Stingr',
+      description: 'Convert XML to JSON and JSON to XML instantly. Preserves attributes, handles nested elements. Free, private, in-browser.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Convert/XmlJsonCard'),
+    faq: [
+      {
+        question: 'How are XML attributes handled in JSON?',
+        answer: 'XML attributes are converted to JSON keys prefixed with @ (e.g., <book category="fiction"> becomes {"@category": "fiction"}). When converting back, @ prefixed keys are restored as XML attributes.',
+      },
+      {
+        question: 'What happens with repeated XML elements?',
+        answer: 'When multiple sibling elements share the same tag name, they are automatically grouped into a JSON array. For example, multiple <item> elements become an "item" array in JSON.',
+      },
+      {
+        question: 'Does this converter require any external libraries?',
+        answer: 'No. It uses the browser\'s built-in DOMParser for XML parsing and constructs JSON/XML output with pure JavaScript. No data is sent to any server.',
+      },
+    ],
+  },
+
+  {
+    slug: 'subnet-calculator',
+    title: 'Subnet Calculator',
+    category: 'convert',
+    seo: {
+      title: 'Subnet Calculator Online - IPv4 CIDR Calculator | Stingr',
+      description: 'Calculate IPv4 subnet details from CIDR notation. Get network address, broadcast, host range, subnet mask, and more. Free, in-browser.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Convert/SubnetCalculatorCard'),
+    faq: [
+      {
+        question: 'What is CIDR notation?',
+        answer: 'CIDR (Classless Inter-Domain Routing) notation combines an IP address with a prefix length separated by a slash, e.g., 192.168.1.0/24. The prefix length (0-32) indicates how many leading bits define the network portion of the address.',
+      },
+      {
+        question: 'How do I calculate the number of usable hosts?',
+        answer: 'For a /N network, total addresses = 2^(32-N). Usable hosts = total - 2 (subtracting the network address and broadcast address). For example, /24 has 256 total addresses and 254 usable hosts. /31 and /32 are special cases used for point-to-point links.',
+      },
+      {
+        question: 'What are private IP ranges?',
+        answer: 'RFC 1918 defines three private ranges: 10.0.0.0/8 (Class A), 172.16.0.0/12 (Class B), and 192.168.0.0/16 (Class C). These are not routable on the public internet and are used for internal networks.',
+      },
+    ],
+  },
+
+  {
+    slug: 'http-status-codes',
+    title: 'HTTP Status Codes',
+    category: 'convert',
+    seo: {
+      title: 'HTTP Status Codes Reference - Complete List | Stingr',
+      description: 'Searchable reference of all HTTP status codes with descriptions. Filter by category (1xx-5xx). Free, instant, in-browser.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Convert/HttpStatusCard'),
+    faq: [
+      {
+        question: 'What is the difference between 401 and 403?',
+        answer: '401 Unauthorized means authentication is missing or invalid — the client should provide valid credentials. 403 Forbidden means the server understood the request but refuses to authorize it — authentication won\'t help because the user lacks permission.',
+      },
+      {
+        question: 'When should I use 404 vs 410?',
+        answer: '404 Not Found means the resource cannot be found and it\'s unknown whether the absence is temporary or permanent. 410 Gone explicitly indicates the resource was intentionally removed and won\'t be available again, which helps search engines delist it faster.',
+      },
+      {
+        question: 'What does HTTP 418 mean?',
+        answer: 'HTTP 418 "I\'m a Teapot" was defined in RFC 2324 (Hyper Text Coffee Pot Control Protocol) as an April Fools\' joke in 1998. It indicates the server refuses to brew coffee because it is a teapot. Despite being a joke, it persists in many HTTP libraries.',
+      },
+    ],
+  },
+
   // ─── Text Tools (9) ──────────────────────────────────────────────────
 
   {
