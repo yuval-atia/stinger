@@ -78,8 +78,9 @@ function TextDiffCard() {
     }}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="text-xs text-[var(--text-secondary)] mb-1 block">Original</label>
+          <label htmlFor="diff-original" className="text-xs text-[var(--text-secondary)] mb-1 block">Original</label>
           <textarea
+            id="diff-original"
             value={textA}
             onChange={(e) => setTextA(e.target.value)}
             placeholder="Paste original text..."
@@ -87,8 +88,9 @@ function TextDiffCard() {
           />
         </div>
         <div>
-          <label className="text-xs text-[var(--text-secondary)] mb-1 block">Modified</label>
+          <label htmlFor="diff-modified" className="text-xs text-[var(--text-secondary)] mb-1 block">Modified</label>
           <textarea
+            id="diff-modified"
             value={textB}
             onChange={(e) => setTextB(e.target.value)}
             placeholder="Paste modified text..."

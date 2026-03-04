@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App'
 import { ToastProvider } from './components/common/Toast'
+import ErrorBoundary from './components/common/ErrorBoundary'
 import '@stingr/json-viewer/styles'
 import './styles/global.css'
 
@@ -28,24 +29,34 @@ function PageLoader() {
   )
 }
 
+function PageRoute({ component: Component }) {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        <Component />
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <ToastProvider>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route index element={<Suspense fallback={<PageLoader />}><JsonPreviewPage /></Suspense>} />
-            <Route path="compare" element={<Suspense fallback={<PageLoader />}><JsonComparePage /></Suspense>} />
-            <Route path="generate" element={<Suspense fallback={<PageLoader />}><GeneratePage /></Suspense>} />
-            <Route path="encode" element={<Suspense fallback={<PageLoader />}><EncodePage /></Suspense>} />
-            <Route path="hash" element={<Suspense fallback={<PageLoader />}><HashPage /></Suspense>} />
-            <Route path="convert" element={<Suspense fallback={<PageLoader />}><ConvertPage /></Suspense>} />
-            <Route path="text" element={<Suspense fallback={<PageLoader />}><TextToolsPage /></Suspense>} />
-            <Route path="format" element={<Suspense fallback={<PageLoader />}><FormatterPage /></Suspense>} />
-            <Route path="privacy" element={<Suspense fallback={<PageLoader />}><PrivacyPolicyPage /></Suspense>} />
-            <Route path="terms" element={<Suspense fallback={<PageLoader />}><TermsOfUsePage /></Suspense>} />
-            <Route path="contact" element={<Suspense fallback={<PageLoader />}><ContactPage /></Suspense>} />
-            <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense>} />
+            <Route index element={<PageRoute component={JsonPreviewPage} />} />
+            <Route path="compare" element={<PageRoute component={JsonComparePage} />} />
+            <Route path="generate" element={<PageRoute component={GeneratePage} />} />
+            <Route path="encode" element={<PageRoute component={EncodePage} />} />
+            <Route path="hash" element={<PageRoute component={HashPage} />} />
+            <Route path="convert" element={<PageRoute component={ConvertPage} />} />
+            <Route path="text" element={<PageRoute component={TextToolsPage} />} />
+            <Route path="format" element={<PageRoute component={FormatterPage} />} />
+            <Route path="privacy" element={<PageRoute component={PrivacyPolicyPage} />} />
+            <Route path="terms" element={<PageRoute component={TermsOfUsePage} />} />
+            <Route path="contact" element={<PageRoute component={ContactPage} />} />
+            <Route path="*" element={<PageRoute component={NotFoundPage} />} />
           </Route>
         </Routes>
       </ToastProvider>

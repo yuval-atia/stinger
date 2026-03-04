@@ -109,8 +109,9 @@ function HashPage() {
         <div className="p-4 space-y-6">
           {/* Input */}
           <div>
-            <label className="text-xs text-[var(--text-secondary)] mb-2 block">Input</label>
+            <label htmlFor="hash-input" className="text-xs text-[var(--text-secondary)] mb-2 block">Input</label>
             <textarea
+              id="hash-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type or paste text to hash..."
@@ -120,7 +121,7 @@ function HashPage() {
 
           {/* Hash results */}
           <div>
-            <label className="text-xs text-[var(--text-secondary)] mb-3 block">Hash Results</label>
+            <span className="text-xs text-[var(--text-secondary)] mb-3 block">Hash Results</span>
             <div className="space-y-2">
               <HashRow label="MD5" value={hashes.md5} />
               <HashRow label="SHA-1" value={hashes.sha1} />
@@ -131,8 +132,9 @@ function HashPage() {
 
           {/* HMAC section */}
           <div className="border-t border-[var(--border-color)] pt-4">
-            <label className="text-xs text-[var(--text-secondary)] mb-2 block">HMAC</label>
+            <label htmlFor="hmac-secret" className="text-xs text-[var(--text-secondary)] mb-2 block">HMAC</label>
             <input
+              id="hmac-secret"
               type="text"
               value={secret}
               onChange={(e) => setSecret(e.target.value)}
@@ -204,8 +206,9 @@ function HashVerifier() {
       </div>
       <div className="p-4 space-y-3">
         <div>
-          <label className="text-xs text-[var(--text-secondary)] mb-1 block">Known hash</label>
+          <label htmlFor="known-hash" className="text-xs text-[var(--text-secondary)] mb-1 block">Known hash</label>
           <input
+            id="known-hash"
             type="text"
             value={knownHash}
             onChange={(e) => setKnownHash(e.target.value)}
@@ -214,8 +217,9 @@ function HashVerifier() {
           />
         </div>
         <div>
-          <label className="text-xs text-[var(--text-secondary)] mb-1 block">Text to verify</label>
+          <label htmlFor="verify-text" className="text-xs text-[var(--text-secondary)] mb-1 block">Text to verify</label>
           <input
+            id="verify-text"
             type="text"
             value={verifyText}
             onChange={(e) => setVerifyText(e.target.value)}

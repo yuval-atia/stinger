@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import CopyButton from './CopyButton';
 import { InfoButton } from './InfoTooltip';
+import ErrorBoundary from './ErrorBoundary';
 
 function ToolCard({ title, icon, info, children }) {
   return (
@@ -15,7 +16,14 @@ function ToolCard({ title, icon, info, children }) {
       </div>
       {/* Body */}
       <div className="p-4 flex flex-col gap-3 flex-1 min-h-0">
-        {children}
+        <ErrorBoundary fallback={({ error, reset }) => (
+          <div className="flex flex-col items-center justify-center gap-2 py-4 text-center">
+            <p className="text-sm text-[var(--text-secondary)]">This tool encountered an error.</p>
+            <button onClick={reset} className="text-xs text-[var(--accent-color)] hover:underline">Try Again</button>
+          </div>
+        )}>
+          {children}
+        </ErrorBoundary>
       </div>
     </div>
   );

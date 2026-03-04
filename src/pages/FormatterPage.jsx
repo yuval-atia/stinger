@@ -87,8 +87,9 @@ function FormatterPage() {
         {/* Input / Output panels */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           <div className="p-4 md:border-r border-[var(--border-color)]">
-            <label className="text-xs text-[var(--text-secondary)] mb-2 block">Input</label>
+            <label htmlFor="formatter-input" className="text-xs text-[var(--text-secondary)] mb-2 block">Input</label>
             <textarea
+              id="formatter-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={`Paste ${lang.toUpperCase()} here...`}
@@ -97,7 +98,7 @@ function FormatterPage() {
           </div>
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs text-[var(--text-secondary)]">Output</label>
+              <span className="text-xs text-[var(--text-secondary)]">Output</span>
               {output && (
                 <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>
                   {copied ? (
