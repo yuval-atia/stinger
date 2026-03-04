@@ -1,3 +1,5 @@
+import { toolRegistry } from './toolRegistry.js';
+
 const SITE_NAME = 'Stingr';
 const SITE_URL = 'https://stingr.dev';
 
@@ -84,6 +86,20 @@ export const routeMeta = [
     priority: 0.3,
     changefreq: 'yearly',
   },
+  {
+    path: '/tools',
+    title: 'All Developer Tools',
+    description: 'Browse all 50+ free, private developer tools — generators, encoders, hash tools, converters, text utilities, and formatters. 100% in-browser.',
+    priority: 0.6,
+    changefreq: 'weekly',
+  },
+  ...toolRegistry.map((tool) => ({
+    path: `/tools/${tool.slug}`,
+    title: tool.seo.title.replace(' | Stingr', ''),
+    description: tool.seo.description,
+    priority: tool.seo.priority,
+    changefreq: tool.seo.changefreq,
+  })),
 ];
 
 export function getRouteMeta(pathname) {

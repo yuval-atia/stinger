@@ -87,7 +87,7 @@ function ConfigSelect({ label, value, onChange, options }) {
   );
 }
 
-export default function FakeDataGenerator() {
+export default function FakeDataGenerator({ toolSlug }) {
   const [field, setField] = useState('all');
 
   const handleGenerate = useCallback(() => {
@@ -111,6 +111,7 @@ export default function FakeDataGenerator() {
 
   return (
     <GeneratorCard
+      toolSlug={toolSlug}
       title="Fake Data"
       icon={IconFake}
       info={{

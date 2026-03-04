@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 
-function Base64Card() {
+function Base64Card({ toolSlug }) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState('encode');
@@ -62,7 +62,7 @@ function Base64Card() {
   };
 
   return (
-    <ToolCard title="Base64" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L5.94 9 4.22 7.28a.75.75 0 0 1 1.06-1.06l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0ZM8.5 11.75a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Base64" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L5.94 9 4.22 7.28a.75.75 0 0 1 1.06-1.06l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0ZM8.5 11.75a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
       what: 'Encodes text to Base64 and decodes Base64 back to text. Base64 represents binary data using 64 printable ASCII characters.',
       how: 'Encoding converts UTF-8 bytes via btoa() with a URI-encoding shim for Unicode safety. Decoding reverses the process with atob() and URI-decoding.',
       usedFor: 'Embedding binary data in JSON/XML, data URIs in CSS/HTML, email attachments (MIME), and transmitting data through text-only channels.',

@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import CopyButton from '../common/CopyButton';
 import { markdownToHtml } from '../../utils/markdown';
 
-function MarkdownPreviewCard() {
+function MarkdownPreviewCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -18,7 +18,7 @@ function MarkdownPreviewCard() {
   };
 
   return (
-    <ToolCard title="Markdown Preview" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5v7a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 11.5v-7Zm3.25.5a.75.75 0 0 0 0 1.5h5.5a.75.75 0 0 0 0-1.5h-5.5Zm0 3a.75.75 0 0 0 0 1.5h5.5a.75.75 0 0 0 0-1.5h-5.5Zm0 3a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Markdown Preview" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5v7a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 11.5v-7Zm3.25.5a.75.75 0 0 0 0 1.5h5.5a.75.75 0 0 0 0-1.5h-5.5Zm0 3a.75.75 0 0 0 0 1.5h5.5a.75.75 0 0 0 0-1.5h-5.5Zm0 3a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5Z" /></svg>} info={{
       what: 'Live preview of Markdown text rendered as styled HTML. Supports headings, bold, italic, links, lists, code blocks, and more.',
       how: 'A pure-JS Markdown parser converts input to HTML using regex-based inline parsing and line-by-line block detection. No external libraries needed.',
       usedFor: 'Previewing README files, writing documentation, composing blog posts, and testing Markdown syntax before committing.',

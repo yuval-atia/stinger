@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import CopyButton from '../common/CopyButton';
 import { jsonToTypeScript } from '../../utils/jsonToTs';
 
-function JsonToTsCard() {
+function JsonToTsCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [rootName, setRootName] = useState('Root');
   const [copied, setCopied] = useState(false);
@@ -26,7 +26,7 @@ function JsonToTsCard() {
   };
 
   return (
-    <ToolCard title="JSON → TypeScript" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L5.94 9 4.22 7.28a.75.75 0 0 1 1.06-1.06l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0ZM8.5 11.75a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="JSON → TypeScript" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L5.94 9 4.22 7.28a.75.75 0 0 1 1.06-1.06l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0ZM8.5 11.75a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
       what: 'Generates TypeScript interfaces from JSON data. Infers types for strings, numbers, booleans, arrays, and nested objects.',
       how: 'Parses JSON and recursively walks the structure, creating named interfaces for each object shape. Arrays infer the element type from the first item.',
       usedFor: 'Quickly typing API responses, creating DTOs from sample data, bootstrapping TypeScript projects, and documenting data shapes.',

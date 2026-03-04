@@ -14,7 +14,7 @@ function Badge({ pass, label }) {
   );
 }
 
-function ContrastCheckerCard() {
+function ContrastCheckerCard({ toolSlug }) {
   const [fg, setFg] = useState('#000000');
   const [bg, setBg] = useState('#ffffff');
 
@@ -33,7 +33,7 @@ function ContrastCheckerCard() {
   };
 
   return (
-    <ToolCard title="Contrast Checker" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM5.5 8a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1-5 0Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Contrast Checker" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM5.5 8a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1-5 0Z" /></svg>} info={{
       what: 'Checks the contrast ratio between two colors against WCAG 2.1 accessibility standards. Shows AA and AAA compliance for normal and large text.',
       how: 'Calculates relative luminance of each color using the sRGB linearization formula, then computes the contrast ratio per WCAG 2.1 guidelines.',
       usedFor: 'Ensuring text readability for visually impaired users, meeting accessibility requirements (ADA, Section 508), and designing inclusive color palettes.',

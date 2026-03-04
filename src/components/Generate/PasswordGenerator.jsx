@@ -48,7 +48,7 @@ function ConfigInput({ label, type = 'number', value, onChange, ...props }) {
   );
 }
 
-export default function PasswordGenerator() {
+export default function PasswordGenerator({ toolSlug }) {
   const [length, setLength] = useState(16);
   const [charset, setCharset] = useState({
     uppercase: true,
@@ -98,6 +98,7 @@ export default function PasswordGenerator() {
 
   return (
     <GeneratorCard
+      toolSlug={toolSlug}
       title="Password"
       icon={IconPassword}
       info={{

@@ -37,7 +37,7 @@ function ColorInput({ label, value, onChange }) {
   );
 }
 
-function PlaceholderImageGenerator() {
+function PlaceholderImageGenerator({ toolSlug }) {
   const [width, setWidth] = useState(400);
   const [height, setHeight] = useState(300);
   const [bgColor, setBgColor] = useState('#cccccc');
@@ -76,6 +76,7 @@ function PlaceholderImageGenerator() {
 
   return (
     <GeneratorCard
+      toolSlug={toolSlug}
       title="Placeholder Image"
       icon={IconImage}
       info={{

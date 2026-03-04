@@ -19,7 +19,7 @@ const CASES = [
   { key: 'title', label: 'Title Case', fn: toTitleCase },
 ];
 
-function CaseConverterCard() {
+function CaseConverterCard({ toolSlug }) {
   const [input, setInput] = useState('');
 
   const tokens = useMemo(() => tokenize(input), [input]);
@@ -34,7 +34,7 @@ function CaseConverterCard() {
   }, [tokens]);
 
   return (
-    <ToolCard title="Case Converter" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M3.28 2.22a.75.75 0 0 0-1.06 1.06L5.44 6.5H2.75a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 .75-.75v-4.5a.75.75 0 0 0-1.5 0v2.69L3.28 2.22ZM12.72 13.78a.75.75 0 1 0 1.06-1.06L10.56 9.5h2.69a.75.75 0 0 0 0-1.5h-4.5a.75.75 0 0 0-.75.75v4.5a.75.75 0 0 0 1.5 0v-2.69l3.22 3.22Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Case Converter" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M3.28 2.22a.75.75 0 0 0-1.06 1.06L5.44 6.5H2.75a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 .75-.75v-4.5a.75.75 0 0 0-1.5 0v2.69L3.28 2.22ZM12.72 13.78a.75.75 0 1 0 1.06-1.06L10.56 9.5h2.69a.75.75 0 0 0 0-1.5h-4.5a.75.75 0 0 0-.75.75v4.5a.75.75 0 0 0 1.5 0v-2.69l3.22 3.22Z" /></svg>} info={{
       what: 'Converts text between common naming conventions: camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, and more.',
       how: 'Tokenizes the input by detecting word boundaries (uppercase transitions, underscores, hyphens, spaces), then reassembles with the target convention\'s separator and casing.',
       usedFor: 'Renaming variables across languages, converting API field names, database column naming, and maintaining consistent code style.',

@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 
-function UrlEncodeCard() {
+function UrlEncodeCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState('encode');
@@ -51,7 +51,7 @@ function UrlEncodeCard() {
   };
 
   return (
-    <ToolCard title="URL Encode" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.05-4.84.75.75 0 0 1 1.152.96A2 2 0 0 0 4.99 12.1l2-2a2 2 0 0 0 0-2.83.75.75 0 0 1 0-1.06l-.076.075.076-.075ZM7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.05 4.84.75.75 0 0 1-1.152-.96A2 2 0 0 0 11.01 3.9l-2 2a2 2 0 0 0 0 2.83.75.75 0 0 1 0 1.06l.076-.075-.076.075Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="URL Encode" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.05-4.84.75.75 0 0 1 1.152.96A2 2 0 0 0 4.99 12.1l2-2a2 2 0 0 0 0-2.83.75.75 0 0 1 0-1.06l-.076.075.076-.075ZM7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.05 4.84.75.75 0 0 1-1.152-.96A2 2 0 0 0 11.01 3.9l-2 2a2 2 0 0 0 0 2.83.75.75 0 0 1 0 1.06l.076-.075-.076.075Z" /></svg>} info={{
       what: 'Percent-encodes text for safe use in URLs and decodes percent-encoded strings back to readable text.',
       how: 'Uses encodeURIComponent() which replaces unsafe characters with %XX hex sequences. Decoding uses decodeURIComponent() to reverse the process.',
       usedFor: 'Building query strings, encoding form data, constructing API URLs with special characters, and debugging malformed URLs.',

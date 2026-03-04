@@ -16,7 +16,7 @@ const ENCODE_MAP = {
 
 const ENCODE_RE = /[&<>"'`=/]/g;
 
-function HtmlEntityCard() {
+function HtmlEntityCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState('encode');
@@ -65,7 +65,7 @@ function HtmlEntityCard() {
   };
 
   return (
-    <ToolCard title="HTML Entities" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm2-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 .5-.5ZM6.06 5.47a.75.75 0 0 1 0 1.06L5.12 7.47l.94.94a.75.75 0 1 1-1.06 1.06l-1.47-1.47a.75.75 0 0 1 0-1.06l1.47-1.47a.75.75 0 0 1 1.06 0Zm3.88 0a.75.75 0 0 1 1.06 0l1.47 1.47a.75.75 0 0 1 0 1.06l-1.47 1.47a.75.75 0 1 1-1.06-1.06l.94-.94-.94-.94a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="HTML Entities" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm2-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 .5-.5ZM6.06 5.47a.75.75 0 0 1 0 1.06L5.12 7.47l.94.94a.75.75 0 1 1-1.06 1.06l-1.47-1.47a.75.75 0 0 1 0-1.06l1.47-1.47a.75.75 0 0 1 1.06 0Zm3.88 0a.75.75 0 0 1 1.06 0l1.47 1.47a.75.75 0 0 1 0 1.06l-1.47 1.47a.75.75 0 1 1-1.06-1.06l.94-.94-.94-.94a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" /></svg>} info={{
       what: 'Converts special characters to HTML entities (&amp;, &lt;, &gt;, etc.) and decodes HTML entities back to plain text.',
       how: 'Encoding replaces reserved HTML characters with their named or numeric entity references. Decoding uses the browser\'s built-in HTML parser via a temporary element.',
       usedFor: 'Safely embedding user content in HTML, preventing XSS attacks, displaying code snippets in web pages, and fixing double-encoded content.',

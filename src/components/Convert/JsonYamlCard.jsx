@@ -4,7 +4,7 @@ import ToolCard from '../common/ToolCard';
 import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 
-function JsonYamlCard() {
+function JsonYamlCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState('jsonToYaml');
@@ -47,7 +47,7 @@ function JsonYamlCard() {
   };
 
   return (
-    <ToolCard title="JSON / YAML" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M15 8A7 7 0 1 0 1 8a7 7 0 0 0 14 0ZM6.101 4.836A.75.75 0 0 0 4.899 5.664L6.227 8l-1.328 2.336a.75.75 0 1 0 1.302.728l1.5-2.636a.78.78 0 0 0 0-.756l-1.5-2.636a.75.75 0 0 0-.1-.2ZM9.25 10.5a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5h-1.5Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="JSON / YAML" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M15 8A7 7 0 1 0 1 8a7 7 0 0 0 14 0ZM6.101 4.836A.75.75 0 0 0 4.899 5.664L6.227 8l-1.328 2.336a.75.75 0 1 0 1.302.728l1.5-2.636a.78.78 0 0 0 0-.756l-1.5-2.636a.75.75 0 0 0-.1-.2ZM9.25 10.5a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5h-1.5Z" clipRule="evenodd" /></svg>} info={{
       what: 'Converts between JSON and YAML formats. Paste either format and transform it to the other with a single click.',
       how: 'Uses a pure-JS YAML parser/serializer — no external dependencies. JSON is parsed natively and YAML handles indentation-based syntax with support for common data types.',
       usedFor: 'Converting config files (Docker Compose, Kubernetes, CI/CD), migrating between API formats, and making YAML configs more readable.',

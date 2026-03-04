@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import CopyButton from '../common/CopyButton';
 import { generateMarkdownTable } from '../../utils/markdownTable';
 
-function MarkdownTableGenerator() {
+function MarkdownTableGenerator({ toolSlug }) {
   const [cols, setCols] = useState(3);
   const [rows, setRows] = useState(3);
   const [headers, setHeaders] = useState(() => Array(3).fill(''));
@@ -71,7 +71,7 @@ function MarkdownTableGenerator() {
   const ALIGN_ICONS = { left: '⫷', center: '⫶', right: '⫸' };
 
   return (
-    <ToolCard title="Markdown Table" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9ZM3.5 3a.5.5 0 0 0-.5.5V7h4V3H3.5ZM8.5 3v4H13V3.5a.5.5 0 0 0-.5-.5H8.5ZM13 8.5H8.5V13h3a.5.5 0 0 0 .5-.5V8.5ZM7 13V8.5H3v4a.5.5 0 0 0 .5.5H7Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Markdown Table" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9ZM3.5 3a.5.5 0 0 0-.5.5V7h4V3H3.5ZM8.5 3v4H13V3.5a.5.5 0 0 0-.5-.5H8.5ZM13 8.5H8.5V13h3a.5.5 0 0 0 .5-.5V8.5ZM7 13V8.5H3v4a.5.5 0 0 0 .5.5H7Z" clipRule="evenodd" /></svg>} info={{
       what: 'Visual editor for creating Markdown-formatted tables. Set dimensions, fill in cells, and toggle column alignment.',
       how: 'Builds a pipe-delimited table with proper alignment separators (:--- for left, :---: for center, ---: for right).',
       usedFor: 'Writing documentation, README files, GitHub issues/PRs, and any Markdown content requiring tabular data.',

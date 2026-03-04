@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 import { InfoButton } from '../common/InfoTooltip';
 import ErrorBoundary from '../common/ErrorBoundary';
 
-function GeneratorCard({ title, icon, info, onGenerate, footer, children, renderOutput }) {
+function GeneratorCard({ title, icon, info, onGenerate, footer, children, renderOutput, toolSlug }) {
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const hasMounted = useRef(false);
@@ -37,6 +38,13 @@ function GeneratorCard({ title, icon, info, onGenerate, footer, children, render
         <span className="text-sm font-medium flex items-center gap-1.5">
           {icon && <span className="text-[var(--accent-color)]">{icon}</span>}
           {title}
+          {toolSlug && (
+            <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
+                <path d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" />
+              </svg>
+            </Link>
+          )}
         </span>
         <div className="flex items-center gap-2">
           {info && <InfoButton info={info} />}

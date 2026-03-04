@@ -3,7 +3,7 @@ import ToolCard from '../common/ToolCard';
 import CopyButton from '../common/CopyButton';
 import { htmlToJsx } from '../../utils/htmlToJsx';
 
-function HtmlToJsxCard() {
+function HtmlToJsxCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -18,7 +18,7 @@ function HtmlToJsxCard() {
   };
 
   return (
-    <ToolCard title="HTML → JSX" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75Zm0 4A.75.75 0 0 1 2.75 7h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 7.75Zm0 4a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="HTML → JSX" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75Zm0 4A.75.75 0 0 1 2.75 7h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 7.75Zm0 4a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>} info={{
       what: 'Converts HTML markup to valid JSX for React. Renames attributes (class→className, for→htmlFor), converts inline styles to objects, and self-closes void elements.',
       how: 'Applies regex-based transformations for attribute renaming, style string parsing, event handler camelCasing, void element self-closing, and SVG attribute conversion.',
       usedFor: 'Migrating HTML templates to React components, converting copy-pasted HTML, and adapting SVG markup for JSX usage.',

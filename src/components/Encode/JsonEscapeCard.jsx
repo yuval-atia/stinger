@@ -4,7 +4,7 @@ import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 import { jsonEscape, jsonUnescape } from '../../utils/jsonEscape';
 
-function JsonEscapeCard() {
+function JsonEscapeCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState('escape');
   const [copied, setCopied] = useState(false);
@@ -27,7 +27,7 @@ function JsonEscapeCard() {
   };
 
   return (
-    <ToolCard title="JSON Escape" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M1 8.74c0 .983.713 1.825 1.69 1.943.764.092 1.534.164 2.31.216v2.351a.75.75 0 0 0 1.28.53l2.51-2.51c.182-.181.427-.283.684-.291A44.4 44.4 0 0 0 14 10.66c.707-.118 1.22-.96 1.22-1.92V4.26c0-.96-.513-1.802-1.22-1.92A44.7 44.7 0 0 0 8 2c-2.12 0-4.19.147-6.22.436C1.032 2.558.32 3.4.32 4.36v4.38H1Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="JSON Escape" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M1 8.74c0 .983.713 1.825 1.69 1.943.764.092 1.534.164 2.31.216v2.351a.75.75 0 0 0 1.28.53l2.51-2.51c.182-.181.427-.283.684-.291A44.4 44.4 0 0 0 14 10.66c.707-.118 1.22-.96 1.22-1.92V4.26c0-.96-.513-1.802-1.22-1.92A44.7 44.7 0 0 0 8 2c-2.12 0-4.19.147-6.22.436C1.032 2.558.32 3.4.32 4.36v4.38H1Z" clipRule="evenodd" /></svg>} info={{
       what: 'Escapes special characters for safe embedding in JSON strings, or unescapes JSON-encoded strings back to plain text.',
       how: 'Escape mode uses JSON.stringify to handle quotes, backslashes, newlines, tabs, and Unicode. Unescape mode parses the escaped string back.',
       usedFor: 'Preparing text for JSON payloads, debugging escaped API responses, and cleaning up copy-pasted JSON strings.',

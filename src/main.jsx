@@ -20,6 +20,8 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsOfUsePage = lazy(() => import('./pages/TermsOfUsePage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
+const ToolPage = lazy(() => import('./pages/ToolPage'))
+const ToolsIndexPage = lazy(() => import('./pages/ToolsIndexPage'))
 
 function PageLoader() {
   return (
@@ -56,6 +58,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="privacy" element={<PageRoute component={PrivacyPolicyPage} />} />
             <Route path="terms" element={<PageRoute component={TermsOfUsePage} />} />
             <Route path="contact" element={<PageRoute component={ContactPage} />} />
+            <Route path="tools" element={<PageRoute component={ToolsIndexPage} />} />
+            <Route path="tools/:slug" element={<PageRoute component={ToolPage} />} />
             <Route path="*" element={<PageRoute component={NotFoundPage} />} />
           </Route>
         </Routes>

@@ -18,7 +18,7 @@ function formatRelative(date) {
   return `${prefix}${Math.floor(abs / 2592000000)}mo${suffix}`;
 }
 
-function TimestampCard() {
+function TimestampCard({ toolSlug }) {
   const [tsInput, setTsInput] = useState('');
   const [dtInput, setDtInput] = useState('');
 
@@ -56,7 +56,7 @@ function TimestampCard() {
   }, [dtInput]);
 
   return (
-    <ToolCard title="Timestamp" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Timestamp" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clipRule="evenodd" /></svg>} info={{
       what: 'Converts between Unix timestamps (seconds/milliseconds since epoch) and human-readable date strings in local and UTC time.',
       how: 'Uses JavaScript\'s Date object to parse and format timestamps. Supports both second and millisecond precision with auto-detection based on magnitude.',
       usedFor: 'Debugging API responses with epoch timestamps, converting log timestamps, scheduling events, and correlating times across time zones.',

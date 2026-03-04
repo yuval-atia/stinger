@@ -4,7 +4,7 @@ import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 import { textToBinary, binaryToText } from '../../utils/binaryText';
 
-function BinaryCard() {
+function BinaryCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState('encode');
   const [copied, setCopied] = useState(false);
@@ -26,7 +26,7 @@ function BinaryCard() {
   };
 
   return (
-    <ToolCard title="Text / Binary" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M1 3.75A.75.75 0 0 1 1.75 3h3.5a.75.75 0 0 1 0 1.5h-3.5A.75.75 0 0 1 1 3.75ZM1 7.75A.75.75 0 0 1 1.75 7h5.5a.75.75 0 0 1 0 1.5h-5.5A.75.75 0 0 1 1 7.75ZM1.75 11a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5ZM9.75 3a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5ZM9 7.75A.75.75 0 0 1 9.75 7h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 9 7.75ZM9.75 11a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Text / Binary" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M1 3.75A.75.75 0 0 1 1.75 3h3.5a.75.75 0 0 1 0 1.5h-3.5A.75.75 0 0 1 1 3.75ZM1 7.75A.75.75 0 0 1 1.75 7h5.5a.75.75 0 0 1 0 1.5h-5.5A.75.75 0 0 1 1 7.75ZM1.75 11a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5ZM9.75 3a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5ZM9 7.75A.75.75 0 0 1 9.75 7h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 9 7.75ZM9.75 11a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5h-3.5Z" /></svg>} info={{
       what: 'Converts text to binary (space-separated 8-bit bytes) and binary back to text.',
       how: 'Encode maps each character to its Unicode code point in binary, zero-padded to 8 bits. Decode parses space-separated binary groups back to characters.',
       usedFor: 'Learning binary representation, debugging data encoding, CTF challenges, and educational purposes.',

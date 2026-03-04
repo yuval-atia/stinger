@@ -2,14 +2,14 @@ import { useState, useMemo } from 'react';
 import ToolCard, { CopyField } from '../common/ToolCard';
 import { hexToRgb, rgbToHsl, formatRgb, formatHsl } from '../../utils/colorConverter';
 
-function ColorConverterCard() {
+function ColorConverterCard({ toolSlug }) {
   const [hex, setHex] = useState('#3b82f6');
 
   const rgb = useMemo(() => hexToRgb(hex), [hex]);
   const hsl = useMemo(() => rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null, [rgb]);
 
   return (
-    <ToolCard title="Color Converter" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5v.5H2v-.5ZM2 6h3v3H2V6Zm4 0h4v3H6V6Zm5 0h3v3h-3V6ZM2 10h5v4H4.5A2.5 2.5 0 0 1 2 11.5V10Zm6 0h6v1.5a2.5 2.5 0 0 1-2.5 2.5H8v-4Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Color Converter" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5v.5H2v-.5ZM2 6h3v3H2V6Zm4 0h4v3H6V6Zm5 0h3v3h-3V6ZM2 10h5v4H4.5A2.5 2.5 0 0 1 2 11.5V10Zm6 0h6v1.5a2.5 2.5 0 0 1-2.5 2.5H8v-4Z" /></svg>} info={{
       what: 'Converts colors between HEX, RGB, and HSL formats with a live color picker and preview swatch.',
       how: 'Parses the hex string into R/G/B components, then applies standard color-space formulas to derive HSL values. All conversions are bidirectional.',
       usedFor: 'CSS development, design handoffs, theming, accessibility contrast checks, and converting between design tools that use different formats.',

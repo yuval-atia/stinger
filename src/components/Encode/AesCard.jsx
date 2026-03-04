@@ -4,7 +4,7 @@ import FormatButton from '../common/FormatButton';
 import CopyButton from '../common/CopyButton';
 import { aesEncrypt, aesDecrypt } from '../../utils/aes';
 
-function AesCard() {
+function AesCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
   const [output, setOutput] = useState('');
@@ -46,7 +46,7 @@ function AesCard() {
   };
 
   return (
-    <ToolCard title="AES Encrypt / Decrypt" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Zm-2 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 9.5Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="AES Encrypt / Decrypt" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Zm-2 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 9.5Z" clipRule="evenodd" /></svg>} info={{
       what: 'Encrypts or decrypts text using AES-256-GCM with a password. Your data never leaves the browser — all cryptographic operations run client-side.',
       how: 'Derives a 256-bit key from your password using PBKDF2 (100,000 iterations, SHA-256). Encrypts with AES-GCM using a random 12-byte IV. Output is Base64-encoded (salt + IV + ciphertext).',
       usedFor: 'Securely sharing sensitive text, encrypting configuration values, protecting API keys in transit, and educational cryptography.',

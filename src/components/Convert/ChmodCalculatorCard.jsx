@@ -13,7 +13,7 @@ const BITS = ['r', 'w', 'x'];
 const BIT_LABELS = { r: 'Read', w: 'Write', x: 'Execute' };
 const ROLE_LABELS = { owner: 'Owner', group: 'Group', other: 'Other' };
 
-function ChmodCalculatorCard() {
+function ChmodCalculatorCard({ toolSlug }) {
   const [perms, setPerms] = useState(DEFAULT_PERMS);
 
   const octal = useMemo(() => permsToOctal(perms), [perms]);
@@ -31,7 +31,7 @@ function ChmodCalculatorCard() {
   }, []);
 
   return (
-    <ToolCard title="Chmod Calculator" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Zm-2 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 9.5Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Chmod Calculator" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Zm-2 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 9.5Z" clipRule="evenodd" /></svg>} info={{
       what: 'Interactive Unix file permission calculator. Toggle read/write/execute bits for owner, group, and other to see the octal and symbolic notation.',
       how: 'Maps each permission bit to its octal value (read=4, write=2, execute=1) and sums per role. Symbolic notation uses r/w/x or dash characters.',
       usedFor: 'Setting file permissions with chmod, understanding ls -l output, configuring server file access, and Dockerfile permission setup.',

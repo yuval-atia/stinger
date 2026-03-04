@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import ToolCard from '../common/ToolCard';
 import CopyButton from '../common/CopyButton';
 
-function ImageBase64Card() {
+function ImageBase64Card({ toolSlug }) {
   const [dataUri, setDataUri] = useState('');
   const [fileInfo, setFileInfo] = useState(null);
   const [dragging, setDragging] = useState(false);
@@ -48,7 +48,7 @@ function ImageBase64Card() {
   };
 
   return (
-    <ToolCard title="Image to Base64" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-3.5-3.5a.5.5 0 0 0-.708 0l-2.5 2.5-1-1a.5.5 0 0 0-.708 0l-1.5 1.5a.5.5 0 0 0-.146.354V12a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5l.208-2.293ZM6.5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Image to Base64" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-3.5-3.5a.5.5 0 0 0-.708 0l-2.5 2.5-1-1a.5.5 0 0 0-.708 0l-1.5 1.5a.5.5 0 0 0-.146.354V12a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5l.208-2.293ZM6.5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clipRule="evenodd" /></svg>} info={{
       what: 'Converts an image file to a Base64-encoded data URI string. Supports PNG, JPEG, GIF, SVG, WebP, and other browser-supported formats.',
       how: 'Uses the FileReader API to read the image as a data URL (Base64), entirely in the browser — the file never leaves your machine.',
       usedFor: 'Embedding images in CSS/HTML, sending images in JSON payloads, storing thumbnails in databases, and avoiding extra HTTP requests.',

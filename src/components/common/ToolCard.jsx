@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import CopyButton from './CopyButton';
 import { InfoButton } from './InfoTooltip';
 import ErrorBoundary from './ErrorBoundary';
 
-function ToolCard({ title, icon, info, children }) {
+function ToolCard({ title, icon, info, toolSlug, children }) {
   return (
     <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col card-hover">
       {/* Title bar */}
@@ -11,6 +12,13 @@ function ToolCard({ title, icon, info, children }) {
         <span className="text-sm font-medium flex items-center gap-1.5">
           {icon && <span className="text-[var(--accent-color)]">{icon}</span>}
           {title}
+          {toolSlug && (
+            <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
+                <path d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" />
+              </svg>
+            </Link>
+          )}
         </span>
         {info && <InfoButton info={info} />}
       </div>

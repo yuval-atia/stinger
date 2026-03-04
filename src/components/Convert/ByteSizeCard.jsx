@@ -16,7 +16,7 @@ function formatValue(bytes, factor) {
   return val.toLocaleString(undefined, { maximumFractionDigits: 6 });
 }
 
-function ByteSizeCard() {
+function ByteSizeCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [unit, setUnit] = useState('MB');
 
@@ -28,7 +28,7 @@ function ByteSizeCard() {
   }, [input, unit]);
 
   return (
-    <ToolCard title="Byte Size" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v9A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 12.5 2h-9ZM5 5.75A.75.75 0 0 1 5.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 5.75ZM5.75 8a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Zm0 3a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Byte Size" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v9A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 12.5 2h-9ZM5 5.75A.75.75 0 0 1 5.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 5.75ZM5.75 8a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Zm0 3a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" /></svg>} info={{
       what: 'Converts data sizes between bytes, KB, MB, GB, TB, and PB using binary (1024-based) units.',
       how: 'Multiplies/divides by powers of 1024 to convert between units. Uses binary prefixes (KiB convention) where 1 KB = 1024 bytes.',
       usedFor: 'Estimating storage requirements, interpreting file sizes, configuring memory limits, and planning bandwidth allocation.',

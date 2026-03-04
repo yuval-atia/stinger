@@ -8,7 +8,7 @@ const BASES = [
   { value: 2, label: 'Binary' },
 ];
 
-function NumberBaseCard() {
+function NumberBaseCard({ toolSlug }) {
   const [input, setInput] = useState('');
   const [base, setBase] = useState(10);
 
@@ -47,7 +47,7 @@ function NumberBaseCard() {
   }, [parsed]);
 
   return (
-    <ToolCard title="Number Base" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M4.5 2A2.5 2.5 0 0 0 2 4.5v2.879a2.5 2.5 0 0 0 .732 1.767l4.5 4.5a2.5 2.5 0 0 0 3.536 0l2.878-2.878a2.5 2.5 0 0 0 0-3.536l-4.5-4.5A2.5 2.5 0 0 0 7.379 2H4.5ZM5 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Number Base" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M4.5 2A2.5 2.5 0 0 0 2 4.5v2.879a2.5 2.5 0 0 0 .732 1.767l4.5 4.5a2.5 2.5 0 0 0 3.536 0l2.878-2.878a2.5 2.5 0 0 0 0-3.536l-4.5-4.5A2.5 2.5 0 0 0 7.379 2H4.5ZM5 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" /></svg>} info={{
       what: 'Converts numbers between decimal (base 10), hexadecimal (base 16), octal (base 8), and binary (base 2) representations.',
       how: 'Uses JavaScript BigInt for arbitrary-precision parsing and conversion, supporting very large numbers without overflow.',
       usedFor: 'Low-level programming, reading memory addresses, understanding file permissions (octal), bitwise operations, and color codes (hex).',

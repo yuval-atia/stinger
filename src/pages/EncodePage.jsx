@@ -14,17 +14,17 @@ function EncodePage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
-        <Base64Card />
-        <UrlEncodeCard />
-        <HtmlEntityCard />
-        <JsonEscapeCard />
-        <JwtDecodeCard />
-        <HexEncodeCard />
-        <UnicodeEscapeCard />
-        <ImageBase64Card />
-        <AesCard />
-        <BinaryCard />
-        <MarkdownPreviewCard />
+        <Base64Card toolSlug="base64-encoder" />
+        <UrlEncodeCard toolSlug="url-encoder" />
+        <HtmlEntityCard toolSlug="html-entity-encoder" />
+        <JsonEscapeCard toolSlug="json-escape" />
+        <JwtDecodeCard toolSlug="jwt-decoder" />
+        <HexEncodeCard toolSlug="hex-encoder" />
+        <UnicodeEscapeCard toolSlug="unicode-escape" />
+        <ImageBase64Card toolSlug="image-to-base64" />
+        <AesCard toolSlug="aes-encryption" />
+        <BinaryCard toolSlug="binary-encoder" />
+        <MarkdownPreviewCard toolSlug="markdown-preview" />
       </div>
     </div>
   );

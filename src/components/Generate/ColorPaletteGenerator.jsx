@@ -23,7 +23,7 @@ function ConfigInput({ label, type = 'number', value, onChange, ...props }) {
   );
 }
 
-export default function ColorPaletteGenerator() {
+export default function ColorPaletteGenerator({ toolSlug }) {
   const [count, setCount] = useState(5);
 
   const handleGenerate = useCallback(() => {
@@ -58,6 +58,7 @@ export default function ColorPaletteGenerator() {
 
   return (
     <GeneratorCard
+      toolSlug={toolSlug}
       title="Color Palette"
       icon={IconPalette}
       info={{

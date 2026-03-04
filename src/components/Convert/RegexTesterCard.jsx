@@ -9,7 +9,7 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-function RegexTesterCard() {
+function RegexTesterCard({ toolSlug }) {
   const [pattern, setPattern] = useState('');
   const [flags, setFlags] = useState({ g: true, i: false, m: false, s: false });
   const [testStr, setTestStr] = useState('');
@@ -54,7 +54,7 @@ function RegexTesterCard() {
   }, [pattern, flags, testStr]);
 
   return (
-    <ToolCard title="Regex Tester" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>} info={{
+    <ToolCard toolSlug={toolSlug} title="Regex Tester" icon={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>} info={{
       what: 'Tests regular expressions against input text with live match highlighting, match counts, and capture group extraction.',
       how: 'Creates a native JS RegExp with your pattern and flags, then runs exec() in a loop to find all matches. Results are highlighted inline with HTML spans.',
       usedFor: 'Developing and debugging regex patterns, validating input formats, extracting structured data from text, and learning regex syntax.',
