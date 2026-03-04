@@ -17,6 +17,7 @@
   --diff-move: #dbeafe;
   --diff-move-text: #1e40af;
   --jsonpath-color: #8b5cf6;
+  --footer-text: #656b76;
 }
 
 .dark {
@@ -34,6 +35,7 @@
   --diff-move: #1e3a5f;
   --diff-move-text: #93c5fd;
   --jsonpath-color: #a78bfa;
+  --footer-text: #8b929c;
 }
 
 /* Map package CSS variables to stinger's variables */
