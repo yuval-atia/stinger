@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=360">
+  <title>Stingr</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <img src="icons/icon-48.png" alt="Stingr" class="header-logo">
+      <span class="header-title">Stingr<span style="color: var(--text-muted); font-weight: 400">.dev</span></span>
+    </div>
+    <div class="header-right">
+      <button class="header-btn" id="btn-settings" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="header-btn" id="btn-open-site" title="Open stingr.dev"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar-wrap">
+    <div class="tab-bar" id="tab-bar"></div>
+  </div>
+
+  <!-- Tool Content -->
+  <div class="tool-content" id="tool-content"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-text">50+ more tools</span>
+    <a href="https://stingr.dev" target="_blank" rel="noopener" class="footer-link">stingr.dev &rarr;</a>
+  </div>
+
+  <!-- Scripts: utils then popup logic -->
+  <script src="utils/formatters.js"></script>
+  <script src="utils/generators.js"></script>
+  <script src="utils/base64.js"></script>
+  <script src="utils/url-encode.js"></script>
+  <script src="utils/jwt.js"></script>
+  <script src="utils/hash.js"></script>
+  <script src="utils/timestamp.js"></script>
+  <script src="utils/jsonpath.js"></script>
+  <script src="utils/colorConverter.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

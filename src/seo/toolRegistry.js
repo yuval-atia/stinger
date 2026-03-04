@@ -364,6 +364,33 @@ export const toolRegistry = [
   },
 
   {
+    slug: 'url-parser',
+    title: 'URL Parser',
+    category: 'encode',
+    seo: {
+      title: 'URL Parser Online - Break URLs Into Parts | Stingr',
+      description: 'Parse any URL into protocol, host, port, path, query parameters, and hash fragment. Click to copy each part. Free, private, in-browser.',
+      priority: 0.7,
+      changefreq: 'monthly',
+    },
+    component: () => import('../components/Encode/UrlParserCard'),
+    faq: [
+      {
+        question: 'What does the URL Parser do?',
+        answer: 'It breaks a URL into its component parts: protocol (http/https), hostname, port, pathname, query parameters (as individual key-value pairs), and hash fragment. Each part can be copied with one click.',
+      },
+      {
+        question: 'What URL formats are supported?',
+        answer: 'Any valid URL is supported, including http, https, ftp, and other protocols. The parser uses the browser\'s built-in URL constructor for reliable, standards-compliant parsing.',
+      },
+      {
+        question: 'How are query parameters handled?',
+        answer: 'Query parameters are automatically split into individual key-value pairs, making it easy to inspect and copy each parameter separately. Encoded values like %20 are decoded for readability.',
+      },
+    ],
+  },
+
+  {
     slug: 'html-entity-encoder',
     title: 'HTML Entity Encoder/Decoder',
     category: 'encode',

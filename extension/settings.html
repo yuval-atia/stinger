@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stingr Settings</title>
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    body {
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .settings-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .settings-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .tool-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tool-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s;
+    }
+
+    .tool-row:hover {
+      border-color: var(--text-muted);
+    }
+
+    .tool-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tool-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .tool-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .tool-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--bg-tertiary);
+      border-radius: 11px;
+      transition: background 0.2s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      bottom: 3px;
+      background: var(--text-secondary);
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: var(--accent);
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(18px);
+      background: white;
+    }
+
+    .btn-row-settings {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .saved-toast {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--success);
+      color: #111827;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+
+    .saved-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="header-left" style="margin-bottom: 16px">
+    <img src="icons/icon-48.png" alt="Stingr" class="header-logo">
+    <span class="header-title" style="font-size: 18px; margin-left: 8px">Stingr<span style="color: var(--text-muted); font-weight: 400">.dev</span></span>
+  </div>
+
+  <div class="settings-title">Pinned Tools</div>
+  <div class="settings-desc">Choose which tools appear in your popup tab bar. Changes are saved automatically and synced across your Chrome devices.</div>
+
+  <div class="tool-grid" id="tool-grid"></div>
+
+  <div class="btn-row-settings">
+    <button class="btn" id="btn-reset">Reset to defaults</button>
+  </div>
+
+  <div class="saved-toast" id="saved-toast">Saved</div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

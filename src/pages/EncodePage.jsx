@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Base64Card from '../components/Encode/Base64Card';
 import UrlEncodeCard from '../components/Encode/UrlEncodeCard';
+import UrlParserCard from '../components/Encode/UrlParserCard';
 import HtmlEntityCard from '../components/Encode/HtmlEntityCard';
 import JwtDecodeCard from '../components/Encode/JwtDecodeCard';
 import HexEncodeCard from '../components/Encode/HexEncodeCard';
@@ -24,6 +25,7 @@ function EncodePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         <Base64Card toolSlug="base64-encoder" />
         <UrlEncodeCard toolSlug="url-encoder" />
+        <UrlParserCard toolSlug="url-parser" />
         <HtmlEntityCard toolSlug="html-entity-encoder" />
         <JsonEscapeCard toolSlug="json-escape" />
         <JwtDecodeCard toolSlug="jwt-decoder" />

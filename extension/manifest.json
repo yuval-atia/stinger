@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Stingr - Developer Tools",
+  "short_name": "Stingr",
+  "version": "1.0.0",
+  "description": "JSON formatter, Base64, UUID, Hash, JWT & more. 100% private — all processing happens in your browser.",
+  "permissions": ["storage", "activeTab", "tabs"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
