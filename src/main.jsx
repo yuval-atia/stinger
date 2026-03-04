@@ -51,6 +51,13 @@ if (typeof requestIdleCallback === 'function') {
   }, 2000)
 }
 
+// Register service worker for offline support & PWA install
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+  })
+}
+
 function PageLoader() {
   return (
     <div className="flex items-center justify-center h-full">
