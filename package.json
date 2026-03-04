@@ -1,14 +1,14 @@
 {
   "name": "stinger",
   "private": true,
-  "version": "1.10.0",
+  "version": "1.11.0",
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-sitemap.js && node scripts/prerender-meta.js && cp dist/index.html dist/404.html",
+    "build": "bash scripts/bundle-extension.sh && vite build && node scripts/generate-sitemap.js && node scripts/prerender-meta.js && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
