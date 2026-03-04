@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stingr-v1';
+const CACHE_NAME = 'stingr-v2';
 
 // Pre-cache the app shell on install
 self.addEventListener('install', (event) => {
