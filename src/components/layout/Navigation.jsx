@@ -10,6 +10,7 @@ const navItems = [
   { to: '/convert', label: 'Convert', key: '6' },
   { to: '/text', label: 'Text Tools', key: '7' },
   { to: '/format', label: 'Formatter', key: '8' },
+  { to: '/tools', label: 'All Tools', key: '9' },
 ];
 
 function Navigation({ isOpen, onClose }) {

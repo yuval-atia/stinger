@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import FormatButton from '../components/common/FormatButton';
 import CopyButton from '../components/common/CopyButton';
 import { InfoButton } from '../components/common/InfoTooltip';
@@ -52,6 +53,13 @@ function FormatterPage() {
 
   return (
     <div className="h-full overflow-y-auto">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] mb-3">
+        <Link to="/" className="hover:text-[var(--accent-color)] transition-colors">Home</Link>
+        <span>/</span>
+        <span className="text-[var(--text-primary)]">Formatter</span>
+      </nav>
+      <h1 className="text-xl font-bold mb-1">JSON, XML & Code Formatter</h1>
+      <p className="text-sm text-[var(--text-secondary)] mb-4">Format and beautify JSON, XML, SQL, CSS, and HTML. Minify or pretty-print with one click.</p>
       <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] card-hover">
         {/* Title bar */}
         <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">

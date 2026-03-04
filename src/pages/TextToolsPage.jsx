@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import TextDiffCard from '../components/Text/TextDiffCard';
 import TextStatsCard from '../components/Text/TextStatsCard';
 import CaseTransformCard from '../components/Text/CaseTransformCard';
@@ -11,6 +12,13 @@ import TextTrimmerCard from '../components/Text/TextTrimmerCard';
 function TextToolsPage() {
   return (
     <div className="h-full overflow-y-auto">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] mb-3">
+        <Link to="/" className="hover:text-[var(--accent-color)] transition-colors">Home</Link>
+        <span>/</span>
+        <span className="text-[var(--text-primary)]">Text Tools</span>
+      </nav>
+      <h1 className="text-xl font-bold mb-1">Text Diff, Sort & Transform Tools</h1>
+      <p className="text-sm text-[var(--text-secondary)] mb-4">Compare text diffs, sort/deduplicate lines, find & replace, count words, reverse text, transform case.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4">
         <div className="lg:col-span-2">
           <TextDiffCard toolSlug="text-diff" />

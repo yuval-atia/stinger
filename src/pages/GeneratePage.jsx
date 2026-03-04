@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import UUIDGenerator from '../components/Generate/UUIDGenerator';
 import ULIDGenerator from '../components/Generate/ULIDGenerator';
 import NanoIDGenerator from '../components/Generate/NanoIDGenerator';
@@ -13,6 +14,13 @@ import MarkdownTableGenerator from '../components/Generate/MarkdownTableGenerato
 function GeneratePage() {
   return (
     <div className="h-full overflow-y-auto">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] mb-3">
+        <Link to="/" className="hover:text-[var(--accent-color)] transition-colors">Home</Link>
+        <span>/</span>
+        <span className="text-[var(--text-primary)]">Generate</span>
+      </nav>
+      <h1 className="text-xl font-bold mb-1">UUID, API Key & QR Generators</h1>
+      <p className="text-sm text-[var(--text-secondary)] mb-4">Generate UUIDs, ULIDs, NanoIDs, API keys, passwords, QR codes, Lorem Ipsum, fake data, and color palettes. All local in-browser.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         <UUIDGenerator toolSlug="uuid-generator" />
         <APIKeyGenerator toolSlug="api-key-generator" />

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import TimestampCard from '../components/Convert/TimestampCard';
 import JsonYamlCard from '../components/Convert/JsonYamlCard';
 import CaseConverterCard from '../components/Convert/CaseConverterCard';
@@ -15,6 +16,13 @@ import ContrastCheckerCard from '../components/Convert/ContrastCheckerCard';
 function ConvertPage() {
   return (
     <div className="h-full overflow-y-auto">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] mb-3">
+        <Link to="/" className="hover:text-[var(--accent-color)] transition-colors">Home</Link>
+        <span>/</span>
+        <span className="text-[var(--text-primary)]">Convert</span>
+      </nav>
+      <h1 className="text-xl font-bold mb-1">Timestamp, Color & Unit Converters</h1>
+      <p className="text-sm text-[var(--text-secondary)] mb-4">Convert Unix timestamps, colors, number bases, byte sizes, JSON/YAML, CSV/JSON, and cron expressions.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         <TimestampCard toolSlug="timestamp-converter" />
         <JsonYamlCard toolSlug="json-yaml-converter" />
