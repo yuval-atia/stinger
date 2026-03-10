@@ -13,6 +13,7 @@ const CATEGORIES = [
     { id: 'fonts',    name: 'Font Detector',        icon: '🔤' },
     { id: 'outline',  name: 'CSS Outlines',         icon: '🔲' },
     { id: 'ruler',    name: 'Element Inspector',    icon: '📏' },
+    { id: 'unblock',  name: 'Overlay Remover',      icon: '🚫' },
   ]},
   { id: 'tools', label: 'Tools', tools: [
     { id: 'testdata', name: 'Test Data',             icon: '🎲' },
@@ -93,6 +94,20 @@ function killAllInjections() {
       window.__stingrRuler.label.remove();
       delete window.__stingrRuler;
     }
+    if (window.__stingrPicker) {
+      document.removeEventListener('mousemove', window.__stingrPicker.onMove, true);
+      document.removeEventListener('click', window.__stingrPicker.onClick, true);
+      document.removeEventListener('keydown', window.__stingrPicker.onKey, true);
+      window.__stingrPicker.overlay.remove();
+      window.__stingrPicker.label.remove();
+      delete window.__stingrPicker;
+    }
+    if (window.__stingrBlocker) {
+      window.__stingrBlocker.observer.disconnect();
+      const badge = document.getElementById('stingr-blocker-badge');
+      if (badge) badge.remove();
+      delete window.__stingrBlocker;
+    }
     return 'All cleared';
   }).then(() => {
     activeInjections.clear();
@@ -121,6 +136,22 @@ function resetToolUIs() {
     rulerBtn.classList.remove('btn-active');
     rulerBtn.classList.add('btn-primary');
     rulerBtn.textContent = 'Enable Inspector';
+  }
+
+  // Reset picker button if visible
+  const pickerBtn = document.getElementById('unblock-pick');
+  if (pickerBtn) {
+    pickerBtn.classList.remove('btn-active');
+    pickerBtn.classList.add('btn-primary');
+    pickerBtn.textContent = 'Pick & Remove';
+  }
+
+  // Reset blocker button if visible
+  const blockerBtn = document.getElementById('unblock-block');
+  if (blockerBtn) {
+    blockerBtn.classList.remove('btn-active');
+    blockerBtn.classList.add('btn-primary');
+    blockerBtn.textContent = 'Block New Popups';
   }
 }
 
@@ -265,6 +296,7 @@ const TOOL_RENDERERS = {
   xss: renderXssTool,
   security: renderSecurityHeadersTool,
   qr: renderQrTool,
+  unblock: renderUnblockTool,
 };
 
 function renderCategory(catId) {
@@ -2915,6 +2947,461 @@ function initResize() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// TOOL: Overlay Remover
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderUnblockTool(el) {
+  el.innerHTML = `
+    <div class="btn-row" style="flex-direction: column; gap: 6px">
+      <button class="btn btn-primary" id="unblock-auto" style="width: 100%">Auto Remove Overlays</button>
+      <button class="btn btn-primary" id="unblock-pick" style="width: 100%">Pick & Remove</button>
+      <button class="btn btn-primary" id="unblock-block" style="width: 100%">Block New Popups</button>
+      <button class="btn" id="unblock-scroll" style="width: 100%">Unlock Scroll</button>
+      <button class="btn" id="unblock-undo" style="width: 100%; color: var(--error)">Undo All</button>
+    </div>
+    <div id="unblock-status" class="hint" style="margin-top: 6px; text-align: center"></div>
+    <div id="unblock-log" style="margin-top: 6px"></div>
+  `;
+
+  const statusEl = el.querySelector('#unblock-status');
+  const logEl = el.querySelector('#unblock-log');
+
+  // ── Auto mode: heuristic overlay removal ──
+  el.querySelector('#unblock-auto').addEventListener('click', () => {
+    statusEl.textContent = 'Scanning...';
+    logEl.innerHTML = '';
+
+    executeOnActiveTab(() => {
+      const removed = [];
+      const modified = [];
+
+      // Save original state for undo
+      if (!window.__stingrUnblock) window.__stingrUnblock = { removed: [], modified: [] };
+
+      const allEls = document.querySelectorAll('*');
+      const viewW = window.innerWidth;
+      const viewH = window.innerHeight;
+
+      for (const el of allEls) {
+        if (el === document.body || el === document.documentElement || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'LINK') continue;
+
+        const style = getComputedStyle(el);
+        const pos = style.position;
+        const zIndex = parseInt(style.zIndex) || 0;
+        const rect = el.getBoundingClientRect();
+
+        // Skip elements not visible or too small
+        if (style.display === 'none' || rect.width === 0 || rect.height === 0) continue;
+
+        const isFixed = pos === 'fixed' || pos === 'sticky';
+        const coversLargeArea = rect.width >= viewW * 0.5 && rect.height >= viewH * 0.5;
+        const hasHighZ = zIndex >= 1000;
+        const hasBackdrop = style.backgroundColor.includes('rgba') && parseFloat(style.backgroundColor.split(',')[3]) < 0.95;
+        const isTransparentCover = style.backgroundColor === 'transparent' && coversLargeArea && isFixed && hasHighZ;
+
+        // Detect overlay patterns
+        const isOverlay = (
+          (isFixed && coversLargeArea && hasHighZ) ||
+          (isFixed && coversLargeArea && hasBackdrop) ||
+          (isTransparentCover) ||
+          (el.getAttribute('role') === 'dialog' && isFixed && coversLargeArea) ||
+          (el.classList.toString().match(/overlay|modal-backdrop|lightbox|popup-overlay|blocker|paywall/i)) ||
+          (el.id && el.id.match(/overlay|modal-backdrop|lightbox|blocker|paywall/i))
+        );
+
+        if (isOverlay) {
+          // Save for undo
+          window.__stingrUnblock.removed.push({
+            el: el,
+            parent: el.parentNode,
+            next: el.nextSibling,
+            display: el.style.display
+          });
+          el.style.display = 'none';
+          removed.push(el.tagName + (el.id ? '#' + el.id : '') + (el.className && typeof el.className === 'string' ? '.' + el.className.split(' ')[0] : ''));
+        }
+      }
+
+      // Remove blur from content
+      for (const el of allEls) {
+        const style = getComputedStyle(el);
+        if (style.filter && style.filter !== 'none' && style.filter.includes('blur')) {
+          window.__stingrUnblock.modified.push({ el: el, prop: 'filter', value: el.style.filter });
+          el.style.filter = 'none';
+          modified.push('Removed blur from ' + el.tagName);
+        }
+      }
+
+      // Unlock scroll on body/html
+      const bodyStyle = getComputedStyle(document.body);
+      const htmlStyle = getComputedStyle(document.documentElement);
+      let scrollFixed = false;
+
+      if (bodyStyle.overflow === 'hidden' || bodyStyle.overflowY === 'hidden') {
+        window.__stingrUnblock.modified.push({ el: document.body, prop: 'overflow', value: document.body.style.overflow });
+        window.__stingrUnblock.modified.push({ el: document.body, prop: 'overflowY', value: document.body.style.overflowY });
+        document.body.style.overflow = 'auto';
+        document.body.style.overflowY = 'auto';
+        scrollFixed = true;
+      }
+      if (htmlStyle.overflow === 'hidden' || htmlStyle.overflowY === 'hidden') {
+        window.__stingrUnblock.modified.push({ el: document.documentElement, prop: 'overflow', value: document.documentElement.style.overflow });
+        window.__stingrUnblock.modified.push({ el: document.documentElement, prop: 'overflowY', value: document.documentElement.style.overflowY });
+        document.documentElement.style.overflow = 'auto';
+        document.documentElement.style.overflowY = 'auto';
+        scrollFixed = true;
+      }
+
+      // Remove pointer-events: none from main content
+      for (const el of allEls) {
+        const style = getComputedStyle(el);
+        if (style.pointerEvents === 'none' && el.children.length > 2) {
+          window.__stingrUnblock.modified.push({ el: el, prop: 'pointerEvents', value: el.style.pointerEvents });
+          el.style.pointerEvents = 'auto';
+          modified.push('Restored pointer-events on ' + el.tagName);
+        }
+      }
+
+      if (scrollFixed) modified.push('Unlocked scroll');
+
+      return { removed: removed.length, modified: modified.length, details: [...removed.map(r => 'Removed: ' + r), ...modified] };
+    }).then(result => {
+      if (!result) {
+        statusEl.textContent = 'Could not access page';
+        return;
+      }
+      if (result.removed === 0 && result.modified === 0) {
+        statusEl.textContent = 'No overlays detected';
+      } else {
+        statusEl.textContent = `Removed ${result.removed} overlay(s), ${result.modified} fix(es)`;
+      }
+
+      if (result.details && result.details.length) {
+        logEl.innerHTML = result.details.map(d =>
+          '<div style="font-size: 11px; color: var(--text-secondary); padding: 1px 0">' + escapeHtml(d) + '</div>'
+        ).join('');
+      }
+    }).catch(err => {
+      statusEl.textContent = 'Error: ' + err.message;
+    });
+  });
+
+  // ── Pick mode: click to remove elements ──
+  el.querySelector('#unblock-pick').addEventListener('click', () => {
+    const pickBtn = el.querySelector('#unblock-pick');
+
+    executeOnActiveTab(() => {
+      if (window.__stingrPicker) return 'Already active';
+      if (!window.__stingrUnblock) window.__stingrUnblock = { removed: [], modified: [] };
+
+      const overlay = document.createElement('div');
+      overlay.id = 'stingr-picker-overlay';
+      overlay.style.cssText = 'position:fixed;pointer-events:none;z-index:2147483646;border:2px solid #f87171;background:rgba(248,113,113,0.1);transition:all 0.05s ease;display:none;';
+      document.body.appendChild(overlay);
+
+      const label = document.createElement('div');
+      label.id = 'stingr-picker-label';
+      label.style.cssText = 'position:fixed;z-index:2147483647;pointer-events:none;background:#1f2937;color:#f9fafb;font:11px/1.4 ui-monospace,monospace;padding:4px 8px;border-radius:4px;white-space:nowrap;display:none;';
+      document.body.appendChild(label);
+
+      let hoveredEl = null;
+      let removedCount = 0;
+
+      function onMove(e) {
+        const target = e.target;
+        if (target === overlay || target === label || target.id === 'stingr-picker-overlay' || target.id === 'stingr-picker-label') return;
+        hoveredEl = target;
+        const rect = target.getBoundingClientRect();
+        overlay.style.left = rect.left + 'px';
+        overlay.style.top = rect.top + 'px';
+        overlay.style.width = rect.width + 'px';
+        overlay.style.height = rect.height + 'px';
+        overlay.style.display = 'block';
+
+        const tag = target.tagName.toLowerCase();
+        const id = target.id ? '#' + target.id : '';
+        const cls = target.className && typeof target.className === 'string' ? '.' + target.className.trim().split(/\s+/).slice(0, 2).join('.') : '';
+        label.textContent = tag + id + cls + ' (' + Math.round(rect.width) + 'x' + Math.round(rect.height) + ')';
+        label.style.left = Math.min(rect.left, window.innerWidth - 250) + 'px';
+        label.style.top = Math.max(0, rect.top - 28) + 'px';
+        label.style.display = 'block';
+      }
+
+      function onClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        if (!hoveredEl || hoveredEl === document.body || hoveredEl === document.documentElement) return;
+
+        window.__stingrUnblock.removed.push({
+          el: hoveredEl,
+          parent: hoveredEl.parentNode,
+          next: hoveredEl.nextSibling,
+          display: hoveredEl.style.display
+        });
+        hoveredEl.style.display = 'none';
+        removedCount++;
+        hoveredEl = null;
+        overlay.style.display = 'none';
+        label.style.display = 'none';
+      }
+
+      function onKey(e) {
+        if (e.key === 'Escape') {
+          cleanup();
+        }
+      }
+
+      function cleanup() {
+        document.removeEventListener('mousemove', onMove, true);
+        document.removeEventListener('click', onClick, true);
+        document.removeEventListener('keydown', onKey, true);
+        overlay.remove();
+        label.remove();
+        delete window.__stingrPicker;
+      }
+
+      window.__stingrPicker = { overlay, label, onMove, onClick, onKey, cleanup };
+      document.addEventListener('mousemove', onMove, true);
+      document.addEventListener('click', onClick, true);
+      document.addEventListener('keydown', onKey, true);
+
+      return 'Picker active';
+    }).then(result => {
+      if (result === 'Already active') {
+        statusEl.textContent = 'Picker already active — click elements to remove, Esc to stop';
+        return;
+      }
+      pickBtn.classList.remove('btn-primary');
+      pickBtn.classList.add('btn-active');
+      pickBtn.textContent = 'Picking... (Esc to stop)';
+      statusEl.textContent = 'Click any element to remove it. Press Esc to exit.';
+      markInjection('picker');
+    }).catch(err => {
+      statusEl.textContent = 'Error: ' + err.message;
+    });
+  });
+
+  // ── Block new popups (MutationObserver) ──
+  el.querySelector('#unblock-block').addEventListener('click', () => {
+    const blockBtn = el.querySelector('#unblock-block');
+
+    // Check if already active — if so, stop it
+    executeOnActiveTab(() => {
+      if (window.__stingrBlocker) {
+        window.__stingrBlocker.observer.disconnect();
+        const badge = document.getElementById('stingr-blocker-badge');
+        if (badge) badge.remove();
+        const count = window.__stingrBlocker.count;
+        delete window.__stingrBlocker;
+        return { stopped: true, count };
+      }
+
+      // Start the blocker
+      let blockedCount = 0;
+
+      // Badge to show on page
+      const badge = document.createElement('div');
+      badge.id = 'stingr-blocker-badge';
+      badge.style.cssText = 'position:fixed;top:8px;right:8px;z-index:2147483647;background:#1f2937;color:#4ade80;font:bold 11px/1 ui-monospace,monospace;padding:5px 10px;border-radius:6px;border:1px solid #374151;pointer-events:none;opacity:0.9;transition:opacity 0.3s;';
+      badge.textContent = 'Blocker ON';
+      document.body.appendChild(badge);
+
+      function isOverlayElement(el) {
+        if (el === document.body || el === document.documentElement || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'LINK') return false;
+
+        const style = getComputedStyle(el);
+        const pos = style.position;
+        const zIndex = parseInt(style.zIndex) || 0;
+        const rect = el.getBoundingClientRect();
+
+        if (rect.width === 0 || rect.height === 0) return false;
+
+        const viewW = window.innerWidth;
+        const viewH = window.innerHeight;
+        const isFixed = pos === 'fixed' || pos === 'sticky';
+        const coversLargeArea = rect.width >= viewW * 0.5 && rect.height >= viewH * 0.5;
+        const hasHighZ = zIndex >= 1000;
+        const hasBackdrop = style.backgroundColor.includes('rgba') && parseFloat(style.backgroundColor.split(',')[3]) < 0.95;
+
+        const classMatch = el.className && typeof el.className === 'string' && el.className.match(/overlay|modal-backdrop|lightbox|popup-overlay|blocker|paywall|cookie-consent|cookie-banner|gdpr/i);
+        const idMatch = el.id && el.id.match(/overlay|modal-backdrop|lightbox|blocker|paywall|cookie-consent|cookie-banner|gdpr/i);
+
+        return (
+          (isFixed && coversLargeArea && hasHighZ) ||
+          (isFixed && coversLargeArea && hasBackdrop) ||
+          (el.getAttribute('role') === 'dialog' && isFixed && coversLargeArea) ||
+          classMatch || idMatch
+        );
+      }
+
+      const observer = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          // Check new nodes
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType !== 1) continue;
+            if (node.id === 'stingr-blocker-badge') continue;
+
+            if (isOverlayElement(node)) {
+              node.style.display = 'none';
+              blockedCount++;
+              badge.textContent = 'Blocker ON — ' + blockedCount + ' blocked';
+            }
+
+            // Also check children of added node
+            if (node.querySelectorAll) {
+              node.querySelectorAll('*').forEach(child => {
+                if (isOverlayElement(child)) {
+                  child.style.display = 'none';
+                  blockedCount++;
+                  badge.textContent = 'Blocker ON — ' + blockedCount + ' blocked';
+                }
+              });
+            }
+          }
+
+          // Check attribute changes (e.g. display being toggled)
+          if (mutation.type === 'attributes' && mutation.target.nodeType === 1) {
+            const el = mutation.target;
+            if (el.id === 'stingr-blocker-badge') continue;
+            if (el.style.display !== 'none' && isOverlayElement(el)) {
+              el.style.display = 'none';
+              blockedCount++;
+              badge.textContent = 'Blocker ON — ' + blockedCount + ' blocked';
+            }
+          }
+        }
+
+        // Keep scroll unlocked
+        if (getComputedStyle(document.body).overflow === 'hidden') document.body.style.overflow = 'auto';
+        if (getComputedStyle(document.documentElement).overflow === 'hidden') document.documentElement.style.overflow = 'auto';
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+
+      window.__stingrBlocker = { observer, count: 0, badge };
+      return { stopped: false };
+    }).then(result => {
+      if (!result) return;
+
+      if (result.stopped) {
+        blockBtn.classList.remove('btn-active');
+        blockBtn.classList.add('btn-primary');
+        blockBtn.textContent = 'Block New Popups';
+        statusEl.textContent = 'Blocker stopped' + (result.count ? ' — blocked ' + result.count + ' element(s)' : '');
+        clearInjection('blocker');
+      } else {
+        blockBtn.classList.remove('btn-primary');
+        blockBtn.classList.add('btn-active');
+        blockBtn.textContent = 'Blocking... (click to stop)';
+        statusEl.textContent = 'Monitoring for new overlays & popups';
+        markInjection('blocker');
+      }
+    }).catch(err => {
+      statusEl.textContent = 'Error: ' + err.message;
+    });
+  });
+
+  // ── Unlock scroll only ──
+  el.querySelector('#unblock-scroll').addEventListener('click', () => {
+    executeOnActiveTab(() => {
+      if (!window.__stingrUnblock) window.__stingrUnblock = { removed: [], modified: [] };
+
+      let fixed = false;
+      ['body', 'documentElement'].forEach(target => {
+        const el = document[target];
+        const style = getComputedStyle(el);
+        if (style.overflow === 'hidden' || style.overflowY === 'hidden') {
+          window.__stingrUnblock.modified.push({ el: el, prop: 'overflow', value: el.style.overflow });
+          window.__stingrUnblock.modified.push({ el: el, prop: 'overflowY', value: el.style.overflowY });
+          el.style.overflow = 'auto';
+          el.style.overflowY = 'auto';
+          fixed = true;
+        }
+        // Also remove position:fixed on body (some sites use this to lock scroll)
+        if (target === 'body' && style.position === 'fixed') {
+          window.__stingrUnblock.modified.push({ el: el, prop: 'position', value: el.style.position });
+          window.__stingrUnblock.modified.push({ el: el, prop: 'top', value: el.style.top });
+          window.__stingrUnblock.modified.push({ el: el, prop: 'width', value: el.style.width });
+          el.style.position = '';
+          el.style.top = '';
+          el.style.width = '';
+          fixed = true;
+        }
+      });
+
+      return fixed ? 'Scroll unlocked' : 'Scroll was not locked';
+    }).then(result => {
+      statusEl.textContent = result || 'Done';
+    }).catch(err => {
+      statusEl.textContent = 'Error: ' + err.message;
+    });
+  });
+
+  // ── Undo all changes ──
+  el.querySelector('#unblock-undo').addEventListener('click', () => {
+    executeOnActiveTab(() => {
+      if (!window.__stingrUnblock) return 'Nothing to undo';
+
+      let count = 0;
+
+      // Restore removed elements
+      for (const item of window.__stingrUnblock.removed) {
+        try {
+          item.el.style.display = item.display || '';
+          count++;
+        } catch (e) {}
+      }
+
+      // Restore modified properties
+      for (const item of window.__stingrUnblock.modified) {
+        try {
+          item.el.style[item.prop] = item.value || '';
+          count++;
+        } catch (e) {}
+      }
+
+      window.__stingrUnblock = { removed: [], modified: [] };
+
+      // Clean up picker if active
+      if (window.__stingrPicker) {
+        window.__stingrPicker.cleanup();
+      }
+
+      // Clean up blocker if active
+      if (window.__stingrBlocker) {
+        window.__stingrBlocker.observer.disconnect();
+        const badge = document.getElementById('stingr-blocker-badge');
+        if (badge) badge.remove();
+        delete window.__stingrBlocker;
+      }
+
+      return count > 0 ? 'Restored ' + count + ' change(s)' : 'Nothing to undo';
+    }).then(result => {
+      statusEl.textContent = result || 'Done';
+      logEl.innerHTML = '';
+      clearInjection('picker');
+      clearInjection('blocker');
+      const pickBtn = el.querySelector('#unblock-pick');
+      pickBtn.classList.remove('btn-active');
+      pickBtn.classList.add('btn-primary');
+      pickBtn.textContent = 'Pick & Remove';
+      const blockBtn = el.querySelector('#unblock-block');
+      blockBtn.classList.remove('btn-active');
+      blockBtn.classList.add('btn-primary');
+      blockBtn.textContent = 'Block New Popups';
+    }).catch(err => {
+      statusEl.textContent = 'Error: ' + err.message;
+    });
+  });
+}
+
 // ── Init ────────────────────────────────────────────────────────────────────
 
 function init() {
@@ -2930,6 +3417,8 @@ function init() {
     const has = [];
     if (document.getElementById('stingr-outline-style')) has.push('outline');
     if (window.__stingrRuler) has.push('ruler');
+    if (window.__stingrPicker) has.push('picker');
+    if (window.__stingrBlocker) has.push('blocker');
     return has;
   }).then(results => {
     const active = results && results[0] && results[0].result;

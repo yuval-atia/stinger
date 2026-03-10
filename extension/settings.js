@@ -13,6 +13,7 @@ const CATEGORIES = [
     { id: 'fonts',    name: 'Font Detector',        icon: '🔤',   desc: 'See all fonts used on the page' },
     { id: 'outline',  name: 'CSS Outlines',         icon: '🔲',  desc: 'Toggle element outlines for debugging' },
     { id: 'ruler',    name: 'Element Inspector',    icon: '📏',   desc: 'Hover to inspect element dimensions' },
+    { id: 'unblock',  name: 'Overlay Remover',      icon: '🚫',   desc: 'Remove overlays, paywalls & unlock scroll' },
   ]},
   { id: 'tools', label: 'Tools', desc: 'Quick developer utilities', tools: [
     { id: 'testdata', name: 'Test Data',             icon: '🎲',    desc: 'Generate UUIDs, emails, passwords & more' },
