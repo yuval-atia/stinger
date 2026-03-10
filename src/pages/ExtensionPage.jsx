@@ -1,16 +1,34 @@
 import { useState } from 'react';
 
-const TOOLS = [
-  { icon: '/', name: 'URL Parser', desc: 'Break URLs into parts, auto-loads current tab' },
-  { icon: '{ }', name: 'JSON Formatter', desc: 'Format, minify & validate JSON' },
-  { icon: 'jwt', name: 'JWT Decoder', desc: 'Decode and inspect JWT tokens' },
-  { icon: 'B64', name: 'Base64', desc: 'Encode and decode Base64 strings' },
-  { icon: '\u25cf', name: 'Color Picker', desc: 'Pick & convert HEX, RGB, HSL colors' },
-  { icon: '#', name: 'UUID Generator', desc: 'Generate UUID v4 and v1' },
-  { icon: '\u23f0', name: 'Timestamp', desc: 'Convert Unix timestamps & dates' },
-  { icon: '#!', name: 'Hash Generator', desc: 'MD5, SHA-256, SHA-512 hashing' },
-  { icon: '$..', name: 'JSONPath', desc: 'Query JSON with JSONPath expressions' },
-  { icon: 'Aa', name: 'Lorem Ipsum', desc: 'Generate placeholder text' },
+const CATEGORIES = [
+  { label: 'Inspect', desc: 'Inspect the current page', tools: [
+    { icon: '📡', name: 'Response Headers', desc: 'View HTTP headers, server info & geolocation' },
+    { icon: '🛡️', name: 'Security Headers', desc: 'Audit security headers with severity grades' },
+    { icon: '🏷️', name: 'Meta & OG Tags', desc: 'Meta tags, Open Graph & Twitter Cards' },
+    { icon: '🔧', name: 'Tech Stack', desc: 'Detect frameworks, libraries & analytics' },
+    { icon: '🔗', name: 'URL Parser', desc: 'Break URLs into parts & query params' },
+  ]},
+  { label: 'Visual', desc: 'Visual & CSS tools', tools: [
+    { icon: '🎨', name: 'Color Picker', desc: 'Pick colors from any page element' },
+    { icon: '🔤', name: 'Font Detector', desc: 'See all fonts used on the page' },
+    { icon: '🔲', name: 'CSS Outlines', desc: 'Toggle element outlines for debugging' },
+    { icon: '📏', name: 'Element Inspector', desc: 'Hover to inspect element dimensions' },
+  ]},
+  { label: 'Tools', desc: 'Quick developer utilities', tools: [
+    { icon: '🎲', name: 'Test Data', desc: 'Generate UUIDs, emails, passwords & more' },
+    { icon: '📝', name: 'Form Filler', desc: 'Auto-fill forms with realistic test data' },
+    { icon: '💉', name: 'SQLi Tester', desc: 'SQL injection payloads for security testing' },
+    { icon: '🧨', name: 'XSS Tester', desc: 'XSS payloads for security testing' },
+    { icon: '📷', name: 'QR Code', desc: 'Generate QR code for any URL or text' },
+  ]},
+  { label: 'Page', desc: 'Page data & debugging', tools: [
+    { icon: '🍪', name: 'Cookie Inspector', desc: 'View, edit, add & delete cookies' },
+    { icon: '💾', name: 'Storage', desc: 'Browse, edit & add localStorage & sessionStorage' },
+    { icon: '📦', name: 'Resources', desc: 'View all network resources loaded' },
+    { icon: '⚡', name: 'Performance', desc: 'Page load metrics & DOM stats' },
+    { icon: '♿', name: 'Accessibility', desc: 'Quick accessibility audit' },
+    { icon: '📱', name: 'Viewport', desc: 'Resize to common device sizes' },
+  ]},
 ];
 
 const STEPS = [
@@ -24,9 +42,9 @@ const STEPS = [
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--accent-color)] text-white font-semibold text-sm hover:brightness-110 transition-all"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download Stingr Extension
+          Download Stingr v2.0
         </a>
-        <p className="mt-2 text-[var(--text-muted)] text-xs">ZIP file &middot; ~30 KB &middot; Works on Chrome, Edge, Brave, Arc & all Chromium browsers</p>
+        <p className="mt-2 text-[var(--text-muted)] text-xs">ZIP file &middot; Works on Chrome, Edge, Brave, Arc & all Chromium browsers</p>
       </>
     ),
   },
@@ -94,27 +112,34 @@ function ExtensionPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-color)]/10 text-[var(--accent-color)] text-xs font-medium mb-4">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Free &middot; No account needed
+            v2.0 &middot; Free &middot; No account needed
           </div>
           <h1 className="text-3xl font-bold mb-3">Stingr Browser Extension</h1>
           <p className="text-[var(--text-muted)] text-base max-w-lg mx-auto">
-            10 developer tools in your browser toolbar. URL parser, JSON formatter, JWT decoder, Base64, hashing & more. 100% private — everything runs locally.
+            20 developer tools for inspecting, debugging & testing any website — right from your browser toolbar. Security audit, tech detection, visual tools & more. 100% private.
           </p>
         </div>
 
-        {/* Preview mockup */}
-        <div className="mb-10 rounded-xl border border-[var(--border-color)] overflow-hidden bg-[var(--bg-secondary)] p-4">
-          <div className="flex items-center gap-2 mb-3 text-xs text-[var(--text-muted)]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            Extension popup preview
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-            {TOOLS.map(t => (
-              <div key={t.name} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)]">
-                <span className="text-xs font-mono text-[var(--accent-color)] w-6 text-center flex-shrink-0">{t.icon}</span>
-                <div className="min-w-0">
-                  <div className="text-xs font-medium text-[var(--text-primary)] truncate">{t.name}</div>
-                  <div className="text-[10px] text-[var(--text-muted)] truncate">{t.desc}</div>
+        {/* Tools by category */}
+        <div className="mb-10">
+          <h2 className="text-xl font-bold mb-5">All 20 Tools</h2>
+          <div className="space-y-5">
+            {CATEGORIES.map(cat => (
+              <div key={cat.label}>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <h3 className="text-sm font-bold text-[var(--accent-color)]">{cat.label}</h3>
+                  <span className="text-xs text-[var(--text-muted)]">{cat.desc}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {cat.tools.map(t => (
+                    <div key={t.name} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
+                      <span className="text-base flex-shrink-0">{t.icon}</span>
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-[var(--text-primary)]">{t.name}</div>
+                        <div className="text-xs text-[var(--text-muted)] truncate">{t.desc}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -143,12 +168,14 @@ function ExtensionPage() {
           <div className="grid sm:grid-cols-2 gap-3 text-sm">
             {[
               ['100% Private', 'All processing happens in your browser. Your data never leaves your machine.'],
-              ['10 Tools', 'URL, JSON, JWT, Base64, Color, UUID, Timestamp, Hash, JSONPath, Lorem Ipsum.'],
-              ['Customizable', 'Pin only the tools you use. Settings sync across devices.'],
-              ['Lightweight', '~30 KB total. No background processes, no tracking, no analytics.'],
+              ['20 Tools, 4 Categories', 'Inspect, Visual, Tools & Page — everything you need to debug and test websites.'],
+              ['Browser-Context Tools', 'Reads live page data: headers, cookies, tech stack, security audit, DOM inspection.'],
+              ['Security Testing', 'Built-in SQLi and XSS payload testers for authorized penetration testing.'],
+              ['Resizable Popup', 'Drag to resize the popup width. Your preferred size is remembered.'],
+              ['Kill Switch', 'One-click button to stop all active page injections (color picker, outlines, inspector).'],
             ].map(([title, desc]) => (
               <div key={title} className="flex gap-3">
-                <span className="text-[var(--accent-color)] mt-0.5">
+                <span className="text-[var(--accent-color)] mt-0.5 flex-shrink-0">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </span>
                 <div>
@@ -160,13 +187,27 @@ function ExtensionPage() {
           </div>
         </div>
 
+        {/* What's new in v2 */}
+        <div className="rounded-xl border border-[var(--accent-color)]/20 bg-[var(--accent-color)]/5 p-6 mb-10">
+          <h2 className="text-lg font-bold mb-3">What&apos;s new in v2.0</h2>
+          <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> Complete redesign — focused on browser-context tools instead of encoding/formatting</li>
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> 9 new tools: Security Headers, Tech Stack, Font Detector, Element Inspector, Form Filler, SQLi Tester, XSS Tester, QR Code, Accessibility</li>
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> Server geolocation in Response Headers (country, provider, IP)</li>
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> Accordion UI with collapsible tool sections</li>
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> Resizable popup with persistent width preference</li>
+            <li className="flex gap-2"><span className="text-[var(--accent-color)]">&rarr;</span> Kill switch to stop all active page injections</li>
+          </ul>
+        </div>
+
         {/* FAQ */}
         <h2 className="text-lg font-bold mb-4">FAQ</h2>
         <div className="space-y-4 text-sm mb-8">
           <Faq q="Is it safe to enable Developer Mode?" a="Yes. Developer Mode simply allows you to load extensions from your computer instead of the Chrome Web Store. Many developers use this daily." />
           <Faq q="Will it auto-update?" a="Not automatically. When a new version is released, download the updated ZIP and replace the old folder. Then click the refresh icon on the extensions page." />
           <Faq q="Does it work on Firefox?" a="Not yet — this extension is built for Chromium-based browsers (Chrome, Edge, Brave, Arc, Opera, Vivaldi). Firefox support is planned." />
-          <Faq q="What permissions does it need?" a="Only 'storage' (to save your tool preferences) and 'tabs' (to read the current tab URL for the URL parser). No data is sent anywhere." />
+          <Faq q="What permissions does it need?" a="storage (save preferences), activeTab & tabs (read current page), scripting (inject visual tools like color picker and outlines), cookies (cookie inspector), and host_permissions (fetch response headers). No data is sent to any server — everything stays in your browser." />
+          <Faq q="What about the encoding tools from v1?" a="v2.0 focuses on browser-context tools that need the extension API. For encoding, hashing, JSON formatting and other standalone tools, use stingr.dev — it has 40+ tools available." />
         </div>
       </div>
     </div>

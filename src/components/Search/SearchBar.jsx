@@ -135,6 +135,7 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder={isJsonPath ? '.users[*].name' : 'Search...'}
+          aria-label={isJsonPath ? 'JSONPath query' : 'Search JSON'}
           className={`w-44 pl-8 pr-7 py-1 text-sm bg-[var(--bg-secondary)] border rounded focus:outline-none transition-colors ${
             isJsonPath
               ? 'border-[var(--jsonpath-color)]/40 focus:border-[var(--jsonpath-color)]'

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stingr Settings</title>
+  <title>Stingr — All Tools</title>
   <link rel="stylesheet" href="popup.css">
   <style>
     body {
@@ -31,23 +31,40 @@
     .tool-grid {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       margin-bottom: 20px;
+    }
+
+    .cat-header {
+      margin-top: 16px;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cat-header:first-child {
+      margin-top: 0;
+    }
+
+    .cat-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .cat-desc {
+      font-size: 11px;
+      color: var(--text-muted);
     }
 
     .tool-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
+      padding: 8px 12px;
       background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: border-color 0.15s;
-    }
-
-    .tool-row:hover {
-      border-color: var(--text-muted);
+      border-radius: var(--radius-sm);
     }
 
     .tool-info {
@@ -57,8 +74,8 @@
     }
 
     .tool-icon {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -71,7 +88,7 @@
     }
 
     .tool-name {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
     }
 
@@ -80,75 +97,80 @@
       color: var(--text-secondary);
     }
 
-    /* Toggle switch */
-    .toggle {
-      position: relative;
-      width: 40px;
-      height: 22px;
-      flex-shrink: 0;
+    .stats {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
-    .toggle input {
-      opacity: 0;
-      width: 0;
-      height: 0;
+    .settings-section {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
 
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background: var(--bg-tertiary);
-      border-radius: 11px;
-      transition: background 0.2s;
+    .settings-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    .toggle-slider::before {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      left: 3px;
-      bottom: 3px;
-      background: var(--text-secondary);
-      border-radius: 50%;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    .toggle input:checked + .toggle-slider {
-      background: var(--accent);
-    }
-
-    .toggle input:checked + .toggle-slider::before {
-      transform: translateX(18px);
-      background: white;
-    }
-
-    .btn-row-settings {
+    .settings-row {
       display: flex;
-      gap: 10px;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
     }
 
-    .saved-toast {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: var(--success);
-      color: #111827;
-      padding: 8px 16px;
-      border-radius: var(--radius);
-      font-weight: 600;
+    .settings-row-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .settings-row-label {
       font-size: 13px;
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
+      font-weight: 600;
     }
 
-    .saved-toast.show {
-      opacity: 1;
-      transform: translateY(0);
+    .settings-row-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .settings-row-value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-reset {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-reset:hover {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    .btn-reset.done {
+      border-color: var(--success);
+      color: var(--success);
+      background: rgba(74, 222, 128, 0.08);
     }
   </style>
 </head>
@@ -158,16 +180,25 @@
     <span class="header-title" style="font-size: 18px; margin-left: 8px">Stingr<span style="color: var(--text-muted); font-weight: 400">.dev</span></span>
   </div>
 
-  <div class="settings-title">Pinned Tools</div>
-  <div class="settings-desc">Choose which tools appear in your popup tab bar. Changes are saved automatically and synced across your Chrome devices.</div>
+  <div class="settings-title">All Tools</div>
+  <div class="settings-desc">20 developer tools organized in 4 categories. All tools are always available — just switch tabs in the popup.</div>
 
   <div class="tool-grid" id="tool-grid"></div>
 
-  <div class="btn-row-settings">
-    <button class="btn" id="btn-reset">Reset to defaults</button>
+  <!-- Settings Section -->
+  <div class="settings-section">
+    <div class="settings-section-title">Settings</div>
+    <div class="settings-row">
+      <div class="settings-row-info">
+        <div class="settings-row-label">Popup Width</div>
+        <div class="settings-row-desc">Reset to default 420px</div>
+        <div class="settings-row-value" id="current-size">Loading...</div>
+      </div>
+      <button class="btn-reset" id="btn-reset-size">Reset</button>
+    </div>
   </div>
 
-  <div class="saved-toast" id="saved-toast">Saved</div>
+  <div class="stats">100% private — all processing happens in your browser</div>
 
   <script src="settings.js"></script>
 </body>

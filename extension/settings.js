@@ -1,111 +1,114 @@
-// ── Tool Definitions (must match popup.js) ──────────────────────────────────
+// ── Categories (must match popup.js) ─────────────────────────────────────────
 
-const ALL_TOOLS = [
-  { id: 'url',       label: 'URL Parser',           icon: '/',    desc: 'Break URLs into parts and query params', defaultPinned: true },
-  { id: 'json',      label: 'JSON Tree View',       icon: '{ }',   desc: 'Interactive JSON tree viewer',         defaultPinned: true },
-  { id: 'jwt',       label: 'JWT Decode',           icon: 'jwt',   desc: 'Decode and inspect JWT tokens',        defaultPinned: true },
-  { id: 'base64',    label: 'Base64 Encode/Decode',  icon: 'B64',  desc: 'Encode and decode Base64 strings',     defaultPinned: true },
-  { id: 'color',     label: 'Color Picker',         icon: '\u25cf', desc: 'Pick, convert & explore colors',      defaultPinned: true },
-  { id: 'uuid',      label: 'UUID Generator',       icon: '#',     desc: 'Generate UUID v4 and v1',              defaultPinned: true },
-  { id: 'timestamp', label: 'Timestamp Converter',  icon: '\u23f0', desc: 'Convert between Unix timestamps and dates', defaultPinned: true },
-  { id: 'hash',      label: 'Hash Generator',       icon: '#!',    desc: 'MD5, SHA-256, SHA-512 hashing',        defaultPinned: true },
-  { id: 'jsonpath',  label: 'JSONPath Evaluator',   icon: '$..',   desc: 'Query JSON data with JSONPath',        defaultPinned: false },
-  { id: 'lorem',     label: 'Lorem Ipsum Generator', icon: 'Aa',   desc: 'Generate placeholder text',            defaultPinned: false },
+const CATEGORIES = [
+  { id: 'inspect', label: 'Inspect', desc: 'Inspect the current page', tools: [
+    { id: 'headers',  name: 'Response Headers',  icon: '📡',  desc: 'View HTTP response headers & server info' },
+    { id: 'security', name: 'Security Headers',   icon: '🛡️',  desc: 'Audit security headers with grade' },
+    { id: 'meta',     name: 'Meta & OG Tags',     icon: '🏷️',   desc: 'Meta tags, Open Graph, Twitter Cards' },
+    { id: 'tech',     name: 'Tech Stack',          icon: '🔧',   desc: 'Detect frameworks, libraries, analytics' },
+    { id: 'url',      name: 'URL Parser',           icon: '🔗',    desc: 'Break URLs into parts and query params' },
+  ]},
+  { id: 'visual', label: 'Visual', desc: 'Visual & CSS tools', tools: [
+    { id: 'color',    name: 'Color Picker',        icon: '🎨',    desc: 'Pick, convert & explore colors' },
+    { id: 'fonts',    name: 'Font Detector',        icon: '🔤',   desc: 'See all fonts used on the page' },
+    { id: 'outline',  name: 'CSS Outlines',         icon: '🔲',  desc: 'Toggle element outlines for debugging' },
+    { id: 'ruler',    name: 'Element Inspector',    icon: '📏',   desc: 'Hover to inspect element dimensions' },
+  ]},
+  { id: 'tools', label: 'Tools', desc: 'Quick developer utilities', tools: [
+    { id: 'testdata', name: 'Test Data',             icon: '🎲',    desc: 'Generate UUIDs, emails, passwords & more' },
+    { id: 'forms',    name: 'Form Filler',           icon: '📝',    desc: 'Auto-fill forms with realistic test data' },
+    { id: 'sqli',     name: 'SQLi Tester',           icon: '💉',    desc: 'SQL injection payloads for security testing' },
+    { id: 'xss',      name: 'XSS Tester',            icon: '🧨',    desc: 'XSS payloads for security testing' },
+    { id: 'qr',       name: 'QR Code',                icon: '📷',    desc: 'Generate QR code for any URL or text' },
+  ]},
+  { id: 'page', label: 'Page', desc: 'Page data & debugging', tools: [
+    { id: 'cookies',  name: 'Cookie Inspector',   icon: '🍪',  desc: 'View, edit, add & delete cookies' },
+    { id: 'storage',  name: 'Storage',               icon: '💾',    desc: 'Browse, edit & add localStorage & sessionStorage entries' },
+    { id: 'network',  name: 'Resources',              icon: '📦',    desc: 'View all network resources loaded' },
+    { id: 'perf',     name: 'Performance',            icon: '⚡',    desc: 'Page load metrics and DOM stats' },
+    { id: 'a11y',     name: 'Accessibility',          icon: '♿',    desc: 'Quick accessibility audit' },
+    { id: 'viewport', name: 'Viewport',               icon: '📱',    desc: 'Resize window to common device sizes' },
+  ]},
 ];
 
-const DEFAULT_PINNED = ALL_TOOLS.filter(t => t.defaultPinned).map(t => t.id);
-
-// ── Storage ─────────────────────────────────────────────────────────────────
-
-function loadPinned() {
-  return new Promise(resolve => {
-    if (typeof chrome !== 'undefined' && chrome.storage) {
-      chrome.storage.sync.get({ pinnedTools: DEFAULT_PINNED }, data => {
-        resolve(data.pinnedTools);
-      });
-    } else {
-      const saved = localStorage.getItem('stingr_pinned');
-      resolve(saved ? JSON.parse(saved) : DEFAULT_PINNED);
-    }
-  });
-}
-
-function savePinned(pinned) {
-  if (typeof chrome !== 'undefined' && chrome.storage) {
-    chrome.storage.sync.set({ pinnedTools: pinned });
-  } else {
-    localStorage.setItem('stingr_pinned', JSON.stringify(pinned));
-  }
-}
-
 // ── UI ──────────────────────────────────────────────────────────────────────
-
-let pinnedTools = [];
-
-function showToast() {
-  const toast = document.getElementById('saved-toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 1500);
-}
 
 function renderGrid() {
   const grid = document.getElementById('tool-grid');
   grid.innerHTML = '';
 
-  ALL_TOOLS.forEach(tool => {
-    const isPinned = pinnedTools.includes(tool.id);
-    const row = document.createElement('div');
-    row.className = 'tool-row';
-    row.innerHTML = `
-      <div class="tool-info">
-        <div class="tool-icon">${tool.icon}</div>
-        <div>
-          <div class="tool-name">${tool.label}</div>
-          <div class="tool-desc">${tool.desc}</div>
-        </div>
-      </div>
-      <label class="toggle">
-        <input type="checkbox" data-tool-id="${tool.id}" ${isPinned ? 'checked' : ''}>
-        <span class="toggle-slider"></span>
-      </label>
+  CATEGORIES.forEach(cat => {
+    // Category header
+    const catHeader = document.createElement('div');
+    catHeader.className = 'cat-header';
+    catHeader.innerHTML = `
+      <div class="cat-title">${cat.label}</div>
+      <div class="cat-desc">${cat.desc}</div>
     `;
-    grid.appendChild(row);
-  });
+    grid.appendChild(catHeader);
 
-  // Bind toggle events
-  grid.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const id = cb.dataset.toolId;
-      if (cb.checked) {
-        if (!pinnedTools.includes(id)) pinnedTools.push(id);
-      } else {
-        pinnedTools = pinnedTools.filter(t => t !== id);
-      }
-
-      // Ensure at least one tool is pinned
-      if (pinnedTools.length === 0) {
-        pinnedTools = ['json'];
-        cb.checked = id === 'json';
-      }
-
-      savePinned(pinnedTools);
-      showToast();
+    // Tools in this category
+    cat.tools.forEach(tool => {
+      const row = document.createElement('div');
+      row.className = 'tool-row';
+      row.innerHTML = `
+        <div class="tool-info">
+          <div class="tool-icon">${tool.icon}</div>
+          <div>
+            <div class="tool-name">${tool.name}</div>
+            <div class="tool-desc">${tool.desc}</div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(row);
     });
+  });
+}
+
+// ── Size Settings ───────────────────────────────────────────────────────────
+
+function initSizeSettings() {
+  const sizeLabel = document.getElementById('current-size');
+  const resetBtn = document.getElementById('btn-reset-size');
+  if (!sizeLabel || !resetBtn) return;
+
+  const DEFAULT_W = 420;
+
+  // Show current saved width
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.local.get(['popupWidth'], result => {
+      const w = result.popupWidth || DEFAULT_W;
+      sizeLabel.textContent = `Current: ${w}px`;
+      if (w === DEFAULT_W) {
+        resetBtn.textContent = 'Default';
+        resetBtn.classList.add('done');
+        resetBtn.disabled = true;
+      }
+    });
+  } else {
+    sizeLabel.textContent = 'Current: 420px (default)';
+  }
+
+  resetBtn.addEventListener('click', () => {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      chrome.storage.local.remove(['popupWidth'], () => {
+        sizeLabel.textContent = `Current: ${DEFAULT_W}px`;
+        resetBtn.textContent = 'Done!';
+        resetBtn.classList.add('done');
+        setTimeout(() => {
+          resetBtn.textContent = 'Default';
+          resetBtn.disabled = true;
+        }, 1200);
+      });
+    }
   });
 }
 
 // ── Init ────────────────────────────────────────────────────────────────────
 
-async function init() {
-  pinnedTools = await loadPinned();
+function init() {
   renderGrid();
-
-  document.getElementById('btn-reset').addEventListener('click', () => {
-    pinnedTools = [...DEFAULT_PINNED];
-    savePinned(pinnedTools);
-    renderGrid();
-    showToast();
-  });
+  initSizeSettings();
 }
 
 init();

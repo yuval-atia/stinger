@@ -2,9 +2,10 @@
   "manifest_version": 3,
   "name": "Stingr - Developer Tools",
   "short_name": "Stingr",
-  "version": "1.0.0",
-  "description": "JSON formatter, Base64, UUID, Hash, JWT & more. 100% private — all processing happens in your browser.",
-  "permissions": ["storage", "activeTab", "tabs"],
+  "version": "2.0.0",
+  "description": "Headers, cookies, meta tags, tech detection, fonts, a11y & more. 100% private — all processing happens in your browser.",
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "cookies"],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

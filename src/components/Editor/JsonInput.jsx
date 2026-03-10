@@ -88,6 +88,7 @@ const JsonInput = forwardRef(function JsonInput({ value, onChange, error, placeh
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         placeholder={placeholder}
+        aria-label="JSON input"
         spellCheck={false}
         className={`flex-1 w-full p-4 bg-transparent resize-none focus:outline-none text-sm leading-relaxed font-mono ${
           error ? 'border-l-4 border-[var(--error-color)]' : ''
