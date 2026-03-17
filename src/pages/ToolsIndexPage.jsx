@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { toolRegistry, categories } from '../seo/toolRegistry';
 
-const categoryOrder = ['generate', 'encode', 'hash', 'convert', 'text', 'format'];
+const categoryOrder = ['api', 'generate', 'encode', 'hash', 'convert', 'text', 'format'];
 
 function ToolsIndexPage() {
   return (

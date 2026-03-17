@@ -87,6 +87,13 @@ export const routeMeta = [
     changefreq: 'yearly',
   },
   {
+    path: '/api',
+    title: 'Online API Client - Free Postman Alternative | REST API Tester',
+    description: 'Free online API testing tool — send HTTP requests (GET, POST, PUT, DELETE) with custom headers, Bearer token auth, JSON body, and query params. Inspect responses with JSON viewer. Postman alternative that runs in your browser, no install or sign-up needed.',
+    priority: 0.9,
+    changefreq: 'weekly',
+  },
+  {
     path: '/tools',
     title: 'All Developer Tools',
     description: 'Browse all 50+ free, private developer tools — generators, encoders, hash tools, converters, text utilities, and formatters. 100% in-browser.',

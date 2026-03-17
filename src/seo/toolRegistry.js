@@ -1,4 +1,5 @@
 export const categories = {
+  api:      { label: 'API & HTTP', path: '/api' },
   generate: { label: 'Generate', path: '/generate' },
   encode:   { label: 'Encode/Decode', path: '/encode' },
   hash:     { label: 'Hash', path: '/hash' },
@@ -8,6 +9,47 @@ export const categories = {
 };
 
 export const toolRegistry = [
+  // ─── API & HTTP (1) ────────────────────────────────────────────────
+
+  {
+    slug: 'api-client',
+    title: 'API Client',
+    category: 'api',
+    seo: {
+      title: 'Online API Client - Free Postman Alternative, REST API Tester | Stingr',
+      description: 'Free online API client and REST API tester. Send HTTP requests (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) with custom headers, Bearer token and Basic authentication, JSON/form body, and query parameters. View responses with syntax-highlighted JSON viewer and tree explorer. A free Postman alternative — no download, no sign-up, works directly in your browser.',
+      priority: 0.9,
+      changefreq: 'weekly',
+    },
+    component: () => import('../pages/ApiClientPage'),
+    faq: [
+      {
+        question: 'Is this a free Postman alternative that works online?',
+        answer: 'Yes. Stingr API Client is a free, browser-based REST API testing tool similar to Postman, Insomnia, and Hoppscotch. You can send GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS requests with custom headers, authentication (Bearer token or Basic Auth), and request bodies (JSON, form data, form-urlencoded, raw text, binary file upload). No download or sign-up required — it works directly in your browser.',
+      },
+      {
+        question: 'How do I test a REST API online without installing Postman?',
+        answer: 'Enter your API endpoint URL, select the HTTP method (GET, POST, PUT, DELETE, etc.), add any headers, authentication, or request body, and click Send. The response will be displayed with status code, response time, size, and a pretty-printed JSON viewer with syntax highlighting. You can also switch to a tree view to explore nested JSON responses interactively.',
+      },
+      {
+        question: 'Can I send POST requests with JSON body and authorization headers?',
+        answer: 'Yes. Select POST from the method dropdown, go to the Body tab and choose JSON, then type or paste your JSON payload. For authorization, go to the Auth tab and choose Bearer Token or Basic Auth. You can also add custom headers in the Headers tab. All of these are sent together when you click Send.',
+      },
+      {
+        question: 'Why do some API requests fail with a CORS error?',
+        answer: 'Since this tool runs in your browser, requests are subject to the browser same-origin policy (CORS). If the target API server does not include Access-Control-Allow-Origin headers allowing requests from this origin, the browser will block the response. This is a browser security restriction, not a tool limitation. Public APIs with CORS enabled, your own local development servers, and APIs that return Access-Control-Allow-Origin: * will work without issues.',
+      },
+      {
+        question: 'Is my API data private and secure when using this tool?',
+        answer: 'Yes. All HTTP requests are sent directly from your browser to the target API server — no proxy or backend is involved. Your API keys, tokens, request bodies, and responses never leave your machine. Request history is stored in your browser session only and is cleared when you close the tab. Stingr never sees or stores any of your data.',
+      },
+      {
+        question: 'What HTTP methods and features does this API tester support?',
+        answer: 'This tool supports all standard HTTP methods: GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS. Features include: query parameter builder, custom headers editor, JSON/form-data/form-urlencoded/raw/binary request bodies with a JSON beautifier, Bearer Token and Basic Auth, response body with syntax-highlighted pretty print, interactive JSON tree view, raw view, response header inspection, response body search, copy to clipboard, and request history.',
+      },
+    ],
+  },
+
   // ─── Generate (11) ───────────────────────────────────────────────────
 
   {

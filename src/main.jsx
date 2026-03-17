@@ -24,6 +24,7 @@ const pageImports = {
   ToolPage: () => import('./pages/ToolPage'),
   ToolsIndexPage: () => import('./pages/ToolsIndexPage'),
   ExtensionPage: () => import('./pages/ExtensionPage'),
+  ApiClientPage: () => import('./pages/ApiClientPage'),
 }
 
 const JsonPreviewPage = lazy(pageImports.JsonPreviewPage)
@@ -41,6 +42,7 @@ const ContactPage = lazy(pageImports.ContactPage)
 const ToolPage = lazy(pageImports.ToolPage)
 const ToolsIndexPage = lazy(pageImports.ToolsIndexPage)
 const ExtensionPage = lazy(pageImports.ExtensionPage)
+const ApiClientPage = lazy(pageImports.ApiClientPage)
 
 // Prefetch all page chunks once the app is idle
 if (typeof requestIdleCallback === 'function') {
@@ -96,6 +98,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="terms" element={<PageRoute component={TermsOfUsePage} />} />
             <Route path="contact" element={<PageRoute component={ContactPage} />} />
             <Route path="extension" element={<PageRoute component={ExtensionPage} />} />
+            <Route path="api" element={<PageRoute component={ApiClientPage} />} />
             <Route path="tools" element={<PageRoute component={ToolsIndexPage} />} />
             <Route path="tools/:slug" element={<PageRoute component={ToolPage} />} />
             <Route path="*" element={<PageRoute component={NotFoundPage} />} />
