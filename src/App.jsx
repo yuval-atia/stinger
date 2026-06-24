@@ -13,146 +13,155 @@ function App() {
   usePageMeta();
 
   return (
-    <div className="h-screen flex flex-col bg-[var(--bg-secondary)] text-[var(--text-primary)]">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[10000] focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-[var(--accent-color)] focus:text-white focus:rounded focus:text-sm"
-      >
-        Skip to content
-      </a>
-      {/* Header */}
-      <header className="flex-shrink-0 bg-[var(--bg-primary)] border-b border-[var(--border-color)] px-4 py-3">
-        <div className="flex items-center">
-          <div className="w-28 flex items-center flex-shrink-0 pl-2">
-            <img
-              src={darkMode ? stingrLogoDark : stingrLogo}
-              alt="Stingr.dev"
-              className="h-8"
-              width="112"
-              height="32"
-            />
-          </div>
-          <div className="flex-1 flex justify-center">
-            <Navigation isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
-          </div>
-          <div className="w-28 flex items-center justify-end flex-shrink-0 gap-1">
-            <a
-              href="https://github.com/yuval-atia/stinger"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="GitHub"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-            </a>
-            <Link
-              to="/extension"
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Browser Extension"
-              title="Browser Extension"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5a2.5 2.5 0 0 0-5 0V5H4c-1.1 0-2 .9-2 2v3.8h1.5c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5H2V19c0 1.1.9 2 2 2h3.8v-1.5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5V21H17c1.1 0 2-.9 2-2v-4h1.5a2.5 2.5 0 0 0 0-5z"/>
-              </svg>
-            </Link>
-            <a
-              href="https://www.paypal.com/donate/?hosted_button_id=PXEF8FL63X9CJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Donate"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </a>
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Toggle theme"
-            >
-              {darkMode ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#FED01E" stroke="#FED01E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4"/>
-                  <line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/>
-                  <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
-                  <line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/>
-                  <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
-                </svg>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#151414" stroke="#151414" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-              )}
-            </button>
-            <button
-              className="md:hidden p-1.5 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-primary)]"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="h-screen flex flex-col text-[var(--text-primary)] relative overflow-hidden bg-[var(--bg-secondary)] transition-colors duration-300">
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/20 dark:bg-blue-600/20 blur-[100px] animate-blob"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/20 dark:bg-purple-600/20 blur-[120px] animate-blob" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-pink-500/20 dark:bg-pink-600/20 blur-[100px] animate-blob" style={{ animationDelay: '4s' }}></div>
+      </div>
 
-      <main id="main-content" className="flex-1 overflow-hidden w-full mx-auto px-4 pt-4 pb-2">
-        <Outlet />
-      </main>
+      <div className="relative z-10 flex flex-col h-full">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[10000] focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-[var(--accent-color)] focus:text-white focus:rounded focus:text-sm"
+        >
+          Skip to content
+        </a>
+        {/* Header */}
+        <header className="flex-shrink-0 glass-header border-b border-white/10 dark:border-white/5 px-4 py-1.5 sticky top-0 z-50">
+          <div className="flex items-center h-10">
+            <div className="w-24 flex items-center flex-shrink-0 pl-1">
+              <img
+                src={darkMode ? stingrLogoDark : stingrLogo}
+                alt="Stingr.dev"
+                className="h-7"
+                width="112"
+                height="32"
+              />
+            </div>
+            <div className="flex-1 flex justify-center">
+              <Navigation isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+            </div>
+            <div className="w-24 flex items-center justify-end flex-shrink-0 gap-0.5">
+              <a
+                href="https://github.com/yuval-atia/stinger"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-150 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-110 active:scale-95"
+                aria-label="GitHub"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </a>
+              <Link
+                to="/extension"
+                className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-150 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-110 active:scale-95"
+                aria-label="Browser Extension"
+                title="Browser Extension"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5a2.5 2.5 0 0 0-5 0V5H4c-1.1 0-2 .9-2 2v3.8h1.5c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5H2V19c0 1.1.9 2 2 2h3.8v-1.5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5V21H17c1.1 0 2-.9 2-2v-4h1.5a2.5 2.5 0 0 0 0-5z" />
+                </svg>
+              </Link>
+              <a
+                href="https://www.paypal.com/donate/?hosted_button_id=PXEF8FL63X9CJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-150 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-110 active:scale-95"
+                aria-label="Donate"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </a>
+              <button
+                onClick={toggleDarkMode}
+                className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-150 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-110 active:scale-95"
+                aria-label="Toggle theme"
+              >
+                {darkMode ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#FED01E" stroke="#FED01E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4" />
+                    <line x1="12" y1="1" x2="12" y2="4" /><line x1="12" y1="20" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" /><line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="4" y2="12" /><line x1="20" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" /><line x1="17.66" y1="6.34" x2="19.78" y2="4.22" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#151414" stroke="#151414" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                className="md:hidden p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-150 text-[var(--text-primary)] active:scale-95"
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
 
-      <footer className="flex-shrink-0 py-0 leading-none flex justify-center items-center h-5 gap-1 text-xs text-[var(--footer-text)]">
-        <span>&copy; Yuval Atia</span>
-        <span className="opacity-50">|</span>
-        <Link to="/privacy" className="hover:text-[var(--text-primary)] transition-colors">Privacy</Link>
-        <span className="opacity-50">|</span>
-        <Link to="/terms" className="hover:text-[var(--text-primary)] transition-colors">Terms</Link>
-        <span className="opacity-50">|</span>
-        <Link to="/contact" className="hover:text-[var(--text-primary)] transition-colors">Contact</Link>
-        <span className="opacity-50">|</span>
-        <span>v{__APP_VERSION__}</span>
-        <span className="opacity-50">|</span>
-        <span>Share</span>
-        <a
-          href="https://x.com/intent/tweet?text=Check%20out%20Stingr%20%E2%80%94%20free%20private%20dev%20tools%20that%20run%20100%25%20in%20your%20browser.%20JSON%20viewer%2C%20hash%20generator%2C%20encoder%20%26%2040%2B%20more%20%F0%9F%94%A5&url=https%3A%2F%2Fstingr.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
-          aria-label="Share on X"
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a
-          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fstingr.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
-          aria-label="Share on LinkedIn"
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a
-          href="https://reddit.com/submit?url=https%3A%2F%2Fstingr.dev&title=Stingr%20%E2%80%94%20Free%20private%20developer%20tools%20that%20run%20100%25%20in%20your%20browser"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
-          aria-label="Share on Reddit"
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
-        </a>
-      </footer>
+        <main id="main-content" className="flex-1 overflow-hidden w-full mx-auto px-3 pt-2 pb-1">
+          <Outlet />
+        </main>
+
+        <footer className="flex-shrink-0 py-0 leading-none flex justify-center items-center h-5 gap-1 text-xs text-[var(--footer-text)]">
+          <span>&copy; Yuval Atia</span>
+          <span className="opacity-50">|</span>
+          <Link to="/privacy" className="hover:text-[var(--text-primary)] transition-colors">Privacy</Link>
+          <span className="opacity-50">|</span>
+          <Link to="/terms" className="hover:text-[var(--text-primary)] transition-colors">Terms</Link>
+          <span className="opacity-50">|</span>
+          <Link to="/contact" className="hover:text-[var(--text-primary)] transition-colors">Contact</Link>
+          <span className="opacity-50">|</span>
+          <span>v{__APP_VERSION__}</span>
+          <span className="opacity-50">|</span>
+          <span>Share</span>
+          <a
+            href="https://x.com/intent/tweet?text=Check%20out%20Stingr%20%E2%80%94%20free%20private%20dev%20tools%20that%20run%20100%25%20in%20your%20browser.%20JSON%20viewer%2C%20hash%20generator%2C%20encoder%20%26%2040%2B%20more%20%F0%9F%94%A5&url=https%3A%2F%2Fstingr.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
+            aria-label="Share on X"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+          </a>
+          <a
+            href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fstingr.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
+            aria-label="Share on LinkedIn"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+          </a>
+          <a
+            href="https://reddit.com/submit?url=https%3A%2F%2Fstingr.dev&title=Stingr%20%E2%80%94%20Free%20private%20developer%20tools%20that%20run%20100%25%20in%20your%20browser"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 -m-1.5 hover:text-[var(--text-primary)] transition-colors"
+            aria-label="Share on Reddit"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z" /></svg>
+          </a>
+        </footer>
+      </div>
     </div>
   );
 }

@@ -27,7 +27,7 @@ function ScrollToTop({ containerRef }) {
   return (
     <button
       onClick={scrollToTop}
-      className="absolute bottom-3 right-6 w-7 h-7 flex items-center justify-center rounded-md bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-color)] hover:bg-[var(--bg-primary)] transition-all shadow-sm z-10"
+      className="absolute bottom-3 right-6 w-7 h-7 flex items-center justify-center rounded-md bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-color)] hover:bg-[var(--bg-primary)] transition-all shadow-sm z-10"
       aria-label="Scroll to top"
       title="Scroll to top"
     >

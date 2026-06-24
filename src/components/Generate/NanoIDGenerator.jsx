@@ -38,7 +38,7 @@ function NanoIDGenerator({ toolSlug }) {
         type="text"
         value={alphabet}
         onChange={setAlphabet}
-        className="w-48 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-48 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       <ConfigInput label="Count" value={count} onChange={setCount} min={1} max={50} />
     </GeneratorCard>

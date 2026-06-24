@@ -75,7 +75,7 @@ function ToolPage() {
               {tool.faq.map((item, i) => (
                 <details
                   key={i}
-                  className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] group"
+                  className="glass-panel rounded-2xl group"
                 >
                   <summary className="px-4 py-3 text-sm font-medium cursor-pointer select-none hover:text-[var(--accent-color)] transition-colors list-none flex items-center justify-between">
                     {item.question}
@@ -101,7 +101,7 @@ function ToolPage() {
                 <Link
                   key={t.slug}
                   to={`/tools/${t.slug}`}
-                  className="px-3 py-2 text-xs rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[var(--accent-color)] transition-colors truncate"
+                  className="px-3 py-2 text-xs rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] hover:border-[var(--accent-color)] transition-colors truncate"
                 >
                   {t.title}
                 </Link>

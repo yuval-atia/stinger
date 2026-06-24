@@ -39,7 +39,7 @@ function SortLinesCard({ toolSlug }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste lines to sort..."
-        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] cursor-pointer">
@@ -57,7 +57,7 @@ function SortLinesCard({ toolSlug }) {
       </div>
       {text && (
         <div className="flex items-start gap-2">
-          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto">
+          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto">
             {result}
           </div>
           <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>

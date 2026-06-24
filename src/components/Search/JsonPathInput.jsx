@@ -39,7 +39,7 @@ function JsonPathInput({ value, onChange, matchCount, error }) {
           value={value}
           onChange={handleChange}
           placeholder=".users[*].name"
-          className="w-44 pl-7 pr-7 py-1 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+          className="w-44 pl-7 pr-7 py-1 text-sm bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded focus:outline-none focus:border-[var(--accent-color)] transition-colors"
         />
         {value && (
           <button

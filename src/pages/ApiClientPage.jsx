@@ -46,7 +46,7 @@ function MethodSelect({ value, onChange }) {
     <div className="relative flex-shrink-0" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-base font-mono font-bold focus:outline-none focus:border-[var(--accent-color)] cursor-pointer flex items-center justify-between h-full min-w-[120px]"
+        className="bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-4 py-2 text-base font-mono font-bold focus:outline-none focus:border-[var(--accent-color)] cursor-pointer flex items-center justify-between h-full min-w-[120px]"
         style={{ color: METHOD_COLORS[value] }}
       >
         {value}
@@ -55,7 +55,7 @@ function MethodSelect({ value, onChange }) {
         </svg>
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg shadow-lg overflow-hidden min-w-[140px]">
+        <div className="absolute top-full left-0 mt-1 z-50 glass-panel rounded-2xl shadow-lg overflow-hidden min-w-[140px]">
           {METHODS.map(m => (
             <button
               key={m}
@@ -106,14 +106,14 @@ function KeyValueEditor({ rows, onChange, placeholder = 'Key', valuePlaceholder 
             value={row.key}
             onChange={(e) => updateRow(row.id, 'key', e.target.value)}
             placeholder={placeholder}
-            className={`flex-1 min-w-0 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-2 py-1.5 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)] ${!row.enabled ? 'opacity-40' : ''}`}
+            className={`flex-1 min-w-0 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded px-2 py-1.5 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)] ${!row.enabled ? 'opacity-40' : ''}`}
           />
           <input
             type="text"
             value={row.value}
             onChange={(e) => updateRow(row.id, 'value', e.target.value)}
             placeholder={valuePlaceholder}
-            className={`flex-1 min-w-0 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-2 py-1.5 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)] ${!row.enabled ? 'opacity-40' : ''}`}
+            className={`flex-1 min-w-0 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded px-2 py-1.5 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)] ${!row.enabled ? 'opacity-40' : ''}`}
           />
           <button
             onClick={() => removeRow(row.id)}
@@ -167,7 +167,7 @@ function ResponseHeaders({ headers }) {
       </thead>
       <tbody>
         {headers.map(([k, v], i) => (
-          <tr key={i} className="border-t border-[var(--border-color)]">
+          <tr key={i} className="border-t border-white/10 dark:border-white/5">
             <td className="py-1.5 pr-4 text-[var(--accent-color)] whitespace-nowrap">{k}</td>
             <td className="py-1.5 text-[var(--text-primary)] break-all">{v}</td>
           </tr>
@@ -502,7 +502,7 @@ function ApiClientPage() {
           className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-colors flex-shrink-0 ${
             showHistory
               ? 'border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/10'
-              : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-secondary)]'
+              : 'border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-secondary)]'
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
@@ -514,14 +514,14 @@ function ApiClientPage() {
 
       {/* History panel */}
       {showHistory && (
-        <div className="mb-4 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg overflow-hidden">
+        <div className="mb-4 glass-panel rounded-2xl overflow-hidden">
           {history.length === 0 ? (
             <div className="px-4 py-6 text-center text-xs text-[var(--text-secondary)]">
               No request history yet. Send a request to get started.
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-transparent bg-[var(--bg-secondary)]">
                 <span className="text-[10px] uppercase tracking-wider text-[var(--text-secondary)] font-medium">Recent Requests</span>
                 <button onClick={clearHistory} className="text-[10px] text-[var(--text-secondary)] hover:text-[var(--error-color)] transition-colors">
                   Clear all
@@ -532,7 +532,7 @@ function ApiClientPage() {
                   <button
                     key={i}
                     onClick={() => loadFromHistory(item)}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-[var(--bg-secondary)] transition-colors border-b border-[var(--border-color)] last:border-b-0"
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-[var(--bg-secondary)] transition-colors border-b border-transparent last:border-b-0"
                   >
                     <span className="font-mono font-bold flex-shrink-0" style={{ color: METHOD_COLORS[item.method], minWidth: '56px', textAlign: 'left' }}>
                       {item.method}
@@ -560,7 +560,7 @@ function ApiClientPage() {
           onChange={(e) => setUrl(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) sendRequest(); }}
           placeholder="https://api.example.com/endpoint"
-          className="flex-1 min-w-0 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-[var(--accent-color)]"
+          className="flex-1 min-w-0 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-[var(--accent-color)]"
           data-testid="url-input"
         />
         <button
@@ -596,9 +596,9 @@ function ApiClientPage() {
       {/* Request + Response panels */}
       <div className="flex flex-col gap-4 pb-4">
         {/* Request panel */}
-        <div className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg flex flex-col">
+        <div className="glass-panel rounded-2xl flex flex-col">
           {/* Request tabs */}
-          <div className="flex border-b border-[var(--border-color)] overflow-x-auto">
+          <div className="flex border-b border-transparent overflow-x-auto">
             {requestTabs.map(tab => (
               <button
                 key={tab.id}
@@ -658,7 +658,7 @@ function ApiClientPage() {
                       className={`px-3 py-1 text-xs rounded-full border transition-colors ${
                         bodyType === bt
                           ? 'border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/10'
-                          : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                          : 'border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                       }`}
                       data-testid={`body-type-${bt}`}
                     >
@@ -683,7 +683,7 @@ function ApiClientPage() {
                     value={bodyContent}
                     onChange={(e) => setBodyContent(e.target.value)}
                     placeholder={'{\n  "key": "value"\n}'}
-                    className="w-full h-32 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)] leading-relaxed"
+                    className="w-full h-32 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)] leading-relaxed"
                     spellCheck={false}
                     data-testid="body-editor"
                   />
@@ -702,7 +702,7 @@ function ApiClientPage() {
                     value={bodyContent}
                     onChange={(e) => setBodyContent(e.target.value)}
                     placeholder="key1=value1&key2=value2"
-                    className="w-full h-32 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)]"
+                    className="w-full h-32 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)]"
                     spellCheck={false}
                     data-testid="body-editor"
                   />
@@ -712,7 +712,7 @@ function ApiClientPage() {
                     value={bodyContent}
                     onChange={(e) => setBodyContent(e.target.value)}
                     placeholder="Raw request body..."
-                    className="w-full h-32 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)]"
+                    className="w-full h-32 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:border-[var(--accent-color)]"
                     spellCheck={false}
                     data-testid="body-editor"
                   />
@@ -723,7 +723,7 @@ function ApiClientPage() {
                       ref={fileInputRef}
                       type="file"
                       onChange={(e) => setBinaryFile(e.target.files?.[0] || null)}
-                      className="text-xs text-[var(--text-secondary)] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-[var(--border-color)] file:bg-[var(--bg-secondary)] file:text-xs file:text-[var(--text-primary)] file:cursor-pointer"
+                      className="text-xs text-[var(--text-secondary)] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-white/10 dark:border-white/5 file:bg-[var(--bg-secondary)] file:text-xs file:text-[var(--text-primary)] file:cursor-pointer"
                     />
                     {binaryFile && (
                       <p className="text-xs text-[var(--text-secondary)]">
@@ -751,7 +751,7 @@ function ApiClientPage() {
                       className={`px-3 py-1 text-xs rounded-full border transition-colors ${
                         authType === at
                           ? 'border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/10'
-                          : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                          : 'border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                       }`}
                       data-testid={`auth-type-${at}`}
                     >
@@ -767,7 +767,7 @@ function ApiClientPage() {
                       value={authToken}
                       onChange={(e) => setAuthToken(e.target.value)}
                       placeholder="Enter bearer token"
-                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
+                      className="w-full bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
                       data-testid="auth-token"
                     />
                     <p className="text-[10px] text-[var(--text-secondary)] mt-1.5">
@@ -784,7 +784,7 @@ function ApiClientPage() {
                         value={authUser}
                         onChange={(e) => setAuthUser(e.target.value)}
                         placeholder="Username"
-                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
+                        className="w-full bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
                         data-testid="auth-username"
                       />
                     </div>
@@ -795,7 +795,7 @@ function ApiClientPage() {
                         value={authPass}
                         onChange={(e) => setAuthPass(e.target.value)}
                         placeholder="Password"
-                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
+                        className="w-full bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-[var(--accent-color)]"
                         data-testid="auth-password"
                       />
                     </div>
@@ -812,9 +812,9 @@ function ApiClientPage() {
           </div>
 
           {/* Keyboard shortcut hint */}
-          <div className="px-4 py-2 border-t border-[var(--border-color)] text-[10px] text-[var(--text-secondary)] flex items-center justify-between">
+          <div className="px-4 py-2 border-t border-white/10 dark:border-white/5 text-[10px] text-[var(--text-secondary)] flex items-center justify-between">
             <span>
-              <kbd className="px-1 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[10px]">{navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+Enter</kbd> to send
+              <kbd className="px-1 py-0.5 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[10px]">{navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+Enter</kbd> to send
             </span>
             <span className="text-[var(--text-secondary)]">
               Requests are sent directly from your browser (CORS policies apply)
@@ -823,9 +823,9 @@ function ApiClientPage() {
         </div>
 
         {/* Response panel */}
-        <div className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg flex flex-col" data-testid="response-panel">
+        <div className="glass-panel rounded-2xl flex flex-col" data-testid="response-panel">
           {/* Response header bar */}
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border-color)]">
+          <div className="flex items-center justify-between px-5 py-3 bg-transparent">
             <span className="text-xs font-medium text-[var(--text-primary)] flex items-center gap-2">
               Response
               {response && <StatusBadge status={response.status} statusText={response.statusText} />}
@@ -861,7 +861,7 @@ function ApiClientPage() {
 
           {/* Response search bar */}
           {showResponseSearch && response && (
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-transparent bg-[var(--bg-secondary)]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[var(--text-secondary)] flex-shrink-0">
                 <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
               </svg>
@@ -891,7 +891,7 @@ function ApiClientPage() {
 
           {/* Response tabs */}
           {response && (
-            <div className="flex items-center border-b border-[var(--border-color)]">
+            <div className="flex items-center border-b border-transparent">
               <div className="flex flex-1">
                 {['body', 'headers'].map(tab => (
                   <button
@@ -948,7 +948,7 @@ function ApiClientPage() {
                 <p className="text-sm font-medium" style={{ color: 'var(--error-color)' }}>Request Failed</p>
                 <p className="text-xs text-[var(--text-secondary)] max-w-md">{error.message}</p>
                 {error.isCors && (
-                  <div className="text-xs text-[var(--text-secondary)] max-w-md bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-3 mt-1">
+                  <div className="text-xs text-[var(--text-secondary)] max-w-md bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded-lg p-3 mt-1">
                     <p className="font-medium text-[var(--text-primary)] mb-1">Possible CORS issue</p>
                     <p>The target server may not allow requests from this origin. This is a browser security restriction.
                     Try APIs that support CORS, or test against your own local dev server.</p>

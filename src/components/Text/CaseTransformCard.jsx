@@ -46,7 +46,7 @@ function CaseTransformCard({ toolSlug }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste text to transform..."
-        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="flex flex-wrap gap-1.5">
         {CASE_MODES.map(m => (
@@ -57,7 +57,7 @@ function CaseTransformCard({ toolSlug }) {
             className={`px-2 py-1 text-xs rounded border transition-colors ${
               mode === m.value
                 ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white'
-                : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
+                : 'bg-[var(--bg-secondary)] border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
             }`}
           >
             {m.label}
@@ -66,7 +66,7 @@ function CaseTransformCard({ toolSlug }) {
       </div>
       {text && (
         <div className="flex items-start gap-2">
-          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto animate-fade-in">
+          <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-1.5 text-xs font-mono whitespace-pre-wrap break-all max-h-32 overflow-auto animate-fade-in">
             {result}
           </div>
           <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>

@@ -64,7 +64,7 @@ function ImageBase64Card({ toolSlug }) {
         } ${
           dragging
             ? 'border-[var(--accent-color)] bg-[var(--bg-secondary)]'
-            : 'border-[var(--border-color)] hover:border-[var(--accent-color)]'
+            : 'border-white/10 dark:border-white/5 hover:border-[var(--accent-color)]'
         }`}
       >
         {dataUri ? (
@@ -95,7 +95,7 @@ function ImageBase64Card({ toolSlug }) {
       {/* Data URI output */}
       {dataUri && (
         <div className="relative animate-fade-in">
-          <div className="w-full max-h-32 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] break-all overflow-auto pr-8">
+          <div className="w-full max-h-32 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] break-all overflow-auto pr-8">
             {dataUri}
           </div>
           <div className="absolute top-2 right-2">

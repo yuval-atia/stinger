@@ -25,17 +25,17 @@ function CronParserCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="*/5 * * * *"
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       <div className="text-xs text-[var(--text-secondary)]">
         <span className="font-mono">minute hour day-of-month month day-of-week</span>
       </div>
-      <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2">
+      <div className="bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2">
         <div className="text-xs font-medium text-[var(--text-primary)] mb-1">Description</div>
         <div className="text-xs text-[var(--text-secondary)]">{description}</div>
       </div>
       {nextRuns.length > 0 && (
-        <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2">
+        <div className="bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2">
           <div className="text-xs font-medium text-[var(--text-primary)] mb-1">Next 5 runs</div>
           <div className="space-y-1">
             {nextRuns.map((date, i) => (

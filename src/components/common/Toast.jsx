@@ -22,7 +22,7 @@ export function ToastProvider({ children }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg shadow-lg animate-toast-in"
+            className="flex items-center gap-2 px-3 py-2 glass-panel rounded-2xl shadow-lg animate-toast-in"
           >
             <span className="w-5 h-5 flex items-center justify-center rounded-full bg-[var(--success-color)] text-white text-xs">
               ✓

@@ -44,7 +44,7 @@ function CaseConverterCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="e.g. myVariableName, my-kebab-case, MY_CONSTANT"
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       {results.length > 0 && (
         <div className="space-y-1.5">

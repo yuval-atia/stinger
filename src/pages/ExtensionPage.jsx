@@ -132,7 +132,7 @@ function ExtensionPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {cat.tools.map(t => (
-                    <div key={t.name} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
+                    <div key={t.name} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner">
                       <span className="text-base flex-shrink-0">{t.icon}</span>
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-[var(--text-primary)]">{t.name}</div>
@@ -163,7 +163,7 @@ function ExtensionPage() {
         </div>
 
         {/* Features */}
-        <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-6 mb-10">
+        <div className="rounded-xl border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] p-6 mb-10">
           <h2 className="text-lg font-bold mb-4">Why Stingr Extension?</h2>
           <div className="grid sm:grid-cols-2 gap-3 text-sm">
             {[

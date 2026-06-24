@@ -150,7 +150,7 @@ function JsonComparePage() {
             {inputCount < MAX_INPUTS && (
               <button
                 onClick={addInput}
-                className="px-2 py-1 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors flex items-center gap-1"
+                className="px-2 py-1 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors flex items-center gap-1"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
                   <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
@@ -163,7 +163,7 @@ function JsonComparePage() {
             {inputCount === 2 && validCount >= 1 && (
               <button
                 onClick={swapInputs}
-                className="px-2 py-1 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors flex items-center gap-1"
+                className="px-2 py-1 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors flex items-center gap-1"
                 title="Swap left and right"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
@@ -179,7 +179,7 @@ function JsonComparePage() {
             {!hasAnyInput && (
               <button
                 onClick={loadSample}
-                className="px-2 py-1 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                className="px-2 py-1 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors"
               >
                 Load sample
               </button>
@@ -189,7 +189,7 @@ function JsonComparePage() {
             {hasAnyInput && (
               <button
                 onClick={clearAll}
-                className="px-2 py-1 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                className="px-2 py-1 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors"
               >
                 Clear all
               </button>
@@ -272,7 +272,7 @@ function JsonComparePage() {
                   </div>
 
                   {/* Input box */}
-                  <div className="rounded-lg border border-[var(--border-color)] overflow-hidden h-52 transition-all">
+                  <div className="rounded-lg border border-white/10 dark:border-white/5 overflow-hidden h-52 transition-all">
                     <JsonInput
                       value={parser.inputValue}
                       onChange={parser.handleInputChange}

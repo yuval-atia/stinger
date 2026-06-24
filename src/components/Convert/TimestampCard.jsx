@@ -70,7 +70,7 @@ function TimestampCard({ toolSlug }) {
         value={tsInput}
         onChange={(e) => { setTsInput(e.target.value); setDtInput(''); }}
         placeholder="e.g. 1700000000"
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       {fromTimestamp && fromTimestamp.error && (
         <div className="text-xs text-[var(--error-color)]">{fromTimestamp.error}</div>
@@ -87,13 +87,13 @@ function TimestampCard({ toolSlug }) {
         </div>
       )}
 
-      <div className="border-t border-[var(--border-color)] pt-3 mt-1">
+      <div className="border-t border-white/10 dark:border-white/5 pt-3 mt-1">
         <span className="text-xs text-[var(--text-secondary)] mb-2 block">Date to timestamp</span>
         <input
           type="datetime-local"
           value={dtInput}
           onChange={(e) => { setDtInput(e.target.value); setTsInput(''); }}
-          className="w-full px-3 py-2 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+          className="w-full px-3 py-2 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         />
         {fromDatetime && fromDatetime.error && (
           <div className="text-xs text-[var(--error-color)] mt-2">{fromDatetime.error}</div>

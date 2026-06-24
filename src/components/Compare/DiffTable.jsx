@@ -141,7 +141,7 @@ function DiffTable({ jsonObjects, labels }) {
           )}
           {stats.missing > 0 && (
             <span className="flex items-center gap-1.5 text-xs">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[var(--bg-secondary)] border border-[var(--border-color)]" />
+              <span className="w-2.5 h-2.5 rounded-sm bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner" />
               <span className="text-[var(--text-secondary)]">{stats.missing} partial</span>
             </span>
           )}
@@ -161,7 +161,7 @@ function DiffTable({ jsonObjects, labels }) {
           className={`px-2 py-1 text-xs rounded transition-colors ${
             showAll
               ? 'bg-[var(--accent-color)] text-white'
-              : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)]'
+              : 'bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm text-[var(--text-secondary)]'
           }`}
           title={showAll ? 'Showing all paths (click to show only differences)' : 'Showing only differences (click to show all paths)'}
         >
@@ -178,7 +178,7 @@ function DiffTable({ jsonObjects, labels }) {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             placeholder="Filter..."
-            className="w-48 pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-color)] placeholder:text-[var(--text-secondary)]"
+            className="w-48 pl-8 pr-3 py-1.5 text-xs rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-color)] placeholder:text-[var(--text-secondary)]"
           />
           {filter && (
             <button
@@ -195,7 +195,7 @@ function DiffTable({ jsonObjects, labels }) {
         {/* Copy all diffs */}
         <button
           onClick={copyAllDiffs}
-          className="px-2 py-1 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors flex items-center gap-1"
+          className="px-2 py-1 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors flex items-center gap-1"
           title="Copy all differences as JSON"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
@@ -216,11 +216,11 @@ function DiffTable({ jsonObjects, labels }) {
       <div
         ref={tableRef}
         tabIndex={0}
-        className="overflow-x-auto rounded-lg border border-[var(--border-color)] focus:outline-none"
+        className="overflow-x-auto rounded-lg border border-white/10 dark:border-white/5 focus:outline-none"
       >
         <table className="w-full text-sm border-collapse">
           <thead className="sticky top-0 z-20">
-            <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
+            <tr className="bg-[var(--bg-secondary)] border-b border-transparent">
               <th className="text-left px-3 py-2.5 font-medium text-[var(--text-secondary)] whitespace-nowrap sticky left-0 bg-[var(--bg-secondary)] z-30 text-xs uppercase tracking-wider">
                 Path
               </th>
@@ -285,13 +285,13 @@ function DiffRow({ row, rowIdx, n, expanded, focused, onToggle, onCopy, onFocus 
     <tr
       data-row={rowIdx}
       onClick={onFocus}
-      className={`border-b border-[var(--border-color)] transition-colors cursor-default ${
+      className={`border-b border-transparent transition-colors cursor-default ${
         same ? 'opacity-40' : ''
       } ${focused ? 'ring-1 ring-inset ring-[var(--accent-color)]' : 'hover:bg-[var(--bg-secondary)]/40'}`}
       style={!same && diffType === 'added' ? { borderLeft: '3px solid var(--diff-add)' } : !same && diffType === 'removed' ? { borderLeft: '3px solid var(--diff-remove)' } : !same && diffType === 'missing' ? { borderLeft: '3px solid var(--diff-move)' } : {}}
     >
       {/* Path cell */}
-      <td className="px-3 py-2 font-mono text-xs whitespace-nowrap sticky left-0 bg-[var(--bg-primary)] z-10 border-r border-[var(--border-color)]">
+      <td className="px-3 py-2 font-mono text-xs whitespace-nowrap sticky left-0 bg-[var(--bg-primary)] z-10 border-r border-white/10 dark:border-white/5">
         <div className="flex items-center gap-1" style={{ paddingLeft: `${Math.min(depth, 4) * 12}px` }}>
           {parentPath && (
             <span className="text-[var(--text-secondary)] opacity-50">

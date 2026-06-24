@@ -16,7 +16,7 @@ function ConfigInput({ label, type = 'number', value, onChange, ...props }) {
         type={type}
         value={value}
         onChange={(e) => onChange(type === 'number' ? Number(e.target.value) : e.target.value)}
-        className="w-20 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-20 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         {...props}
       />
     </label>
@@ -31,7 +31,7 @@ function ColorInput({ label, value, onChange }) {
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-7 h-6 rounded border border-[var(--border-color)] cursor-pointer bg-transparent"
+        className="w-7 h-6 rounded border border-white/10 dark:border-white/5 cursor-pointer bg-transparent"
       />
     </label>
   );

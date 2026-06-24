@@ -72,7 +72,7 @@ function JwtDecodeCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Paste a JWT token..."
-        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       {decoded && decoded.error && (
         <div className="text-xs text-[var(--error-color)]">{decoded.error}</div>
@@ -100,7 +100,7 @@ function JwtDecodeCard({ toolSlug }) {
               <span className="text-xs font-medium text-[var(--text-secondary)]">Header</span>
               <CopyIcon section="header" text={JSON.stringify(decoded.header, null, 2)} />
             </div>
-            <pre className="text-xs font-mono bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] p-2 overflow-auto max-h-32">
+            <pre className="text-xs font-mono bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 p-2 overflow-auto max-h-32">
               {JSON.stringify(decoded.header, null, 2)}
             </pre>
           </div>
@@ -110,7 +110,7 @@ function JwtDecodeCard({ toolSlug }) {
               <span className="text-xs font-medium text-[var(--text-secondary)]">Payload</span>
               <CopyIcon section="payload" text={JSON.stringify(decoded.payload, null, 2)} />
             </div>
-            <pre className="text-xs font-mono bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] p-2 overflow-auto max-h-48">
+            <pre className="text-xs font-mono bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 p-2 overflow-auto max-h-48">
               {JSON.stringify(decoded.payload, null, 2)}
             </pre>
           </div>

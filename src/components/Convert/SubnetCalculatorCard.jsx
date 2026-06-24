@@ -32,7 +32,7 @@ function SubnetCalculatorCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="e.g. 192.168.1.0/24 or 10.0.0.1"
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
 
       {error && input.trim() && (

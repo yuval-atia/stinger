@@ -33,7 +33,7 @@ function CurlToCodeCard({ toolSlug }) {
         onChange={(e) => setInput(e.target.value)}
         placeholder={`curl -X POST 'https://api.example.com/data' \\\n  -H 'Content-Type: application/json' \\\n  -d '{"key":"value"}'`}
         rows={4}
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
       />
 
       <div className="flex gap-1">
@@ -58,7 +58,7 @@ function CurlToCodeCard({ toolSlug }) {
 
       {output && (
         <div className="relative">
-          <pre className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-x-auto whitespace-pre-wrap">{output}</pre>
+          <pre className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-x-auto whitespace-pre-wrap">{output}</pre>
           <div className="absolute top-1.5 right-1.5">
             <CopyButton text={output} />
           </div>

@@ -177,14 +177,14 @@ function SharePopover({ buttonRef, onClose, shareData }) {
   return createPortal(
     <div
       ref={popoverRef}
-      className="fixed z-[9999] w-80 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg p-3 space-y-2.5"
+      className="fixed z-[9999] w-80 rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] shadow-lg p-3 space-y-2.5"
       style={pos ? { top: pos.top, left: pos.left } : { visibility: 'hidden' }}
     >
       <div
         className={`absolute w-3 h-3 rotate-45 bg-[var(--bg-primary)] ${
           pos?.flipped
-            ? '-bottom-2 border-r border-b border-[var(--border-color)]'
-            : '-top-2 border-l border-t border-[var(--border-color)]'
+            ? '-bottom-2 border-r border-b border-transparent'
+            : '-top-2 border-l border-t border-white/10 dark:border-white/5'
         }`}
         style={{ left: pos?.arrowLeft ?? 0 }}
       />
@@ -193,7 +193,7 @@ function SharePopover({ buttonRef, onClose, shareData }) {
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-xs font-semibold text-[var(--text-primary)]">Share</span>
         {summaryItems.map((item, i) => (
-          <span key={i} className="px-1.5 py-0.5 text-[10px] rounded bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)]">
+          <span key={i} className="px-1.5 py-0.5 text-[10px] rounded bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-white/10 dark:border-white/5">
             {item}
           </span>
         ))}
@@ -225,7 +225,7 @@ function SharePopover({ buttonRef, onClose, shareData }) {
 
       {phase === 'ready' && url && (
         <div className="flex items-center gap-1.5">
-          <div className="flex-1 min-w-0 px-2 py-1.5 text-[11px] font-mono rounded bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] truncate select-all">
+          <div className="flex-1 min-w-0 px-2 py-1.5 text-[11px] font-mono rounded bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner text-[var(--text-secondary)] truncate select-all">
             {displayUrl}
           </div>
           <button

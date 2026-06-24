@@ -53,7 +53,7 @@ function Breadcrumb({ path, onNavigate }) {
   if (!path || path.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-0.5 text-xs text-[var(--text-secondary)] overflow-x-auto px-4 py-1.5 border-b border-[var(--border-color)] flex-shrink-0">
+    <div className="flex items-center gap-0.5 text-xs text-[var(--text-secondary)] overflow-x-auto px-4 py-1.5 border-b border-transparent flex-shrink-0">
       <button
         onClick={() => onNavigate([])}
         className="hover:text-[var(--accent-color)] transition-colors flex-shrink-0"
@@ -581,9 +581,9 @@ function JsonPreviewPage() {
       <h1 className="sr-only">JSON Viewer & Tree Explorer</h1>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
         {/* Input Panel */}
-        <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden relative">
-          <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
-            <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm1 2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 4.25Zm0 2.5A.75.75 0 0 1 5.75 6h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 6.75ZM5.75 8.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" clipRule="evenodd" /></svg></span>Input</span>
+        <div className="glass-panel rounded-2xl flex flex-col overflow-hidden relative">
+          <div className="flex-shrink-0 flex items-center justify-between px-4 py-1.5 bg-transparent min-h-[2.5rem]">
+            <span className="text-xs font-semibold flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm1 2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 4.25Zm0 2.5A.75.75 0 0 1 5.75 6h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 6.75ZM5.75 8.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z" clipRule="evenodd" /></svg></span>Input</span>
             <div className="flex items-center gap-2">
               <InfoButton info={{
                 what: 'Parses and visualises JSON (or JSON5) as an interactive, collapsible tree with syntax highlighting, search, and in-place editing.',
@@ -596,10 +596,10 @@ function JsonPreviewPage() {
                 <div className="relative" ref={keyCaseRef}>
                   <button
                     onClick={() => setKeyCaseOpen((p) => !p)}
-                    className={`px-2 py-1 text-xs rounded transition-colors flex items-center gap-0.5 ${
+                    className={`px-2 py-1 text-xs rounded-md font-medium transition-all duration-150 active:scale-95 flex items-center gap-0.5 ${
                       keyCaseOpen
-                        ? 'bg-[var(--accent-color)] text-white'
-                        : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)]'
+                        ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-sm'
+                        : 'bg-white/40 dark:bg-white/8 hover:bg-white/70 dark:hover:bg-white/15 text-[var(--text-primary)] shadow-sm backdrop-blur-sm'
                     }`}
                   >
                     Keys
@@ -608,7 +608,7 @@ function JsonPreviewPage() {
                     </svg>
                   </button>
                   {keyCaseOpen && (
-                    <div className="absolute top-full left-0 mt-1 z-50 w-36 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg py-1">
+                    <div className="absolute top-full left-0 mt-1 z-50 w-36 rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] shadow-lg py-1">
                       {[
                         { label: 'camelCase', fn: toCamelCase },
                         { label: 'snake_case', fn: toSnakeCase },
@@ -632,10 +632,10 @@ function JsonPreviewPage() {
                 <div className="relative" ref={sortRef}>
                   <button
                     onClick={() => setSortOpen((p) => !p)}
-                    className={`px-2 py-1 text-xs rounded transition-colors flex items-center gap-0.5 ${
+                    className={`px-2 py-1 text-xs rounded-md font-medium transition-all duration-150 active:scale-95 flex items-center gap-0.5 ${
                       sortOpen
-                        ? 'bg-[var(--accent-color)] text-white'
-                        : 'bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)]'
+                        ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-sm'
+                        : 'bg-white/40 dark:bg-white/8 hover:bg-white/70 dark:hover:bg-white/15 text-[var(--text-primary)] shadow-sm backdrop-blur-sm'
                     }`}
                   >
                     Sort
@@ -644,7 +644,7 @@ function JsonPreviewPage() {
                     </svg>
                   </button>
                   {sortOpen && (
-                    <div className="absolute top-full left-0 mt-1 z-50 w-28 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg py-1">
+                    <div className="absolute top-full left-0 mt-1 z-50 w-28 rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] shadow-lg py-1">
                       <button
                         onClick={() => handleSortKeys('asc')}
                         className="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors"
@@ -679,19 +679,19 @@ function JsonPreviewPage() {
           {(inputType || jsonStats) && (
             <div className="absolute bottom-3 left-3 flex items-center gap-2">
               {inputType && (
-                <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                <div className="px-2 py-0.5 text-xs bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[var(--text-secondary)]">
                   {inputType === 'json' ? 'JSON' : 'JS Object'}
                 </div>
               )}
               {jsonStats && (
                 <>
-                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                  <div className="px-2 py-0.5 text-xs bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[var(--text-secondary)]">
                     {jsonStats.sizeFormatted}
                   </div>
-                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                  <div className="px-2 py-0.5 text-xs bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[var(--text-secondary)]">
                     {jsonStats.keys} keys
                   </div>
-                  <div className="px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-secondary)]">
+                  <div className="px-2 py-0.5 text-xs bg-white/50 dark:bg-black/30 border border-white/40 dark:border-white/10 shadow-inner rounded text-[var(--text-secondary)]">
                     depth {jsonStats.maxDepth}
                   </div>
                 </>
@@ -702,10 +702,10 @@ function JsonPreviewPage() {
         </div>
 
         {/* Output Panel */}
-        <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col overflow-hidden relative">
-          <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+        <div className="glass-panel rounded-2xl flex flex-col overflow-hidden relative">
+          <div className="flex-shrink-0 flex items-center justify-between px-4 py-1.5 bg-transparent min-h-[2.5rem]">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Tree View</span>
+              <span className="text-xs font-semibold flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M8 .5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V1.25A.75.75 0 0 1 8 .5ZM4.5 7a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2Z" /></svg></span>Tree View</span>
               {/* Depth controls */}
               {parsedData && (
                 <div className="flex items-center gap-0.5">
@@ -713,7 +713,7 @@ function JsonPreviewPage() {
                     <button
                       key={d}
                       onClick={() => handleExpandToDepth(d)}
-                      className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      className="px-1.5 py-0.5 text-xs bg-white/40 dark:bg-white/8 hover:bg-white/70 dark:hover:bg-white/15 shadow-sm backdrop-blur-sm rounded-md transition-all duration-150 active:scale-95 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium"
                       title={`Expand to depth ${d}`}
                     >
                       {d}
@@ -721,7 +721,7 @@ function JsonPreviewPage() {
                   ))}
                   <button
                     onClick={handleExpandAll}
-                    className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    className="px-1.5 py-0.5 text-xs bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                     title="Expand all"
                   >
                     All
@@ -729,7 +729,7 @@ function JsonPreviewPage() {
                   {hasExpandedNodes && (
                     <button
                       onClick={handleCollapseAll}
-                      className="px-1.5 py-0.5 text-xs bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center"
+                      className="px-1.5 py-0.5 text-xs bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center"
                       title="Collapse all"
                       style={{ minHeight: '1.25rem' }}
                     >
@@ -796,7 +796,7 @@ function JsonPreviewPage() {
 
           {/* JSONPath results panel */}
           {queryMode === 'jsonpath' && jsonPathResults.matches.length > 0 && (
-            <div className="flex-shrink-0 border-b border-[var(--border-color)]">
+            <div className="flex-shrink-0 border-b border-transparent">
               <button
                 onClick={() => setJsonPathResultsOpen((p) => !p)}
                 className="w-full flex items-center gap-1.5 px-4 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors"

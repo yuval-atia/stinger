@@ -42,21 +42,21 @@ function ContrastCheckerCard({ toolSlug }) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5">
           <label className="text-xs text-[var(--text-secondary)]">Text</label>
-          <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-8 h-7 rounded border border-[var(--border-color)] cursor-pointer bg-transparent" />
-          <input type="text" value={fg} onChange={(e) => setFg(e.target.value)} className="w-20 px-2 py-1 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
+          <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-8 h-7 rounded border border-white/10 dark:border-white/5 cursor-pointer bg-transparent" />
+          <input type="text" value={fg} onChange={(e) => setFg(e.target.value)} className="w-20 px-2 py-1 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
         </div>
         <button type="button" onClick={swap} className="p-1 rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--accent-color)]" title="Swap colors">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M13.78 10.47a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 1 1 1.06-1.06l.97.97V8.75a.75.75 0 0 1 1.5 0v2.69l.97-.97a.75.75 0 0 1 1.06 0ZM2.22 5.53a.75.75 0 0 1 0-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1-1.06 1.06l-.97-.97v2.69a.75.75 0 0 1-1.5 0V4.56l-.97.97a.75.75 0 0 1-1.06 0Z" clipRule="evenodd" /></svg>
         </button>
         <div className="flex items-center gap-1.5">
           <label className="text-xs text-[var(--text-secondary)]">BG</label>
-          <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-8 h-7 rounded border border-[var(--border-color)] cursor-pointer bg-transparent" />
-          <input type="text" value={bg} onChange={(e) => setBg(e.target.value)} className="w-20 px-2 py-1 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
+          <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-8 h-7 rounded border border-white/10 dark:border-white/5 cursor-pointer bg-transparent" />
+          <input type="text" value={bg} onChange={(e) => setBg(e.target.value)} className="w-20 px-2 py-1 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
         </div>
       </div>
 
       {/* Preview */}
-      <div className="rounded border border-[var(--border-color)] p-4 text-center" style={{ backgroundColor: bg, color: fg }}>
+      <div className="rounded border border-white/10 dark:border-white/5 p-4 text-center" style={{ backgroundColor: bg, color: fg }}>
         <div className="text-lg font-bold">Sample Text</div>
         <div className="text-xs">The quick brown fox jumps over the lazy dog</div>
       </div>

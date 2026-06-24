@@ -16,7 +16,7 @@ function ConfigInput({ label, type = 'number', value, onChange, ...props }) {
         type={type}
         value={value}
         onChange={(e) => onChange(type === 'number' ? Number(e.target.value) : e.target.value)}
-        className="w-20 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-20 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         {...props}
       />
     </label>
@@ -44,7 +44,7 @@ export default function ColorPaletteGenerator({ toolSlug }) {
         {palette.map((color, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
             <div
-              className="w-12 h-12 rounded border border-[var(--border-color)]"
+              className="w-12 h-12 rounded border border-white/10 dark:border-white/5"
               style={{ backgroundColor: color.hex }}
             />
             <span className="text-[10px] font-mono text-[var(--text-secondary)]">

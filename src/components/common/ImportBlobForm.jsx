@@ -32,7 +32,7 @@ function ImportBlobForm({ onImport, onCancel }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Paste share blob here..."
-        className="w-full h-32 px-3 py-2 text-sm font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] resize-none focus:outline-none focus:border-[var(--accent-color)]"
+        className="w-full h-32 px-3 py-2 text-sm font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] resize-none focus:outline-none focus:border-[var(--accent-color)]"
         autoFocus
       />
       {error && (
@@ -42,7 +42,7 @@ function ImportBlobForm({ onImport, onCancel }) {
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 text-xs rounded bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] transition-colors"
+          className="px-3 py-1.5 text-xs rounded bg-white/50 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-white/10 border border-white/40 dark:border-white/10 shadow-sm backdrop-blur-sm text-[var(--text-primary)] transition-colors"
         >
           Cancel
         </button>

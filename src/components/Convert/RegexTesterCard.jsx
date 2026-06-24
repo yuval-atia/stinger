@@ -65,7 +65,7 @@ function RegexTesterCard({ toolSlug }) {
           value={pattern}
           onChange={(e) => setPattern(e.target.value)}
           placeholder="Pattern (e.g. \d+)"
-          className="flex-1 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+          className="flex-1 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         />
         <div className="flex gap-1">
           {['g', 'i', 'm', 's'].map((f) => (
@@ -75,7 +75,7 @@ function RegexTesterCard({ toolSlug }) {
               className={`w-6 h-6 text-xs font-mono rounded transition-colors ${
                 flags[f]
                   ? 'bg-[var(--accent-color)] text-white'
-                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)]'
+                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-white/10 dark:border-white/5'
               }`}
             >
               {f}
@@ -87,14 +87,14 @@ function RegexTesterCard({ toolSlug }) {
         value={testStr}
         onChange={(e) => setTestStr(e.target.value)}
         placeholder="Test string..."
-        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       {result && result.error && (
         <div className="text-xs text-[var(--error-color)]">{result.error}</div>
       )}
       {result && !result.error && result.highlighted && (
         <>
-          <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2">
+          <div className="bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2">
             <div className="text-xs font-medium text-[var(--text-primary)] mb-1">
               Matches ({result.matches.length})
             </div>
@@ -104,7 +104,7 @@ function RegexTesterCard({ toolSlug }) {
             />
           </div>
           {result.matches.some((m) => m.groups.length > 0) && (
-            <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2">
+            <div className="bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2">
               <div className="text-xs font-medium text-[var(--text-primary)] mb-1">Capture Groups</div>
               <table className="w-full text-xs font-mono">
                 <thead>

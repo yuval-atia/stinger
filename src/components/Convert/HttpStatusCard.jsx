@@ -19,7 +19,7 @@ function HttpStatusCard({ toolSlug }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search by code, name, or description..."
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
 
       <div className="flex gap-1 flex-wrap">
@@ -38,12 +38,12 @@ function HttpStatusCard({ toolSlug }) {
         ))}
       </div>
 
-      <div className="max-h-64 overflow-y-auto rounded border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+      <div className="max-h-64 overflow-y-auto rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)]">
         {codes.length === 0 ? (
           <div className="px-3 py-2 text-xs text-[var(--text-secondary)]">No matching status codes</div>
         ) : (
           codes.map((s) => (
-            <div key={s.code} className="px-3 py-2 border-b border-[var(--border-color)] last:border-b-0">
+            <div key={s.code} className="px-3 py-2 border-b border-transparent last:border-b-0">
               <div className="flex items-center gap-2">
                 <span className={`text-xs font-bold font-mono ${CATEGORY_COLORS[s.category] || ''}`}>{s.code}</span>
                 <span className="text-xs font-medium text-[var(--text-primary)]">{s.text}</span>

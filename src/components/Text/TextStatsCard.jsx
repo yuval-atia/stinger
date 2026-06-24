@@ -23,7 +23,7 @@ function TextStatsCard({ toolSlug }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste or type text..."
-        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="grid grid-cols-2 gap-1.5">
         <CopyField label="Words" value={String(stats.words)} />

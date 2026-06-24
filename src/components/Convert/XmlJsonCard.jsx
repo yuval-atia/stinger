@@ -76,7 +76,7 @@ function XmlJsonCard({ toolSlug }) {
         placeholder={mode === 'xml2json' ? 'Paste XML here...' : 'Paste JSON here...'}
         rows={5}
         spellCheck={false}
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
       />
 
       {error && (
@@ -85,7 +85,7 @@ function XmlJsonCard({ toolSlug }) {
 
       {output && (
         <div className="relative">
-          <pre className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">{output}</pre>
+          <pre className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">{output}</pre>
           <div className="absolute top-1.5 right-1.5">
             <CopyButton text={output} />
           </div>

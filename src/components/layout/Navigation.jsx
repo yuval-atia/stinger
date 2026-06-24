@@ -42,7 +42,7 @@ function Navigation({ isOpen, onClose }) {
       {/* Desktop nav */}
       <nav
         ref={navRef}
-        className="hidden md:flex overflow-x-auto rounded overflow-hidden border border-[var(--border-color)]"
+        className="hidden md:flex overflow-x-auto gap-0.5 py-0.5"
       >
         {navItems.map(({ to, label, key }) => (
           <NavLink
@@ -50,10 +50,10 @@ function Navigation({ isOpen, onClose }) {
             to={to}
             end={to === '/'}
             className={({ isActive }) =>
-              `px-3 py-1.5 text-sm whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+              `px-3 py-1 text-xs font-medium whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 rounded-full ${
                 isActive
-                  ? 'bg-[var(--border-color)] text-[var(--text-primary)] nav-active'
-                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  ? 'nav-active'
+                  : 'bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/15 dark:hover:bg-white/8'
               }`
             }
           >
@@ -72,14 +72,14 @@ function Navigation({ isOpen, onClose }) {
           />
           {/* Slide-down menu */}
           <nav
-            className="fixed left-0 right-0 z-50 md:hidden bg-[var(--bg-primary)] border-b border-[var(--border-color)] shadow-lg animate-slide-down"
+            className="fixed left-0 right-0 z-50 md:hidden bg-slate-50 dark:bg-[#0f172a] border-b border-white/20 dark:border-white/10 shadow-lg animate-slide-down"
             style={{
               top: navRef.current
                 ?.closest('header')
                 ?.getBoundingClientRect().bottom + 'px',
             }}
           >
-            <div className="max-w-7xl mx-auto py-2 px-4">
+            <div className="max-w-7xl mx-auto py-2 px-4 flex flex-col gap-1">
               {navItems.map(({ to, label }) => (
                 <NavLink
                   key={to}
@@ -87,10 +87,10 @@ function Navigation({ isOpen, onClose }) {
                   end={to === '/'}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `block py-3 px-3 text-sm rounded transition-colors ${
+                    `block py-3 px-4 text-sm rounded-xl transition-all duration-200 font-medium ${
                       isActive
-                        ? 'bg-[var(--border-color)] text-[var(--text-primary)]'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                        ? 'bg-white/30 dark:bg-black/30 text-[var(--text-primary)] shadow-sm'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/10 dark:hover:bg-white/5'
                     }`
                   }
                 >

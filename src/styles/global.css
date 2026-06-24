@@ -3,39 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f3f4f6;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
-  --accent-color: #3b82f6;
+  --bg-primary: rgba(255, 255, 255, 0.7);
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-color: rgba(226, 232, 240, 0.6);
+  --accent-color: #8b5cf6;
+  --accent-color-hover: #7c3aed;
   --error-color: #ef4444;
-  --success-color: #22c55e;
+  --success-color: #10b981;
   --diff-add: #dcfce7;
   --diff-remove: #fee2e2;
   --diff-change: #fef3c7;
   --diff-move: #dbeafe;
   --diff-move-text: #1e40af;
   --jsonpath-color: #8b5cf6;
-  --footer-text: #656b76;
+  --footer-text: #64748b;
 }
 
 .dark {
-  --bg-primary: #1f2937;
-  --bg-secondary: #111827;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
-  --accent-color: #60a5fa;
+  --bg-primary: rgba(30, 41, 59, 0.7);
+  --bg-secondary: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: rgba(51, 65, 85, 0.6);
+  --accent-color: #a78bfa;
+  --accent-color-hover: #c084fc;
   --error-color: #f87171;
-  --success-color: #4ade80;
-  --diff-add: #166534;
-  --diff-remove: #991b1b;
-  --diff-change: #854d0e;
-  --diff-move: #1e3a5f;
-  --diff-move-text: #93c5fd;
+  --success-color: #34d399;
+  --diff-add: #064e3b;
+  --diff-remove: #7f1d1d;
+  --diff-change: #713f12;
+  --diff-move: #1e3a8a;
+  --diff-move-text: #bfdbfe;
   --jsonpath-color: #a78bfa;
-  --footer-text: #8b929c;
+  --footer-text: #94a3b8;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  background-color: var(--bg-primary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-header {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+.dark .glass-header {
+  background-color: rgba(10, 15, 30, 0.82);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 /* Map package CSS variables to stinger's variables */
@@ -59,6 +87,10 @@
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+code, pre, textarea, input[type="text"], .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -270,9 +302,17 @@ select:focus-visible {
   border-radius: 4px;
 }
 
-/* Nav active indicator */
+/* Nav active indicator — glowing pill, no underline */
 .nav-active {
-  box-shadow: inset 0 -2px 0 var(--accent-color);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(99, 102, 241, 0.15)) !important;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3), 0 2px 8px rgba(139, 92, 246, 0.15) !important;
+  color: var(--accent-color) !important;
+}
+
+.dark .nav-active {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(139, 92, 246, 0.12)) !important;
+  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25), 0 2px 8px rgba(139, 92, 246, 0.2) !important;
+  color: var(--accent-color) !important;
 }
 
 .pinned-node::before {

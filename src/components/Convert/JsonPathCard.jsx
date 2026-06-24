@@ -48,7 +48,7 @@ function JsonPathCard({ toolSlug }) {
         placeholder="Paste JSON here..."
         rows={5}
         spellCheck={false}
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-y"
       />
 
       {parsed.error && (
@@ -60,7 +60,7 @@ function JsonPathCard({ toolSlug }) {
         value={expression}
         onChange={(e) => setExpression(e.target.value)}
         placeholder="$.store.books[*].title"
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
 
       {result && result.error && (
@@ -75,12 +75,12 @@ function JsonPathCard({ toolSlug }) {
             </span>
             {matchText && <CopyButton text={matchText} />}
           </div>
-          <div className="max-h-48 overflow-y-auto rounded border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+          <div className="max-h-48 overflow-y-auto rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)]">
             {result.matches.length === 0 ? (
               <div className="px-3 py-2 text-xs text-[var(--text-secondary)]">No matches</div>
             ) : (
               result.matches.map((m, i) => (
-                <div key={i} className="px-3 py-1.5 text-xs font-mono border-b border-[var(--border-color)] last:border-b-0">
+                <div key={i} className="px-3 py-1.5 text-xs font-mono border-b border-transparent last:border-b-0">
                   <span className="text-[var(--text-secondary)]">{m.path || '$'}</span>
                   <span className="mx-1.5 text-[var(--text-secondary)]">=</span>
                   <span className="text-[var(--text-primary)]">{JSON.stringify(m.value)}</span>

@@ -60,9 +60,9 @@ function FormatterPage() {
       </nav>
       <h1 className="text-xl font-bold mb-1">JSON, XML & Code Formatter</h1>
       <p className="text-sm text-[var(--text-secondary)] mb-4">Format and beautify JSON, XML, SQL, CSS, and HTML. Minify or pretty-print with one click.</p>
-      <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] card-hover">
+      <div className="glass-panel rounded-2xl card-hover">
         {/* Title bar */}
-        <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+        <div className="min-h-[3rem] flex items-center justify-between px-5 py-2 bg-transparent">
           <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75Zm0 4A.75.75 0 0 1 2.75 7h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 7.75Zm0 4a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg></span>Formatter</span>
           <div className="flex items-center gap-2">
             <InfoButton info={{
@@ -76,14 +76,14 @@ function FormatterPage() {
         </div>
 
         {/* Language tabs */}
-        <div className="flex border-b border-[var(--border-color)]">
+        <div className="flex border-b border-transparent">
           {LANGUAGES.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => { setLang(value); setOutput(''); }}
               className={`px-4 py-2 text-xs transition-colors ${
                 lang === value
-                  ? 'bg-[var(--border-color)] text-[var(--text-primary)]'
+                  ? 'bg-white/80 dark:bg-white/20 text-[var(--text-primary)] border border-white/50 dark:border-white/20 shadow-sm backdrop-blur-sm'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
               }`}
             >
@@ -94,14 +94,14 @@ function FormatterPage() {
 
         {/* Input / Output panels */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <div className="p-4 md:border-r border-[var(--border-color)]">
+          <div className="p-4 md:border-r border-white/10 dark:border-white/5">
             <label htmlFor="formatter-input" className="text-xs text-[var(--text-secondary)] mb-2 block">Input</label>
             <textarea
               id="formatter-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={`Paste ${lang.toUpperCase()} here...`}
-              className="w-full h-80 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+              className="w-full h-80 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
             />
           </div>
           <div className="p-4">
@@ -122,7 +122,7 @@ function FormatterPage() {
                 </CopyButton>
               )}
             </div>
-            <div className="w-full h-80 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-auto whitespace-pre-wrap">
+            <div className="w-full h-80 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] overflow-auto whitespace-pre-wrap">
               {output || <span className="text-[var(--text-secondary)]">Formatted output will appear here</span>}
             </div>
           </div>

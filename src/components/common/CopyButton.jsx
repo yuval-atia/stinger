@@ -33,7 +33,7 @@ function CopyButton({ onClick, tooltip, children, size = 'md' }) {
         onClick={onClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`${sizeClasses[size]} flex items-center justify-center rounded hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]`}
+        className={`${sizeClasses[size]} flex items-center justify-center rounded-md hover:bg-white/50 dark:hover:bg-white/10 transition-all duration-200 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-110 active:scale-95`}
       >
         {children}
       </button>

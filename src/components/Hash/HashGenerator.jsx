@@ -58,8 +58,8 @@ function HashGenerator({ toolSlug }) {
   }, [input, secret]);
 
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] pb-4 card-hover">
-      <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+    <div className="glass-panel rounded-2xl pb-4 card-hover">
+      <div className="min-h-[3rem] flex items-center justify-between px-5 py-2 bg-transparent">
         <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Z" clipRule="evenodd" /></svg></span>Hash Generator{toolSlug && <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3"><path d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" /></svg></Link>}</span>
         <InfoButton info={{
           what: 'Computes MD5, SHA-1, SHA-256, and SHA-512 hashes of any text input in real time, plus HMAC signatures with a secret key.',
@@ -76,7 +76,7 @@ function HashGenerator({ toolSlug }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type or paste text to hash..."
-            className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+            className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
           />
         </div>
 
@@ -90,7 +90,7 @@ function HashGenerator({ toolSlug }) {
           </div>
         </div>
 
-        <div className="border-t border-[var(--border-color)] pt-4">
+        <div className="border-t border-white/10 dark:border-white/5 pt-4">
           <label htmlFor="hmac-secret" className="text-xs text-[var(--text-secondary)] mb-2 block">HMAC</label>
           <input
             id="hmac-secret"
@@ -98,7 +98,7 @@ function HashGenerator({ toolSlug }) {
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
             placeholder="Secret key..."
-            className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] mb-3"
+            className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] mb-3"
           />
           <div className="space-y-2">
             <HashRow label="HMAC-SHA256" value={hmacs.sha256} />

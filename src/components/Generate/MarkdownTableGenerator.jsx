@@ -80,11 +80,11 @@ function MarkdownTableGenerator({ toolSlug }) {
       <div className="flex items-center gap-3">
         <label className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
           Cols
-          <input type="number" value={cols} onChange={(e) => adjustGrid(Math.max(1, Math.min(10, Number(e.target.value))), rows)} min={1} max={10} className="w-14 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
+          <input type="number" value={cols} onChange={(e) => adjustGrid(Math.max(1, Math.min(10, Number(e.target.value))), rows)} min={1} max={10} className="w-14 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
         </label>
         <label className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
           Rows
-          <input type="number" value={rows} onChange={(e) => adjustGrid(cols, Math.max(1, Math.min(20, Number(e.target.value))))} min={1} max={20} className="w-14 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
+          <input type="number" value={rows} onChange={(e) => adjustGrid(cols, Math.max(1, Math.min(20, Number(e.target.value))))} min={1} max={20} className="w-14 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]" />
         </label>
       </div>
 
@@ -94,7 +94,7 @@ function MarkdownTableGenerator({ toolSlug }) {
           <thead>
             <tr>
               {headers.slice(0, cols).map((h, i) => (
-                <th key={i} className="border border-[var(--border-color)] p-0">
+                <th key={i} className="border border-white/10 dark:border-white/5 p-0">
                   <div className="flex">
                     <input
                       type="text"
@@ -106,7 +106,7 @@ function MarkdownTableGenerator({ toolSlug }) {
                     <button
                       type="button"
                       onClick={() => cycleAlign(i)}
-                      className="px-1.5 bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--accent-color)] text-xs border-l border-[var(--border-color)]"
+                      className="px-1.5 bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--accent-color)] text-xs border-l border-white/10 dark:border-white/5"
                       title={`Align: ${alignments[i]}`}
                     >
                       {ALIGN_ICONS[alignments[i]]}
@@ -120,7 +120,7 @@ function MarkdownTableGenerator({ toolSlug }) {
             {cells.slice(0, rows).map((row, r) => (
               <tr key={r}>
                 {row.slice(0, cols).map((cell, c) => (
-                  <td key={c} className="border border-[var(--border-color)] p-0">
+                  <td key={c} className="border border-white/10 dark:border-white/5 p-0">
                     <input
                       type="text"
                       value={cell}
@@ -137,7 +137,7 @@ function MarkdownTableGenerator({ toolSlug }) {
 
       {/* Output */}
       <div className="relative">
-        <div className="w-full max-h-32 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] whitespace-pre overflow-auto pr-8 animate-fade-in">
+        <div className="w-full max-h-32 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] whitespace-pre overflow-auto pr-8 animate-fade-in">
           {output}
         </div>
         <div className="absolute top-2 right-2">

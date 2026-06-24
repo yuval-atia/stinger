@@ -31,7 +31,7 @@ function TextDiffCard({ toolSlug }) {
             value={textA}
             onChange={(e) => setTextA(e.target.value)}
             placeholder="Paste original text..."
-            className="w-full h-40 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+            className="w-full h-40 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
           />
         </div>
         <div>
@@ -41,7 +41,7 @@ function TextDiffCard({ toolSlug }) {
             value={textB}
             onChange={(e) => setTextB(e.target.value)}
             placeholder="Paste modified text..."
-            className="w-full h-40 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+            className="w-full h-40 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
           />
         </div>
       </div>
@@ -55,7 +55,7 @@ function TextDiffCard({ toolSlug }) {
       )}
 
       {diff.length > 0 && (
-        <div className="rounded border border-[var(--border-color)] overflow-auto max-h-[500px]">
+        <div className="rounded border border-white/10 dark:border-white/5 overflow-auto max-h-[500px]">
           {diff.map((entry, i) => {
             let bgClass = '';
             let prefix = ' ';
@@ -68,10 +68,10 @@ function TextDiffCard({ toolSlug }) {
             }
             return (
               <div key={i} className={`flex text-xs font-mono ${bgClass}`}>
-                <span className="w-10 flex-shrink-0 text-right pr-2 text-[var(--text-secondary)] select-none border-r border-[var(--border-color)] py-0.5">
+                <span className="w-10 flex-shrink-0 text-right pr-2 text-[var(--text-secondary)] select-none border-r border-white/10 dark:border-white/5 py-0.5">
                   {entry.lineA || ''}
                 </span>
-                <span className="w-10 flex-shrink-0 text-right pr-2 text-[var(--text-secondary)] select-none border-r border-[var(--border-color)] py-0.5">
+                <span className="w-10 flex-shrink-0 text-right pr-2 text-[var(--text-secondary)] select-none border-r border-white/10 dark:border-white/5 py-0.5">
                   {entry.lineB || ''}
                 </span>
                 <span className="w-5 flex-shrink-0 text-center text-[var(--text-secondary)] select-none py-0.5">

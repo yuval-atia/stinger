@@ -53,7 +53,7 @@ function ChmodCalculatorCard({ toolSlug }) {
                   className={`w-8 h-8 rounded border text-xs font-mono font-bold transition-colors ${
                     perms[role][bit]
                       ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white'
-                      : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
+                      : 'bg-[var(--bg-secondary)] border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
                   }`}
                 >
                   {perms[role][bit] ? bit : '-'}
@@ -74,7 +74,7 @@ function ChmodCalculatorCard({ toolSlug }) {
             className={`px-2 py-1 text-xs rounded border transition-colors ${
               octal === p.octal
                 ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white'
-                : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
+                : 'bg-[var(--bg-secondary)] border-white/10 dark:border-white/5 text-[var(--text-secondary)] hover:border-[var(--accent-color)]'
             }`}
             title={p.desc}
           >

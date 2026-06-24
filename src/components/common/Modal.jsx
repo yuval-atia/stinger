@@ -72,10 +72,10 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         aria-labelledby="modal-title"
         tabIndex={-1}
         onKeyDown={handleKeyDown}
-        className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg shadow-2xl max-w-4xl w-full max-h-[80vh] flex flex-col outline-none"
+        className="glass-panel rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] flex flex-col outline-none"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-transparent">
           <h2 id="modal-title" className="text-lg font-semibold text-[var(--text-primary)]">{title}</h2>
           <button
             onClick={onClose}

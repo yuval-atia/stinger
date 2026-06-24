@@ -117,7 +117,7 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
               </svg>
             )}
             {/* Hover tooltip */}
-            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap rounded border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)] text-[10px] px-2 py-1 opacity-0 group-hover/icon:opacity-100 transition-opacity shadow-lg">
+            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap rounded border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] text-[var(--text-secondary)] text-[10px] px-2 py-1 opacity-0 group-hover/icon:opacity-100 transition-opacity shadow-lg">
               {isJsonPath ? 'Switch to text search' : 'Switch to JSONPath ($.path)'}
             </span>
           </button>
@@ -139,7 +139,7 @@ function SearchBar({ value, onChange, onSubmit, onPrev, onNext, isSearching, mat
           className={`w-44 pl-8 pr-7 py-1 text-sm bg-[var(--bg-secondary)] border rounded focus:outline-none transition-colors ${
             isJsonPath
               ? 'border-[var(--jsonpath-color)]/40 focus:border-[var(--jsonpath-color)]'
-              : 'border-[var(--border-color)] focus:border-[var(--accent-color)]'
+              : 'border-white/10 dark:border-white/5 focus:border-[var(--accent-color)]'
           }`}
         />
         {value && !isSearching && (

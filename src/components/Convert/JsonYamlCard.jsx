@@ -68,11 +68,11 @@ function JsonYamlCard({ toolSlug }) {
         value={input}
         onChange={(e) => handleInput(e.target.value)}
         placeholder={mode === 'jsonToYaml' ? 'Paste JSON...' : 'Paste YAML...'}
-        className="w-full h-24 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-24 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       {error && <div className="text-xs text-[var(--error-color)] break-all">{error}</div>}
       <div className="relative">
-        <pre className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] overflow-auto whitespace-pre-wrap break-all pr-8">
+        <pre className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] overflow-auto whitespace-pre-wrap break-all pr-8">
           {output || <span className="text-[var(--text-secondary)]">Output will appear here</span>}
         </pre>
         {output && (

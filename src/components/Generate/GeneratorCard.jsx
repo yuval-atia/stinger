@@ -32,9 +32,9 @@ function GeneratorCard({ title, icon, info, onGenerate, footer, children, render
   };
 
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col h-[320px] card-hover">
+    <div className="glass-panel rounded-2xl flex flex-col h-[320px] card-hover">
       {/* Toolbar */}
-      <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+      <div className="flex-shrink-0 min-h-[3rem] flex items-center justify-between px-5 py-2 bg-transparent">
         <span className="text-sm font-medium flex items-center gap-1.5">
           {icon && <span className="text-[var(--accent-color)]">{icon}</span>}
           {title}
@@ -66,7 +66,7 @@ function GeneratorCard({ title, icon, info, onGenerate, footer, children, render
         {/* Output — fills remaining space and scrolls */}
         {output && (
           <div className="flex-1 min-h-0 px-4 pb-4 flex flex-col gap-1.5">
-            <div className="relative flex-1 min-h-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] p-3 overflow-auto">
+            <div className="relative flex-1 min-h-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 p-3 overflow-auto">
               {renderOutput ? renderOutput(output) : (
                 <pre className="text-sm whitespace-pre-wrap break-all pr-8">{output}</pre>
               )}

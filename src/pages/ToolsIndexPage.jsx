@@ -33,7 +33,7 @@ function ToolsIndexPage() {
                   <Link
                     key={tool.slug}
                     to={`/tools/${tool.slug}`}
-                    className="px-3 py-2.5 text-xs rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[var(--accent-color)] transition-colors card-hover"
+                    className="px-3 py-2.5 text-xs rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] hover:border-[var(--accent-color)] transition-colors card-hover"
                   >
                     <span className="font-medium">{tool.title}</span>
                   </Link>

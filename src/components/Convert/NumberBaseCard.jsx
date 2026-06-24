@@ -57,7 +57,7 @@ function NumberBaseCard({ toolSlug }) {
         <select
           value={base}
           onChange={(e) => setBase(Number(e.target.value))}
-          className="px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+          className="px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         >
           {BASES.map((b) => (
             <option key={b.value} value={b.value}>{b.label}</option>
@@ -69,7 +69,7 @@ function NumberBaseCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={base === 16 ? 'e.g. FF' : base === 8 ? 'e.g. 377' : base === 2 ? 'e.g. 11111111' : 'e.g. 255'}
-        className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       {parsed && parsed.error && (
         <div className="text-xs text-[var(--error-color)]">{parsed.error}</div>

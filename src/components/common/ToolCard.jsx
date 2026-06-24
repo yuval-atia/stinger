@@ -6,11 +6,11 @@ import ErrorBoundary from './ErrorBoundary';
 
 function ToolCard({ title, icon, info, toolSlug, children }) {
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] flex flex-col card-hover">
+    <div className="glass-panel rounded-2xl flex flex-col transition-all duration-300 hover:shadow-glow dark:hover:shadow-glow-dark hover:-translate-y-1 hover:border-white/50 dark:hover:border-white/20">
       {/* Title bar */}
-      <div className="flex-shrink-0 h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
-        <span className="text-sm font-medium flex items-center gap-1.5">
-          {icon && <span className="text-[var(--accent-color)]">{icon}</span>}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-1.5 bg-transparent min-h-[2.5rem]">
+        <span className="text-xs font-semibold tracking-wide flex items-center gap-1.5">
+          {icon && <span className="text-[var(--accent-color)] drop-shadow-sm">{icon}</span>}
           {title}
           {toolSlug && (
             <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page">
@@ -23,7 +23,7 @@ function ToolCard({ title, icon, info, toolSlug, children }) {
         {info && <InfoButton info={info} />}
       </div>
       {/* Body */}
-      <div className="p-4 flex flex-col gap-3 flex-1 min-h-0">
+      <div className="px-3 py-2 flex flex-col gap-2 flex-1 min-h-0">
         <ErrorBoundary fallback={({ error, reset }) => (
           <div className="flex flex-col items-center justify-center gap-2 py-4 text-center">
             <p className="text-sm text-[var(--text-secondary)]">This tool encountered an error.</p>
@@ -51,9 +51,9 @@ function CopyField({ label, value }) {
   return (
     <div className="flex items-center gap-2">
       {label && (
-        <span className="text-xs text-[var(--text-secondary)] w-28 flex-shrink-0">{label}</span>
+        <span className="text-xs font-medium text-[var(--text-secondary)] w-28 flex-shrink-0">{label}</span>
       )}
-      <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-1.5 text-xs font-mono truncate">
+      <div className="flex-1 min-w-0 bg-white/50 dark:bg-black/30 rounded-lg border border-white/40 dark:border-white/10 px-3 py-2 text-xs font-mono truncate shadow-inner">
         {value || '\u00A0'}
       </div>
       <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>

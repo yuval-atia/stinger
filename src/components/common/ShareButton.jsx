@@ -13,7 +13,7 @@ function ShareButton({ shareData }) {
         className={`flex items-center gap-1.5 px-3 py-1 text-sm rounded border transition-colors ${
           open
             ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white'
-            : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:bg-[var(--border-color)] text-[var(--text-primary)]'
+            : 'bg-[var(--bg-secondary)] border-white/10 dark:border-white/5 hover:bg-white/80 dark:bg-white/20 text-[var(--text-primary)] border border-white/50 dark:border-white/20 shadow-sm backdrop-blur-sm'
         }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ${open ? '' : 'text-[var(--accent-color)]'}`}>

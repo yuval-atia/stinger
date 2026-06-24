@@ -43,8 +43,8 @@ function HashVerifier({ toolSlug }) {
   }, [knownHash, verifyText]);
 
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] pb-4 mt-4">
-      <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+    <div className="glass-panel rounded-2xl pb-4 mt-4">
+      <div className="min-h-[3rem] flex items-center justify-between px-5 py-2 bg-transparent">
         <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8.5 1.709a.75.75 0 0 0-1 0 8.963 8.963 0 0 1-4.84 2.217.75.75 0 0 0-.654.72 10.499 10.499 0 0 0 5.647 9.672.75.75 0 0 0 .694-.001 10.499 10.499 0 0 0 5.647-9.672.75.75 0 0 0-.654-.719A8.963 8.963 0 0 1 8.5 1.71ZM10.78 7.03a.75.75 0 0 0-1.06-1.06L7.5 8.19 6.28 6.97a.75.75 0 0 0-1.06 1.06l1.75 1.75a.75.75 0 0 0 1.06 0l2.75-2.75Z" clipRule="evenodd" /></svg></span>Hash Verifier{toolSlug && <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3"><path d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" /></svg></Link>}</span>
         <InfoButton info={{
           what: 'Verifies whether a known hash matches the hash of a given text. Auto-detects the algorithm by hash length (32=MD5, 40=SHA-1, 64=SHA-256, 128=SHA-512).',
@@ -61,7 +61,7 @@ function HashVerifier({ toolSlug }) {
             value={knownHash}
             onChange={(e) => setKnownHash(e.target.value)}
             placeholder="Paste a hash to verify..."
-            className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+            className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
           />
         </div>
         <div>
@@ -72,7 +72,7 @@ function HashVerifier({ toolSlug }) {
             value={verifyText}
             onChange={(e) => setVerifyText(e.target.value)}
             placeholder="Text to hash and compare..."
-            className="w-full px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+            className="w-full px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
           />
         </div>
         {result && (

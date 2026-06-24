@@ -8,7 +8,7 @@ export function ConfigInput({ label, type = 'number', value, onChange, ...props 
         type={type}
         value={value}
         onChange={(e) => onChange(type === 'number' ? Number(e.target.value) : e.target.value)}
-        className="w-20 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-20 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         {...props}
       />
     </label>
@@ -36,7 +36,7 @@ export function ConfigSelect({ label, value, onChange, options }) {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex items-center gap-1.5 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none hover:border-[var(--accent-color)] transition-colors"
+          className="flex items-center gap-1.5 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none hover:border-[var(--accent-color)] transition-colors"
         >
           {selected?.label}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className={`w-3 h-3 text-[var(--text-secondary)] transition-transform ${open ? 'rotate-180' : ''}`}>
@@ -44,7 +44,7 @@ export function ConfigSelect({ label, value, onChange, options }) {
           </svg>
         </button>
         {open && (
-          <div className="absolute z-50 mt-1 left-0 min-w-full rounded border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg overflow-hidden">
+          <div className="absolute z-50 mt-1 left-0 min-w-full rounded border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] shadow-lg overflow-hidden">
             {options.map((opt) => (
               <button
                 key={opt.value}
@@ -77,7 +77,7 @@ export function ConfigCheckbox({ label, checked, onChange }) {
         className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
           checked
             ? 'bg-[var(--accent-color)] border-[var(--accent-color)]'
-            : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent-color)]'
+            : 'bg-[var(--bg-secondary)] border-white/10 dark:border-white/5 hover:border-[var(--accent-color)]'
         }`}
       >
         {checked && (

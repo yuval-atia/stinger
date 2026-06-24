@@ -58,8 +58,8 @@ function FileChecksum({ toolSlug }) {
   };
 
   return (
-    <div className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)] pb-4 mt-4">
-      <div className="h-11 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
+    <div className="glass-panel rounded-2xl pb-4 mt-4">
+      <div className="min-h-[3rem] flex items-center justify-between px-5 py-2 bg-transparent">
         <span className="text-sm font-medium flex items-center gap-1.5"><span className="text-[var(--accent-color)]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4"><path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v9A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 12.5 2h-9ZM6.25 5.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm4.25.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM6.25 10.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm4.25.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8 8.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" /></svg></span>File Checksum (SHA-256){toolSlug && <Link to={`/tools/${toolSlug}`} className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors" title="Open tool page"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3"><path d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" /></svg></Link>}</span>
         <InfoButton info={{
           what: 'Computes the SHA-256 hash of any file dropped or selected. The file never leaves your browser — all processing is local.',
@@ -76,7 +76,7 @@ function FileChecksum({ toolSlug }) {
           className={`w-full h-24 flex items-center justify-center rounded border-2 border-dashed cursor-pointer transition-colors ${
             dragging
               ? 'border-[var(--accent-color)] bg-[var(--bg-secondary)]'
-              : 'border-[var(--border-color)] hover:border-[var(--accent-color)]'
+              : 'border-white/10 dark:border-white/5 hover:border-[var(--accent-color)]'
           }`}
         >
           <span className="text-xs text-[var(--text-secondary)]">
@@ -93,19 +93,19 @@ function FileChecksum({ toolSlug }) {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <span className="text-xs text-[var(--text-secondary)] w-24 flex-shrink-0">Filename</span>
-              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2 text-xs font-mono truncate">
+              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2 text-xs font-mono truncate">
                 {fileInfo.name}
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs text-[var(--text-secondary)] w-24 flex-shrink-0">Size</span>
-              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2 text-xs font-mono truncate">
+              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2 text-xs font-mono truncate">
                 {formatSize(fileInfo.size)}
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs text-[var(--text-secondary)] w-24 flex-shrink-0">SHA-256</span>
-              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2 text-xs font-mono truncate">
+              <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2 text-xs font-mono truncate">
                 {hash}
               </div>
               <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>

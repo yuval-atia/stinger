@@ -15,7 +15,7 @@ function HashRow({ label, value }) {
   return (
     <div className="flex items-center gap-3">
       <span className="text-xs text-[var(--text-secondary)] w-24 flex-shrink-0">{label}</span>
-      <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] px-3 py-2 text-xs font-mono truncate">
+      <div className="flex-1 min-w-0 bg-[var(--bg-secondary)] rounded border border-white/10 dark:border-white/5 px-3 py-2 text-xs font-mono truncate">
         {value || <span className="text-[var(--text-secondary)]">—</span>}
       </div>
       <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'}>

@@ -36,10 +36,10 @@ function CsvJsonCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'csvToJson' ? 'name,age,city\nAlice,30,NYC\nBob,25,LA' : '[{"name":"Alice","age":30}]'}
-        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="relative">
-        <div className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] whitespace-pre-wrap break-all overflow-auto pr-8">
+        <div className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] whitespace-pre-wrap break-all overflow-auto pr-8">
           {error ? (
             <span className="text-[var(--error-color)]">{error}</span>
           ) : output ? (

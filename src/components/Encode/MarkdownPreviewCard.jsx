@@ -27,10 +27,10 @@ function MarkdownPreviewCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Type markdown here..."
-        className="w-full h-24 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-24 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="relative">
-        <div className="w-full min-h-[60px] px-3 py-2 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] overflow-auto pr-8">
+        <div className="w-full min-h-[60px] px-3 py-2 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] overflow-auto pr-8">
           {html ? (
             <div className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />
           ) : (

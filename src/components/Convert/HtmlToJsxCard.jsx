@@ -27,10 +27,10 @@ function HtmlToJsxCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder='<div class="container" style="color: red;">\n  <label for="name">Name</label>\n  <input type="text" tabindex="1">\n  <br>\n</div>'
-        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-28 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="relative">
-        <div className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] whitespace-pre-wrap break-all overflow-auto pr-8">
+        <div className="w-full min-h-[60px] max-h-48 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] whitespace-pre-wrap break-all overflow-auto pr-8">
           {output ? (
             <span className="animate-fade-in">{output}</span>
           ) : (

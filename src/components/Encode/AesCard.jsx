@@ -59,7 +59,7 @@ function AesCard({ toolSlug }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'encrypt' ? 'Text to encrypt...' : 'Base64 ciphertext to decrypt...'}
-        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-20 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <div className="flex items-center gap-2">
         <input
@@ -67,13 +67,13 @@ function AesCard({ toolSlug }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password..."
-          className="flex-1 px-3 py-1.5 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+          className="flex-1 px-3 py-1.5 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
         />
         <FormatButton label={loading ? '...' : mode === 'encrypt' ? 'Encrypt' : 'Decrypt'} variant="primary" onClick={handleRun} />
       </div>
       {(output || error) && (
         <div className="relative animate-fade-in">
-          <div className="w-full min-h-[40px] max-h-32 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] break-all whitespace-pre-wrap overflow-auto pr-8">
+          <div className="w-full min-h-[40px] max-h-32 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] break-all whitespace-pre-wrap overflow-auto pr-8">
             {error ? (
               <span className="text-[var(--error-color)]">{error}</span>
             ) : (

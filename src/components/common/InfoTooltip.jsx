@@ -56,14 +56,14 @@ function InfoTooltip({ info, buttonRef, onClose }) {
   return createPortal(
     <div
       ref={tooltipRef}
-      className="fixed z-[9999] w-80 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg p-4 space-y-3"
+      className="fixed z-[9999] w-80 rounded-lg border border-white/10 dark:border-white/5 bg-[var(--bg-primary)] shadow-lg p-4 space-y-3"
       style={pos ? { top: pos.top, left: pos.left } : { visibility: 'hidden' }}
     >
       <div
         className={`absolute w-3 h-3 rotate-45 bg-[var(--bg-primary)] ${
           pos?.flipped
-            ? '-bottom-2 border-r border-b border-[var(--border-color)]'
-            : '-top-2 border-l border-t border-[var(--border-color)]'
+            ? '-bottom-2 border-r border-b border-transparent'
+            : '-top-2 border-l border-t border-white/10 dark:border-white/5'
         }`}
         style={{ left: pos?.arrowLeft ?? 0 }}
       />

@@ -31,7 +31,7 @@ function CopyableValue({ label, value }) {
   if (!value) return null;
 
   return (
-    <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+    <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)]">
       <span className="text-[10px] uppercase tracking-wide text-[var(--text-secondary)] font-semibold shrink-0 w-20">{label}</span>
       <span className="text-xs font-mono text-[var(--text-primary)] truncate flex-1 min-w-0">{value}</span>
       <CopyButton onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'} size="sm">
@@ -101,7 +101,7 @@ function UrlParserCard({ toolSlug }) {
         value={input}
         onChange={(e) => handleInput(e.target.value)}
         placeholder="Paste a URL to parse, e.g. https://example.com/path?key=value#section"
-        className="w-full h-16 px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
+        className="w-full h-16 px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] resize-none"
       />
       <button
         onClick={() => handleInput(window.location.href)}
@@ -137,7 +137,7 @@ function UrlParserCard({ toolSlug }) {
       )}
 
       {!parsed && !error && (
-        <div className="w-full min-h-[60px] px-3 py-2 text-xs font-mono rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-center">
+        <div className="w-full min-h-[60px] px-3 py-2 text-xs font-mono rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] flex items-center justify-center">
           <span className="text-[var(--text-secondary)]">Parsed URL parts will appear here</span>
         </div>
       )}

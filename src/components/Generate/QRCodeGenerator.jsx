@@ -67,7 +67,7 @@ function QRCodeGenerator({ toolSlug }) {
         type="text"
         value={text}
         onChange={setText}
-        className="w-48 px-2 py-1 text-xs rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
+        className="w-48 px-2 py-1 text-xs rounded border border-white/10 dark:border-white/5 bg-[var(--bg-secondary)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)]"
       />
       <ConfigSelect
         label="Error Level"
